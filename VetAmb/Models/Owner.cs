@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable enable
 
-namespace AspNetProjekt.Models
+namespace VetAmb.Models
 {
     /// <summary>
     /// Owner class - represents a pet owner (Complex class with 8 attributes)

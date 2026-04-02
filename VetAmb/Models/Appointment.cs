@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable enable
 
-namespace AspNetProjekt.Models
+namespace VetAmb.Models
 {
     /// <summary>
     /// Appointment class - represents a veterinary appointment (5 attributes)

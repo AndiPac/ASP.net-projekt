@@ -1,7 +1,7 @@
 #nullable enable
 using System;
 
-namespace AspNetProjekt.Models
+namespace VetAmb.Models
 {
     /// <summary>
     /// MedicalRecord class - represents a patient's medical record (5 attributes)

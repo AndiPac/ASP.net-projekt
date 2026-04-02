@@ -43,3 +43,8 @@ USER: You can commit them
 AGENT: Ran git add and git commit with message 'Initial commit: VetAmb project with models, LINQ queries, and async method'. 22 files committed on master.
 ---
 
+--- [2026-04-02] ---
+USER: Fix namespaces in Program.cs and models to match project structure (VetAmb.Models instead of AspNetProjekt.Models).
+AGENT: Updated namespace from AspNetProjekt.Models to VetAmb.Models in all 9 model files and the using directive in Program.cs. Build succeeded.
+---
+

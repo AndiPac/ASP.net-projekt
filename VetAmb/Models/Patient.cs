@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable enable
 
-namespace AspNetProjekt.Models
+namespace VetAmb.Models
 {
     /// <summary>
     /// Patient class - represents a pet (Complex class with 8 attributes)

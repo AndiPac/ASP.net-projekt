@@ -1,6 +1,6 @@
 #nullable enable
 
-namespace AspNetProjekt.Models
+namespace VetAmb.Models
 {
     /// <summary>
     /// AppointmentService class - junction table for N-N relationship between Appointment and Service

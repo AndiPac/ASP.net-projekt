@@ -1,4 +1,4 @@
-[2026-04-02 01:23:42.278] [DEBUG] event=UserPromptSubmit, raw={
+git reset --hard master[2026-04-02 01:23:42.278] [DEBUG] event=UserPromptSubmit, raw={
     "hookEventName":  "UserPromptSubmit",
     "userMessage":  "test"
 }

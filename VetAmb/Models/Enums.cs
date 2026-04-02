@@ -1,4 +1,4 @@
-namespace AspNetProjekt.Models
+namespace VetAmb.Models
 {
     /// <summary>
     /// Enum for veterinary specializations
