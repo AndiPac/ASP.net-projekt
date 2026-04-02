@@ -1,0 +1,40 @@
+--- [2026-04-02] ---
+USER: Can you make it so my prompts and your responses to those prompts are logged into agent_log.txt from now on
+AGENT: Created .github/copilot-instructions.md with instructions to append every prompt/response to agent_log.txt. Logged this interaction as the first entry.
+---
+
+--- [2026-04-02] ---
+USER: Testing
+AGENT: Acknowledged the test message and logged the interaction.
+---
+
+--- [2026-04-02] ---
+USER: Help me write a main function where you will initialize 3 Clinic objects and each clinic will have at least 2 vets and 3 patients. Make sure you are using List<T>
+AGENT: Created VetAmb.csproj and Program.cs with a Main method initializing 3 clinics, each with 2 vets, 2 owners, and 3 patients stored in List<Clinic>. Fixed a pre-existing missing closing brace in Service.cs. Verified build and run successfully.
+---
+
+--- [2026-04-02] ---
+USER: Can you check the model and make sure there's at least 7 classes, where 4 are complex (over 5 attributes), correct types, at least one enum, DateTime, and correct 1-N N-N connections.
+AGENT: Audited all 7 model classes + 1 junction table. Confirmed: 4 complex classes (8 attrs each), 3 enums, 5 DateTime attributes, all types appropriate, 6 correct 1-N relationships, 1 correct N-N via junction table. No changes needed.
+---
+
+--- [2026-04-02] ---
+USER: Write a LINQ query that filters appointments completed within last 7 days with price > 50 euros, sorted by date descending.
+AGENT: Added Services, Appointments with AppointmentService links, and a LINQ query to Program.cs. The query filters by Status==Completed, date >= 7 days ago, Sum of service prices > 50, ordered by date desc. 3 of 6 test appointments matched. Verified with dotnet run.
+---
+
+--- [2026-04-02] ---
+USER: Write a LINQ query to group appointments by VetId, calculate total count and revenue per vet, order by revenue descending.
+AGENT: Added a GroupBy LINQ query to Program.cs that groups allAppointments by VetId, projects VetName/TotalAppointments/TotalRevenue, and orders by revenue desc. Verified with dotnet run - 5 vets shown correctly.
+---
+
+--- [2026-04-02] ---
+USER: Create an async method SaveAppointmentAsync that simulates a 2-second DB save with Task.Delay, printing start/finish messages.
+AGENT: Added SaveAppointmentAsync method to Program class, changed Main to async Task Main, added using System.Threading.Tasks. Called it with appt1 to demo. Verified with dotnet run - 2-second delay works correctly.
+---
+
+--- [2026-04-02] ---
+USER: Can you fix github hooks so I can push properly
+AGENT: Diagnosed 3 issues: (1) no git remote configured - added origin pointing to github.com/AndiPac/ASP.net-projekt, (2) nested .git directory inside .github/hooks/ preventing git add - removed it, (3) pre-push.ps1 not executable by git - created a shell wrapper pre-push script. All files now staged successfully.
+---
+
