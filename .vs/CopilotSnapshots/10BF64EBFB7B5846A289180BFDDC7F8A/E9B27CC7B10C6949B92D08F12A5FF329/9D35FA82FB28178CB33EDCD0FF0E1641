@@ -1,0 +1,33 @@
+﻿@page
+@using VetAmb
+@model VetAmb.Pages.Patients.IndexModel
+
+@{
+    ViewData["Title"] = "Patients";
+}
+
+<h2 class="page-title">🐾 Patient Directory</h2>
+
+<div class="patient-grid">
+    @foreach (var patient in Model.Patients)
+    {
+        <div class="patient-card">
+            <div class="patient-name">@patient.Name</div>
+            <span class="patient-species">@patient.Species</span>
+            <dl>
+                <dt>Breed</dt>
+                <dd>@patient.Breed</dd>
+                <dt>Date of Birth</dt>
+                <dd>@patient.DateOfBirth.ToString("yyyy-MM-dd")</dd>
+                <dt>Weight</dt>
+                <dd>@patient.Weight kg</dd>
+                <dt>Color</dt>
+                <dd>@patient.Color</dd>
+                <dt>Microchip</dt>
+                <dd>@patient.MicrochipId</dd>
+                <dt>Owner</dt>
+                <dd>@patient.Owner?.FirstName @patient.Owner?.LastName</dd>
+            </dl>
+        </div>
+    }
+</div>

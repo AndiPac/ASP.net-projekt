@@ -1,0 +1,100 @@
+@model Vet
+@{
+    ViewData["Title"] = $"Dr. {Model.FirstName} {Model.LastName}";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">/</span>
+    <a href="/Vet">Veterinarians</a>
+    <span class="separator">/</span>
+    <span class="current">Dr. @Model.FirstName @Model.LastName</span>
+</nav>
+
+<a href="/Vet" class="btn-back">← Back to Veterinarians</a>
+
+<div class="details-grid">
+    <div class="glass-card details-hero">
+        <div class="hero-avatar" style="width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));margin-bottom:1.25rem;">🩺</div>
+        <div class="hero-name">Dr. @Model.FirstName @Model.LastName</div>
+        <div class="hero-breed">@System.Text.RegularExpressions.Regex.Replace(Model.Specialization.ToString(), "(?<=.)([A-Z])", " $1")</div>
+        <span class="species-badge blue" style="margin-bottom:1.5rem;">@System.Text.RegularExpressions.Regex.Replace(Model.Specialization.ToString(), "(?<=.)([A-Z])", " $1")</span>
+
+        <div class="info-grid" style="width:100%;">
+            <div class="info-item">
+                <div class="info-label">License</div>
+                <div class="info-value">@Model.LicenseNumber</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Experience</div>
+                <div class="info-value">@Model.YearsOfExperience years</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Hourly Rate</div>
+                <div class="info-value">@Model.HourlyRate€</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Phone</div>
+                <div class="info-value">@Model.Phone</div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="glass-card" style="margin-bottom:1.5rem;">
+            <h3 class="section-title">🏥 Clinic</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Name</div>
+                    <div class="info-value">@Model.Clinic?.Name</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Address</div>
+                    <div class="info-value">@Model.Clinic?.Address</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Phone</div>
+                    <div class="info-value">@Model.Clinic?.Phone</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">@Model.Clinic?.Email</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h3 class="section-title">📅 Appointments</h3>
+            @if (Model.Appointments.Any())
+            {
+                @foreach (var appt in Model.Appointments.OrderByDescending(a => a.AppointmentDateTime))
+                {
+                    var statusClass = appt.Status switch
+                    {
+                        AppointmentStatus.Completed => "completed",
+                        AppointmentStatus.Scheduled => "scheduled",
+                        AppointmentStatus.InProgress => "inprogress",
+                        AppointmentStatus.Cancelled => "cancelled",
+                        AppointmentStatus.NoShow => "noshow",
+                        AppointmentStatus.Rescheduled => "rescheduled",
+                        _ => ""
+                    };
+                    <div class="timeline-item">
+                        <div class="timeline-date">
+                            <span class="day">@appt.AppointmentDateTime.Day</span>
+                            <span class="month">@appt.AppointmentDateTime.ToString("MMM")</span>
+                        </div>
+                        <div class="timeline-body" style="flex:1;">
+                            <div class="tl-reason">@appt.Patient?.Name — @appt.Reason</div>
+                            <span class="status-badge @statusClass">@appt.Status</span>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">No appointments recorded yet.</div>
+            }
+        </div>
+    </div>
+</div>

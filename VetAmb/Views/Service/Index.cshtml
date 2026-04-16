@@ -1,0 +1,51 @@
+@model List<Service>
+@{
+    ViewData["Title"] = "Services";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">/</span>
+    <span class="current">Services</span>
+</nav>
+
+<div class="page-header">
+    <h1>Services</h1>
+    <p class="subtitle">All available veterinary services</p>
+</div>
+
+<div class="card-grid">
+    @foreach (var service in Model)
+    {
+        <a href="/Service/Details/@service.Id" class="glass-card-link">
+            <div class="glass-card patient-card">
+                <div class="card-top">
+                    <div class="avatar green" style="background:linear-gradient(135deg,rgba(0,230,118,0.35),rgba(0,230,118,0.1));">💊</div>
+                    <div>
+                        <div class="card-name">@service.Name</div>
+                        <div class="card-breed">@service.Description</div>
+                    </div>
+                    <span class="species-badge green" style="margin-left:auto;">
+                        @service.Price€
+                    </span>
+                </div>
+
+                <div class="card-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Price</span>
+                        <span class="detail-value">@service.Price€</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Duration</span>
+                        <span class="detail-value">@service.EstimatedDurationMinutes min</span>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <span class="owner-tag">@service.AppointmentServices.Count appointment(s)</span>
+                    <span class="view-link">DETAILS →</span>
+                </div>
+            </div>
+        </a>
+    }
+</div>

@@ -1,0 +1,140 @@
+@page "{id:int}"
+@model VetAmb.Pages.Patients.DetailsModel
+@{
+    ViewData["Title"] = Model.Patient!.Name;
+
+    var speciesEmoji = Model.Patient.Species switch
+    {
+        AnimalSpecies.Dog => "🐕",
+        AnimalSpecies.Cat => "🐈",
+        AnimalSpecies.Bird => "🐦",
+        AnimalSpecies.Rabbit => "🐇",
+        AnimalSpecies.Hamster => "🐹",
+        AnimalSpecies.Guinea_Pig => "🐹",
+        AnimalSpecies.Ferret => "🦦",
+        AnimalSpecies.Reptile => "🦎",
+        _ => "🐾"
+    };
+    var avatarClass = Model.Patient.Species switch
+    {
+        AnimalSpecies.Dog => "dog",
+        AnimalSpecies.Cat => "cat",
+        AnimalSpecies.Bird => "bird",
+        AnimalSpecies.Rabbit => "rabbit",
+        AnimalSpecies.Hamster => "hamster",
+        _ => "default"
+    };
+}
+
+<!-- Breadcrumbs -->
+<nav class="breadcrumbs">
+    <a asp-page="/Index">Dashboard</a>
+    <span class="separator">/</span>
+    <a asp-page="/Patients/Index">Patients</a>
+    <span class="separator">/</span>
+    <span class="current">@Model.Patient.Name</span>
+</nav>
+
+<a asp-page="/Patients/Index" class="btn-back">← Back to Patients</a>
+
+<!-- Details — Asymmetrical CSS Grid -->
+<div class="details-grid">
+    <!-- Left Column: Hero Card -->
+    <div class="glass-card details-hero">
+        <div class="hero-avatar avatar @avatarClass">@speciesEmoji</div>
+        <div class="hero-name">@Model.Patient.Name</div>
+        <div class="hero-breed">@Model.Patient.Breed</div>
+        <span class="species-badge @avatarClass" style="margin-bottom:1.5rem;">
+            @Model.Patient.Species
+        </span>
+
+        <div class="info-grid" style="width:100%;">
+            <div class="info-item">
+                <div class="info-label">Weight</div>
+                <div class="info-value">@Model.Patient.Weight kg</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Color</div>
+                <div class="info-value">@Model.Patient.Color</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Date of Birth</div>
+                <div class="info-value">@Model.Patient.DateOfBirth.ToString("MMMM dd, yyyy")</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Microchip</div>
+                <div class="info-value">@Model.Patient.MicrochipId</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Owner + Appointments -->
+    <div>
+        <!-- Owner Info -->
+        <div class="glass-card" style="margin-bottom:1.5rem;">
+            <h3 class="section-title">👤 Owner Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Name</div>
+                    <div class="info-value">@Model.Patient.Owner?.FirstName @Model.Patient.Owner?.LastName</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Phone</div>
+                    <div class="info-value">@Model.Patient.Owner?.Phone</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">@Model.Patient.Owner?.Email</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Address</div>
+                    <div class="info-value">@Model.Patient.Owner?.Address</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Timeline -->
+        <div class="glass-card">
+            <h3 class="section-title">📅 Appointment History</h3>
+            @if (Model.Patient.Appointments.Any())
+            {
+                @foreach (var appt in Model.Patient.Appointments.OrderByDescending(a => a.AppointmentDateTime))
+                {
+                    var statusClass = appt.Status switch
+                    {
+                        AppointmentStatus.Completed => "completed",
+                        AppointmentStatus.Scheduled => "scheduled",
+                        AppointmentStatus.InProgress => "inprogress",
+                        AppointmentStatus.Cancelled => "cancelled",
+                        AppointmentStatus.NoShow => "noshow",
+                        _ => ""
+                    };
+                    <div class="timeline-item">
+                        <div class="timeline-date">
+                            <span class="day">@appt.AppointmentDateTime.Day</span>
+                            <span class="month">@appt.AppointmentDateTime.ToString("MMM")</span>
+                        </div>
+                        <div class="timeline-body" style="flex:1;">
+                            <div class="tl-reason">@appt.Reason</div>
+                            <div class="tl-vet">Dr. @appt.Vet?.FirstName @appt.Vet?.LastName</div>
+                            <div style="margin-top:0.35rem;">
+                                <span class="status-badge @statusClass">@appt.Status</span>
+                                @if (appt.AppointmentServices.Any())
+                                {
+                                    var total = appt.AppointmentServices.Sum(s => s.Service?.Price ?? 0);
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); margin-left:0.5rem;">
+                                        @total€
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">No appointments recorded yet.</div>
+            }
+        </div>
+    </div>
+</div>

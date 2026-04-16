@@ -1,0 +1,119 @@
+@model Patient
+@{
+    ViewData["Title"] = Model.Name;
+    var speciesEmoji = Model.Species switch
+    {
+        AnimalSpecies.Dog => "🐕",
+        AnimalSpecies.Cat => "🐈",
+        AnimalSpecies.Bird => "🐦",
+        AnimalSpecies.Rabbit => "🐇",
+        AnimalSpecies.Hamster => "🐹",
+        _ => "🐾"
+    };
+    var avatarClass = Model.Species switch
+    {
+        AnimalSpecies.Dog => "dog",
+        AnimalSpecies.Cat => "cat",
+        AnimalSpecies.Bird => "bird",
+        AnimalSpecies.Rabbit => "rabbit",
+        AnimalSpecies.Hamster => "hamster",
+        _ => "default"
+    };
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">/</span>
+    <a href="/Patient">Patients</a>
+    <span class="separator">/</span>
+    <span class="current">@Model.Name</span>
+</nav>
+
+<a href="/Patient" class="btn-back">← Back to Patients</a>
+
+<div class="details-grid">
+    <div class="glass-card details-hero">
+        <div class="hero-avatar avatar @avatarClass">@speciesEmoji</div>
+        <div class="hero-name">@Model.Name</div>
+        <div class="hero-breed">@Model.Breed</div>
+        <span class="species-badge @avatarClass" style="margin-bottom:1.5rem;">@Model.Species</span>
+
+        <div class="info-grid" style="width:100%;">
+            <div class="info-item">
+                <div class="info-label">Weight</div>
+                <div class="info-value">@Model.Weight kg</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Color</div>
+                <div class="info-value">@Model.Color</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Date of Birth</div>
+                <div class="info-value">@Model.DateOfBirth.ToString("MMMM dd, yyyy")</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Microchip</div>
+                <div class="info-value">@Model.MicrochipId</div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="glass-card" style="margin-bottom:1.5rem;">
+            <h3 class="section-title">👤 Owner Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Name</div>
+                    <div class="info-value">@Model.Owner?.FirstName @Model.Owner?.LastName</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Phone</div>
+                    <div class="info-value">@Model.Owner?.Phone</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">@Model.Owner?.Email</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Address</div>
+                    <div class="info-value">@Model.Owner?.Address</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h3 class="section-title">📅 Appointment History</h3>
+            @if (Model.Appointments.Any())
+            {
+                @foreach (var appt in Model.Appointments.OrderByDescending(a => a.AppointmentDateTime))
+                {
+                    var statusClass = appt.Status switch
+                    {
+                        AppointmentStatus.Completed => "completed",
+                        AppointmentStatus.Scheduled => "scheduled",
+                        AppointmentStatus.InProgress => "inprogress",
+                        AppointmentStatus.Cancelled => "cancelled",
+                        AppointmentStatus.NoShow => "noshow",
+                        AppointmentStatus.Rescheduled => "rescheduled",
+                        _ => ""
+                    };
+                    <div class="timeline-item">
+                        <div class="timeline-date">
+                            <span class="day">@appt.AppointmentDateTime.Day</span>
+                            <span class="month">@appt.AppointmentDateTime.ToString("MMM")</span>
+                        </div>
+                        <div class="timeline-body" style="flex:1;">
+                            <div class="tl-reason">@appt.Reason</div>
+                            <div class="tl-vet">Dr. @appt.Vet?.FirstName @appt.Vet?.LastName</div>
+                            <span class="status-badge @statusClass" style="margin-top:0.25rem;">@appt.Status</span>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">No appointments recorded yet.</div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,615 @@
+/* ============================================================
+   VetAmb — Modern Glassmorphism Design System
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ---------- CSS Custom Properties ---------- */
+:root {
+    --bg-primary: #0f0c29;
+    --bg-secondary: #302b63;
+    --bg-accent: #24243e;
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    --glass-blur: blur(16px);
+    --text-primary: #f0f0f0;
+    --text-secondary: rgba(255, 255, 255, 0.65);
+    --text-muted: rgba(255, 255, 255, 0.4);
+    --accent-blue: #6c63ff;
+    --accent-cyan: #00d2ff;
+    --accent-pink: #ff6b9d;
+    --accent-green: #00e676;
+    --accent-orange: #ff9800;
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+    --radius-xl: 24px;
+    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    --sidebar-width: 260px;
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-accent) 100%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- App Shell — CSS Grid Layout ---------- */
+.app-shell {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-rows: 1fr;
+    min-height: 100vh;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: rgba(15, 12, 41, 0.85);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-right: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.25rem;
+    z-index: 100;
+    overflow-y: auto;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--glass-border);
+    text-decoration: none;
+}
+
+.sidebar-brand .brand-icon {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.sidebar-brand .brand-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.sidebar-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.sidebar-nav a:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    transform: translateX(4px);
+}
+
+.sidebar-nav a.active {
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.25), rgba(0, 210, 255, 0.1));
+    color: var(--text-primary);
+    border: 1px solid rgba(108, 99, 255, 0.3);
+}
+
+.sidebar-nav a.active::before {
+    content: '';
+    position: absolute;
+    left: -1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: var(--accent-blue);
+    border-radius: 0 4px 4px 0;
+}
+
+.sidebar-nav .nav-icon {
+    font-size: 1.15rem;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-section-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    padding: 1.25rem 1rem 0.5rem;
+}
+
+/* ---------- Main Content ---------- */
+.main-content {
+    grid-column: 2;
+    padding: 2.5rem 3rem;
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+/* ---------- Breadcrumbs ---------- */
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.breadcrumbs a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.breadcrumbs a:hover {
+    color: var(--accent-cyan);
+}
+
+.breadcrumbs .separator {
+    opacity: 0.4;
+}
+
+.breadcrumbs .current {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* ---------- Page Header ---------- */
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.page-header .subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* ---------- Glass Card / Tile ---------- */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    padding: 1.5rem;
+    transition: all var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.glass-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* ---------- Card Grid (CSS Grid — Asymmetrical) ---------- */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.card-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+/* ---------- Stat Tiles ---------- */
+.stat-tile {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.stat-tile .stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.stat-tile .stat-icon.blue { background: linear-gradient(135deg, rgba(108,99,255,0.3), rgba(108,99,255,0.1)); }
+.stat-tile .stat-icon.cyan { background: linear-gradient(135deg, rgba(0,210,255,0.3), rgba(0,210,255,0.1)); }
+.stat-tile .stat-icon.pink { background: linear-gradient(135deg, rgba(255,107,157,0.3), rgba(255,107,157,0.1)); }
+.stat-tile .stat-icon.green { background: linear-gradient(135deg, rgba(0,230,118,0.3), rgba(0,230,118,0.1)); }
+.stat-tile .stat-icon.orange { background: linear-gradient(135deg, rgba(255,152,0,0.3), rgba(255,152,0,0.1)); }
+
+.stat-tile .stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.stat-tile .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* ---------- Patient Card ---------- */
+.patient-card .card-top {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.patient-card .avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.patient-card .avatar.dog  { background: linear-gradient(135deg, rgba(108,99,255,0.35), rgba(108,99,255,0.1)); }
+.patient-card .avatar.cat  { background: linear-gradient(135deg, rgba(255,107,157,0.35), rgba(255,107,157,0.1)); }
+.patient-card .avatar.bird { background: linear-gradient(135deg, rgba(0,230,118,0.35), rgba(0,230,118,0.1)); }
+.patient-card .avatar.rabbit { background: linear-gradient(135deg, rgba(0,210,255,0.35), rgba(0,210,255,0.1)); }
+.patient-card .avatar.hamster { background: linear-gradient(135deg, rgba(255,152,0,0.35), rgba(255,152,0,0.1)); }
+.patient-card .avatar.default { background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05)); }
+
+.patient-card .card-name {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.patient-card .card-breed {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.patient-card .card-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem 1rem;
+}
+
+.patient-card .detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.patient-card .detail-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.patient-card .detail-value {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.patient-card .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--glass-border);
+}
+
+.patient-card .owner-tag {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.patient-card .view-link {
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+}
+
+.glass-card:hover .view-link {
+    letter-spacing: 1.5px;
+}
+
+/* ---------- Species Badge ---------- */
+.species-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.species-badge.dog    { background: rgba(108,99,255,0.2); color: #a5a0ff; }
+.species-badge.cat    { background: rgba(255,107,157,0.2); color: #ff9cc0; }
+.species-badge.bird   { background: rgba(0,230,118,0.2); color: #66ffab; }
+.species-badge.rabbit { background: rgba(0,210,255,0.2); color: #66e0ff; }
+.species-badge.hamster { background: rgba(255,152,0,0.2); color: #ffbb55; }
+.species-badge.default { background: rgba(255,255,255,0.1); color: var(--text-secondary); }
+
+/* ---------- Details Page ---------- */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.details-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2.5rem 2rem;
+}
+
+.details-hero .hero-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    margin-bottom: 1.25rem;
+}
+
+.details-hero .hero-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.details-hero .hero-breed {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.info-item {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.info-item .info-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.info-item .info-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+/* ---------- Appointment Timeline Card ---------- */
+.timeline-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 0.75rem;
+    transition: all var(--transition-fast);
+}
+
+.timeline-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.timeline-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 50px;
+    padding: 0.5rem;
+    background: rgba(108, 99, 255, 0.15);
+    border-radius: var(--radius-sm);
+}
+
+.timeline-date .day {
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.timeline-date .month {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+}
+
+.timeline-body .tl-reason {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+}
+
+.timeline-body .tl-vet {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-flex;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.completed  { background: rgba(0,230,118,0.2); color: #66ffab; }
+.status-badge.scheduled  { background: rgba(0,210,255,0.2); color: #66e0ff; }
+.status-badge.inprogress { background: rgba(255,152,0,0.2); color: #ffbb55; }
+.status-badge.cancelled  { background: rgba(255,107,157,0.2); color: #ff9cc0; }
+.status-badge.noshow     { background: rgba(255,255,255,0.1); color: var(--text-secondary); }
+.status-badge.rescheduled { background: rgba(255,193,7,0.2); color: #ffd54f; }
+
+/* ---------- Back Button ---------- */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    margin-bottom: 1.5rem;
+}
+
+.btn-back:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    transform: translateX(-4px);
+}
+
+/* ---------- Section Title ---------- */
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+/* ---------- Empty State ---------- */
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+    .app-shell {
+        grid-template-columns: 1fr;
+    }
+    .sidebar {
+        display: none;
+    }
+    .main-content {
+        grid-column: 1;
+        padding: 1.5rem;
+    }
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+    .card-grid-3 {
+        grid-template-columns: 1fr;
+    }
+}

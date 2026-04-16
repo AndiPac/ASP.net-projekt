@@ -1,0 +1,64 @@
+@model List<Clinic>
+@{
+    ViewData["Title"] = "Clinics";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">/</span>
+    <span class="current">Clinics</span>
+</nav>
+
+<div class="page-header">
+    <h1>Clinics</h1>
+    <p class="subtitle">All registered veterinary clinics</p>
+</div>
+
+<div class="card-grid">
+    @foreach (var clinic in Model)
+    {
+        <a href="/Clinic/Details/@clinic.Id" class="glass-card-link">
+            <div class="glass-card patient-card">
+                <div class="card-top">
+                    <div class="avatar cyan" style="background:linear-gradient(135deg,rgba(0,188,212,0.35),rgba(0,188,212,0.1));">🏥</div>
+                    <div>
+                        <div class="card-name">@clinic.Name</div>
+                        <div class="card-breed">@clinic.Address</div>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">@clinic.Phone</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">@clinic.Email</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Founded</span>
+                        <span class="detail-value">@clinic.FoundationDate.ToString("MMM yyyy")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Capacity</span>
+                        <span class="detail-value">@clinic.MaxCapacity</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Reg. No.</span>
+                        <span class="detail-value">@clinic.RegistrationNumber</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Vets</span>
+                        <span class="detail-value">@clinic.Vets.Count</span>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <span class="owner-tag">👤 @clinic.Owners.Count owner(s)</span>
+                    <span class="view-link">DETAILS →</span>
+                </div>
+            </div>
+        </a>
+    }
+</div>

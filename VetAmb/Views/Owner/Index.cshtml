@@ -1,0 +1,56 @@
+@model List<Owner>
+@{
+    ViewData["Title"] = "Owners";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">/</span>
+    <span class="current">Owners</span>
+</nav>
+
+<div class="page-header">
+    <h1>Owners</h1>
+    <p class="subtitle">All registered pet owners</p>
+</div>
+
+<div class="card-grid">
+    @foreach (var owner in Model)
+    {
+        <a href="/Owner/Details/@owner.Id" class="glass-card-link">
+            <div class="glass-card patient-card">
+                <div class="card-top">
+                    <div class="avatar dog" style="background:linear-gradient(135deg,rgba(0,230,118,0.35),rgba(0,230,118,0.1));">👤</div>
+                    <div>
+                        <div class="card-name">@owner.FirstName @owner.LastName</div>
+                        <div class="card-breed">@owner.Patients.Count pet(s)</div>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">@owner.Email</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">@owner.Phone</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Address</span>
+                        <span class="detail-value">@owner.Address</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Registered</span>
+                        <span class="detail-value">@owner.RegistrationDate.ToString("MMM dd, yyyy")</span>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <span class="owner-tag">🏥 @owner.Clinic?.Name</span>
+                    <span class="view-link">DETAILS →</span>
+                </div>
+            </div>
+        </a>
+    }
+</div>

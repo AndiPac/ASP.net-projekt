@@ -1,0 +1,68 @@
+@model List<Appointment>
+@{
+    ViewData["Title"] = "Appointments";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">/</span>
+    <span class="current">Appointments</span>
+</nav>
+
+<div class="page-header">
+    <h1>Appointments</h1>
+    <p class="subtitle">All scheduled and completed appointments</p>
+</div>
+
+<div class="card-grid">
+    @foreach (var appt in Model.OrderByDescending(a => a.AppointmentDateTime))
+    {
+        var statusClass = appt.Status switch
+        {
+            AppointmentStatus.Completed => "completed",
+            AppointmentStatus.Scheduled => "scheduled",
+            AppointmentStatus.InProgress => "inprogress",
+            AppointmentStatus.Cancelled => "cancelled",
+            AppointmentStatus.NoShow => "noshow",
+            AppointmentStatus.Rescheduled => "rescheduled",
+            _ => ""
+        };
+
+        <a href="/Appointment/Details/@appt.Id" class="glass-card-link">
+            <div class="glass-card patient-card">
+                <div class="card-top">
+                    <div class="avatar dog" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">📅</div>
+                    <div>
+                        <div class="card-name">@appt.Reason</div>
+                        <div class="card-breed">@appt.AppointmentDateTime.ToString("MMM dd, yyyy – HH:mm")</div>
+                    </div>
+                    <span class="status-badge @statusClass" style="margin-left:auto;">@appt.Status</span>
+                </div>
+
+                <div class="card-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Patient</span>
+                        <span class="detail-value">@appt.Patient?.Name</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Veterinarian</span>
+                        <span class="detail-value">Dr. @appt.Vet?.FirstName @appt.Vet?.LastName</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Services</span>
+                        <span class="detail-value">@appt.AppointmentServices.Count</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Total</span>
+                        <span class="detail-value">@appt.AppointmentServices.Sum(s => s.Service?.Price ?? 0)€</span>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <span class="owner-tag">🏥 @appt.Vet?.Clinic?.Name</span>
+                    <span class="view-link">DETAILS →</span>
+                </div>
+            </div>
+        </a>
+    }
+</div>

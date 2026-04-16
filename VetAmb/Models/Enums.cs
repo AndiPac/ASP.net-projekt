@@ -23,7 +23,8 @@ namespace VetAmb.Models
         InProgress,
         Completed,
         Cancelled,
-        NoShow
+        NoShow,
+        Rescheduled
     }
 
     /// <summary>

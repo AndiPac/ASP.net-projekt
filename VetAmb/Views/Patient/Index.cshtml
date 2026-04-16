@@ -1,0 +1,74 @@
+@model List<Patient>
+@{
+    ViewData["Title"] = "Patients (MVC)";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">/</span>
+    <span class="current">Patients</span>
+</nav>
+
+<div class="page-header">
+    <h1>Patients</h1>
+    <p class="subtitle">Browse all registered patients across clinics</p>
+</div>
+
+<div class="card-grid">
+    @foreach (var patient in Model)
+    {
+        var speciesEmoji = patient.Species switch
+        {
+            AnimalSpecies.Dog => "🐕",
+            AnimalSpecies.Cat => "🐈",
+            AnimalSpecies.Bird => "🐦",
+            AnimalSpecies.Rabbit => "🐇",
+            AnimalSpecies.Hamster => "🐹",
+            _ => "🐾"
+        };
+        var avatarClass = patient.Species switch
+        {
+            AnimalSpecies.Dog => "dog",
+            AnimalSpecies.Cat => "cat",
+            AnimalSpecies.Bird => "bird",
+            AnimalSpecies.Rabbit => "rabbit",
+            AnimalSpecies.Hamster => "hamster",
+            _ => "default"
+        };
+
+        <a href="/Patient/Details/@patient.Id" class="glass-card-link">
+            <div class="glass-card patient-card">
+                <div class="card-top">
+                    <div class="avatar @avatarClass">@speciesEmoji</div>
+                    <div>
+                        <div class="card-name">@patient.Name</div>
+                        <div class="card-breed">@patient.Breed</div>
+                    </div>
+                    <span class="species-badge @avatarClass" style="margin-left:auto;">@patient.Species</span>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Weight</span>
+                        <span class="detail-value">@patient.Weight kg</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Color</span>
+                        <span class="detail-value">@patient.Color</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Born</span>
+                        <span class="detail-value">@patient.DateOfBirth.ToString("MMM dd, yyyy")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Microchip</span>
+                        <span class="detail-value">@patient.MicrochipId</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="owner-tag">👤 @patient.Owner?.FirstName @patient.Owner?.LastName</span>
+                    <span class="view-link">DETAILS →</span>
+                </div>
+            </div>
+        </a>
+    }
+</div>

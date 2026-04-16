@@ -1,0 +1,56 @@
+@model List<MedicalRecord>
+@{
+    ViewData["Title"] = "Medical Records";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">/</span>
+    <span class="current">Medical Records</span>
+</nav>
+
+<div class="page-header">
+    <h1>Medical Records</h1>
+    <p class="subtitle">All patient medical records</p>
+</div>
+
+<div class="card-grid">
+    @foreach (var record in Model.OrderByDescending(r => r.RecordDate))
+    {
+        <a href="/MedicalRecord/Details/@record.Id" class="glass-card-link">
+            <div class="glass-card patient-card">
+                <div class="card-top">
+                    <div class="avatar blue" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">📋</div>
+                    <div>
+                        <div class="card-name">@record.Diagnosis</div>
+                        <div class="card-breed">@record.RecordDate.ToString("MMM dd, yyyy")</div>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Treatment</span>
+                        <span class="detail-value">@record.Treatment</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Patient</span>
+                        <span class="detail-value">@record.Patient?.Name</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Date</span>
+                        <span class="detail-value">@record.RecordDate.ToString("dd/MM/yyyy")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Notes</span>
+                        <span class="detail-value">@(string.IsNullOrWhiteSpace(record.Notes) ? "—" : (record.Notes.Length > 30 ? record.Notes.Substring(0, 30) + "…" : record.Notes))</span>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <span class="owner-tag">🐾 @record.Patient?.Name</span>
+                    <span class="view-link">DETAILS →</span>
+                </div>
+            </div>
+        </a>
+    }
+</div>

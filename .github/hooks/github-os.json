@@ -6,6 +6,12 @@
                 "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'C:\\git\\.github\\hooks\\log-interaction.ps1'"
             }
         ],
+        "PreToolUse": [
+            {
+                "type": "command",
+                "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'C:\\git\\.github\\hooks\\log-interaction.ps1'"
+            }
+        ],
         "AgentResponse": [
             {
                 "type": "command",

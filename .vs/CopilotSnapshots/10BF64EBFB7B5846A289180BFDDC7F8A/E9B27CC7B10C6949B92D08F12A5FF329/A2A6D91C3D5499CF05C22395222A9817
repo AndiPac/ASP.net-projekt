@@ -1,0 +1,15 @@
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using VetAmb.Models;
+
+namespace VetAmb.Pages.Patients
+{
+    public class IndexModel : PageModel
+    {
+        public List<Patient> Patients { get; set; } = new();
+
+        public void OnGet()
+        {
+            Patients = SeedData.AllPatients;
+        }
+    }
+}

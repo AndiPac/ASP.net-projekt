@@ -1,0 +1,84 @@
+@model Appointment
+@{
+    ViewData["Title"] = Model.Reason;
+    var statusClass = Model.Status switch
+    {
+        AppointmentStatus.Completed => "completed",
+        AppointmentStatus.Scheduled => "scheduled",
+        AppointmentStatus.InProgress => "inprogress",
+        AppointmentStatus.Cancelled => "cancelled",
+        AppointmentStatus.NoShow => "noshow",
+        AppointmentStatus.Rescheduled => "rescheduled",
+        _ => ""
+    };
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">/</span>
+    <a href="/Appointment">Appointments</a>
+    <span class="separator">/</span>
+    <span class="current">@Model.Reason</span>
+</nav>
+
+<a href="/Appointment" class="btn-back">← Back to Appointments</a>
+
+<div class="details-grid">
+    <div class="glass-card details-hero">
+        <div class="hero-avatar" style="width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));margin-bottom:1.25rem;">📅</div>
+        <div class="hero-name">@Model.Reason</div>
+        <div class="hero-breed">@Model.AppointmentDateTime.ToString("MMMM dd, yyyy – HH:mm")</div>
+        <span class="status-badge @statusClass" style="margin-bottom:1.5rem;font-size:0.8rem;">@Model.Status</span>
+
+        <div class="info-grid" style="width:100%;">
+            <div class="info-item">
+                <div class="info-label">Patient</div>
+                <div class="info-value">@Model.Patient?.Name</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Veterinarian</div>
+                <div class="info-value">Dr. @Model.Vet?.FirstName @Model.Vet?.LastName</div>
+            </div>
+            <div class="info-item full-width">
+                <div class="info-label">Notes</div>
+                <div class="info-value">@(string.IsNullOrWhiteSpace(Model.Notes) ? "—" : Model.Notes)</div>
+            </div>
+            @if (Model.Status == AppointmentStatus.Rescheduled && !string.IsNullOrWhiteSpace(Model.RescheduleReason))
+            {
+                <div class="info-item full-width">
+                    <div class="info-label">Reschedule Reason</div>
+                    <div class="info-value">@Model.RescheduleReason</div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div>
+        <div class="glass-card">
+            <h3 class="section-title">💊 Services Performed</h3>
+            @if (Model.AppointmentServices.Any())
+            {
+                @foreach (var asvc in Model.AppointmentServices)
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-date" style="background:rgba(0,230,118,0.15);">
+                            <span class="day" style="font-size:0.9rem;">@asvc.Service?.Price€</span>
+                            <span class="month">@asvc.Service?.EstimatedDurationMinutes min</span>
+                        </div>
+                        <div class="timeline-body" style="flex:1;">
+                            <div class="tl-reason">@asvc.Service?.Name</div>
+                            <div class="tl-vet">@asvc.Service?.Description</div>
+                        </div>
+                    </div>
+                }
+                <div style="margin-top:1rem;text-align:right;font-weight:600;color:var(--accent-green);">
+                    Total: @Model.AppointmentServices.Sum(s => s.Service?.Price ?? 0)€
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">No services recorded.</div>
+            }
+        </div>
+    </div>
+</div>

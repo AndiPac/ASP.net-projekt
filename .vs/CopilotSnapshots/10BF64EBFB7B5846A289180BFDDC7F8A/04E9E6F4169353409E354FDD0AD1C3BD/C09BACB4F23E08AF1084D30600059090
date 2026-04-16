@@ -1,31 +1,4 @@
-using VetAmb.Repositories;
-
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews();
-
-// Repository DI — Singleton (mock/in-memory data)
-builder.Services.AddSingleton<IClinicRepository, MockClinicRepository>();
-builder.Services.AddSingleton<IVetRepository, MockVetRepository>();
-builder.Services.AddSingleton<IOwnerRepository, MockOwnerRepository>();
-builder.Services.AddSingleton<IPatientRepository, MockPatientRepository>();
-builder.Services.AddSingleton<IAppointmentRepository, MockAppointmentRepository>();
-builder.Services.AddSingleton<IMedicalRecordRepository, MockMedicalRecordRepository>();
-builder.Services.AddSingleton<IServiceRepository, MockServiceRepository>();
-
-var app = builder.Build();
-app.UseStaticFiles();
-app.UseRouting();
-app.MapRazorPages();
-app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
-app.Run();
-
-// ============================================================
-// Original Lab 1 Console Code (preserved below)
-// ============================================================
-
-#if false
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -249,4 +222,3 @@ namespace VetAmb
         }
     }
 }
-#endif

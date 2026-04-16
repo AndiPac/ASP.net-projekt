@@ -1,0 +1,77 @@
+@model MedicalRecord
+@{
+    ViewData["Title"] = Model.Diagnosis;
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">/</span>
+    <a href="/MedicalRecord">Medical Records</a>
+    <span class="separator">/</span>
+    <span class="current">@Model.Diagnosis</span>
+</nav>
+
+<a href="/MedicalRecord" class="btn-back">← Back to Medical Records</a>
+
+<div class="details-grid">
+    <div class="glass-card details-hero">
+        <div class="hero-avatar" style="width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));margin-bottom:1.25rem;">📋</div>
+        <div class="hero-name">@Model.Diagnosis</div>
+        <div class="hero-breed">@Model.RecordDate.ToString("MMMM dd, yyyy")</div>
+
+        <div class="info-grid" style="width:100%;">
+            <div class="info-item">
+                <div class="info-label">Treatment</div>
+                <div class="info-value">@Model.Treatment</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Record Date</div>
+                <div class="info-value">@Model.RecordDate.ToString("dd/MM/yyyy")</div>
+            </div>
+            <div class="info-item full-width">
+                <div class="info-label">Notes</div>
+                <div class="info-value">@(string.IsNullOrWhiteSpace(Model.Notes) ? "—" : Model.Notes)</div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="glass-card">
+            <h3 class="section-title">🐾 Patient</h3>
+            @if (Model.Patient != null)
+            {
+                var speciesEmoji = Model.Patient.Species switch
+                {
+                    AnimalSpecies.Dog => "🐕",
+                    AnimalSpecies.Cat => "🐈",
+                    AnimalSpecies.Bird => "🐦",
+                    AnimalSpecies.Rabbit => "🐇",
+                    AnimalSpecies.Hamster => "🐹",
+                    _ => "🐾"
+                };
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Name</div>
+                        <div class="info-value">@speciesEmoji @Model.Patient.Name</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Breed</div>
+                        <div class="info-value">@Model.Patient.Breed</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Species</div>
+                        <div class="info-value">@Model.Patient.Species</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Weight</div>
+                        <div class="info-value">@Model.Patient.Weight kg</div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">No patient information available.</div>
+            }
+        </div>
+    </div>
+</div>

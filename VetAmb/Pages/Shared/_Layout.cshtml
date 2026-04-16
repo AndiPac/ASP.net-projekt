@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — VetAmb</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="app-shell">
+        <!-- ===== Sidebar ===== -->
+        <aside class="sidebar">
+            <a asp-page="/Index" class="sidebar-brand">
+                <div class="brand-icon">🩺</div>
+                <span class="brand-text">VetAmb</span>
+            </a>
+
+            <ul class="sidebar-nav">
+                <li>
+                    <a asp-page="/Index" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")">
+                        <span class="nav-icon">🏠</span> Dashboard
+                    </a>
+                </li>
+
+                <li class="sidebar-section-label">Entities</li>
+
+                <li>
+                    <a href="/Patient" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Patient" ? "active" : "")">
+                        <span class="nav-icon">🐾</span> Patients
+                    </a>
+                </li>
+                <li>
+                    <a href="/Vet" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Vet" ? "active" : "")">
+                        <span class="nav-icon">🩺</span> Veterinarians
+                    </a>
+                </li>
+                <li>
+                    <a href="/Owner" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Owner" ? "active" : "")">
+                        <span class="nav-icon">👤</span> Owners
+                    </a>
+                </li>
+                <li>
+                    <a href="/Appointment" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Appointment" ? "active" : "")">
+                        <span class="nav-icon">📅</span> Appointments
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="MedicalRecord" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "MedicalRecord" ? "active" : "")">
+                        <span class="nav-icon">📋</span> Medical Records
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Service" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Service" ? "active" : "")">
+                        <span class="nav-icon">💊</span> Services
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Clinic" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Clinic" ? "active" : "")">
+                        <span class="nav-icon">🏥</span> Clinics
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- ===== Main Content ===== -->
+        <main class="main-content">
+            @RenderBody()
+        </main>
+    </div>
+</body>
+</html>

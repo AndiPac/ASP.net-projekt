@@ -1,52 +1,26 @@
-using VetAmb.Repositories;
-
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews();
-
-// Repository DI — Singleton (mock/in-memory data)
-builder.Services.AddSingleton<IClinicRepository, MockClinicRepository>();
-builder.Services.AddSingleton<IVetRepository, MockVetRepository>();
-builder.Services.AddSingleton<IOwnerRepository, MockOwnerRepository>();
-builder.Services.AddSingleton<IPatientRepository, MockPatientRepository>();
-builder.Services.AddSingleton<IAppointmentRepository, MockAppointmentRepository>();
-builder.Services.AddSingleton<IMedicalRecordRepository, MockMedicalRecordRepository>();
-builder.Services.AddSingleton<IServiceRepository, MockServiceRepository>();
-
-var app = builder.Build();
-app.UseStaticFiles();
-app.UseRouting();
-app.MapRazorPages();
-app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
-app.Run();
-
-// ============================================================
-// Original Lab 1 Console Code (preserved below)
-// ============================================================
-
-#if false
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using VetAmb.Models;
 
-namespace VetAmb
+namespace VetAmb.Models
 {
-    class Program
+    public static class SeedData
     {
-        static async Task Main(string[] args)
+        public static List<Clinic> Clinics { get; }
+        public static List<Patient> Patients { get; }
+        public static List<Vet> Vets { get; }
+        public static List<Owner> Owners { get; }
+        public static List<Appointment> Appointments { get; }
+        public static List<Service> Services { get; }
+        public static List<MedicalRecord> MedicalRecords { get; }
+
+        static SeedData()
         {
             // --- Clinic 1 ---
             var clinic1 = new Clinic
             {
-                Id = 1,
-                Name = "Paws & Claws Vet",
-                Address = "123 Main St",
-                Phone = "555-1000",
-                Email = "info@pawsclaws.com",
-                FoundationDate = new DateTime(2010, 3, 15),
-                MaxCapacity = 50,
+                Id = 1, Name = "Paws & Claws Vet", Address = "123 Main St",
+                Phone = "555-1000", Email = "info@pawsclaws.com",
+                FoundationDate = new DateTime(2010, 3, 15), MaxCapacity = 50,
                 RegistrationNumber = "CLN-001"
             };
 
@@ -71,13 +45,9 @@ namespace VetAmb
             // --- Clinic 2 ---
             var clinic2 = new Clinic
             {
-                Id = 2,
-                Name = "Happy Tails Clinic",
-                Address = "456 Park Rd",
-                Phone = "555-3000",
-                Email = "contact@happytails.com",
-                FoundationDate = new DateTime(2015, 7, 1),
-                MaxCapacity = 30,
+                Id = 2, Name = "Happy Tails Clinic", Address = "456 Park Rd",
+                Phone = "555-3000", Email = "contact@happytails.com",
+                FoundationDate = new DateTime(2015, 7, 1), MaxCapacity = 30,
                 RegistrationNumber = "CLN-002"
             };
 
@@ -102,13 +72,9 @@ namespace VetAmb
             // --- Clinic 3 ---
             var clinic3 = new Clinic
             {
-                Id = 3,
-                Name = "VetCare Plus",
-                Address = "789 River Blvd",
-                Phone = "555-5000",
-                Email = "hello@vetcareplus.com",
-                FoundationDate = new DateTime(2018, 11, 22),
-                MaxCapacity = 40,
+                Id = 3, Name = "VetCare Plus", Address = "789 River Blvd",
+                Phone = "555-5000", Email = "hello@vetcareplus.com",
+                FoundationDate = new DateTime(2018, 11, 22), MaxCapacity = 40,
                 RegistrationNumber = "CLN-003"
             };
 
@@ -130,31 +96,6 @@ namespace VetAmb
             clinic3.Owners.Add(owner5);
             clinic3.Owners.Add(owner6);
 
-            // Store all clinics in a List<Clinic>
-            List<Clinic> clinics = new List<Clinic> { clinic1, clinic2, clinic3 };
-
-            // Print summary
-            foreach (var clinic in clinics)
-            {
-                Console.WriteLine($"=== {clinic.Name} ({clinic.Address}) ===");
-                Console.WriteLine($"  Vets ({clinic.Vets.Count}):");
-                foreach (var vet in clinic.Vets)
-                {
-                    Console.WriteLine($"    - Dr. {vet.FirstName} {vet.LastName} [{vet.Specialization}]");
-                }
-
-                Console.WriteLine($"  Owners ({clinic.Owners.Count}):");
-                foreach (var owner in clinic.Owners)
-                {
-                    Console.WriteLine($"    - {owner.FirstName} {owner.LastName}");
-                    foreach (var patient in owner.Patients)
-                    {
-                        Console.WriteLine($"        Pet: {patient.Name} ({patient.Species}, {patient.Breed})");
-                    }
-                }
-                Console.WriteLine();
-            }
-
             // --- Services ---
             var svcCheckup = new Service { Id = 1, Name = "General Checkup", Description = "Routine health examination", Price = 30m, EstimatedDurationMinutes = 30 };
             var svcVaccination = new Service { Id = 2, Name = "Vaccination", Description = "Standard vaccination", Price = 25m, EstimatedDurationMinutes = 15 };
@@ -162,91 +103,73 @@ namespace VetAmb
             var svcDental = new Service { Id = 4, Name = "Dental Cleaning", Description = "Professional teeth cleaning", Price = 80m, EstimatedDurationMinutes = 45 };
             var svcXray = new Service { Id = 5, Name = "X-Ray", Description = "Diagnostic imaging", Price = 60m, EstimatedDurationMinutes = 20 };
 
-            // --- Appointments (mix of dates, statuses, and total prices) ---
-            // Today is used as reference for "last 7 days"
+            // --- Appointments ---
             DateTime today = DateTime.Now.Date;
 
-            // Appt 1: Completed 2 days ago, Checkup + Vaccination = 55€ (> 50, within 7 days) --> MATCH
             var appt1 = new Appointment { Id = 1, AppointmentDateTime = today.AddDays(-2).AddHours(9), Reason = "Annual checkup", Status = AppointmentStatus.Completed, Notes = "All good", PatientId = 1, Patient = patient1, VetId = 1, Vet = vet1 };
             var as1a = new AppointmentService { Id = 1, AppointmentId = 1, Appointment = appt1, ServiceId = 1, Service = svcCheckup };
             var as1b = new AppointmentService { Id = 2, AppointmentId = 1, Appointment = appt1, ServiceId = 2, Service = svcVaccination };
             appt1.AppointmentServices.Add(as1a);
             appt1.AppointmentServices.Add(as1b);
+            svcCheckup.AppointmentServices.Add(as1a);
+            svcVaccination.AppointmentServices.Add(as1b);
 
-            // Appt 2: Completed 5 days ago, Surgery = 150€ (> 50, within 7 days) --> MATCH
             var appt2 = new Appointment { Id = 2, AppointmentDateTime = today.AddDays(-5).AddHours(14), Reason = "Lump removal", Status = AppointmentStatus.Completed, Notes = "Successful", PatientId = 3, Patient = patient3, VetId = 2, Vet = vet2 };
             var as2a = new AppointmentService { Id = 3, AppointmentId = 2, Appointment = appt2, ServiceId = 3, Service = svcSurgery };
             appt2.AppointmentServices.Add(as2a);
+            svcSurgery.AppointmentServices.Add(as2a);
 
-            // Appt 3: Completed 1 day ago, Checkup only = 30€ (< 50, within 7 days) --> NO (price too low)
             var appt3 = new Appointment { Id = 3, AppointmentDateTime = today.AddDays(-1).AddHours(10), Reason = "Routine visit", Status = AppointmentStatus.Completed, Notes = "Healthy", PatientId = 4, Patient = patient4, VetId = 3, Vet = vet3 };
             var as3a = new AppointmentService { Id = 4, AppointmentId = 3, Appointment = appt3, ServiceId = 1, Service = svcCheckup };
             appt3.AppointmentServices.Add(as3a);
+            svcCheckup.AppointmentServices.Add(as3a);
 
-            // Appt 4: Completed 20 days ago, Dental + X-Ray = 140€ (> 50, but outside 7 days) --> NO (too old)
             var appt4 = new Appointment { Id = 4, AppointmentDateTime = today.AddDays(-20).AddHours(11), Reason = "Dental issues", Status = AppointmentStatus.Completed, Notes = "Treated", PatientId = 7, Patient = patient7, VetId = 6, Vet = vet6 };
             var as4a = new AppointmentService { Id = 5, AppointmentId = 4, Appointment = appt4, ServiceId = 4, Service = svcDental };
             var as4b = new AppointmentService { Id = 6, AppointmentId = 4, Appointment = appt4, ServiceId = 5, Service = svcXray };
             appt4.AppointmentServices.Add(as4a);
             appt4.AppointmentServices.Add(as4b);
+            svcDental.AppointmentServices.Add(as4a);
+            svcXray.AppointmentServices.Add(as4b);
 
-            // Appt 5: Scheduled (not completed) 3 days ago, X-Ray = 60€ --> NO (not completed)
-            var appt5 = new Appointment { Id = 5, AppointmentDateTime = today.AddDays(-3).AddHours(15), Reason = "Leg pain", Status = AppointmentStatus.Scheduled, Notes = "", PatientId = 9, Patient = patient9, VetId = 5, Vet = vet5 };
+            var appt5 = new Appointment { Id = 5, AppointmentDateTime = today.AddDays(-3).AddHours(15), Reason = "Leg pain", Status = AppointmentStatus.Rescheduled, RescheduleReason = "Owner unavailable due to travel", Notes = "Rescheduled to " + today.AddDays(4).AddHours(15).ToString("MMMM dd, yyyy – HH:mm"), PatientId = 9, Patient = patient9, VetId = 5, Vet = vet5 };
             var as5a = new AppointmentService { Id = 7, AppointmentId = 5, Appointment = appt5, ServiceId = 5, Service = svcXray };
             appt5.AppointmentServices.Add(as5a);
+            svcXray.AppointmentServices.Add(as5a);
 
-            // Appt 6: Completed 6 days ago, Dental = 80€ (> 50, within 7 days) --> MATCH
             var appt6 = new Appointment { Id = 6, AppointmentDateTime = today.AddDays(-6).AddHours(13), Reason = "Teeth cleaning", Status = AppointmentStatus.Completed, Notes = "Done", PatientId = 2, Patient = patient2, VetId = 1, Vet = vet1 };
             var as6a = new AppointmentService { Id = 8, AppointmentId = 6, Appointment = appt6, ServiceId = 4, Service = svcDental };
             appt6.AppointmentServices.Add(as6a);
+            svcDental.AppointmentServices.Add(as6a);
 
-            List<Appointment> allAppointments = new List<Appointment> { appt1, appt2, appt3, appt4, appt5, appt6 };
+            patient1.Appointments.Add(appt1);
+            patient3.Appointments.Add(appt2);
+            patient4.Appointments.Add(appt3);
+            patient7.Appointments.Add(appt4);
+            patient9.Appointments.Add(appt5);
+            patient2.Appointments.Add(appt6);
 
-            // LINQ: Completed in last 7 days with total price > 50€, sorted by date descending
-            var recentExpensiveCompleted = allAppointments
-                .Where(a => a.Status == AppointmentStatus.Completed)
-                .Where(a => a.AppointmentDateTime >= today.AddDays(-7))
-                .Where(a => a.AppointmentServices.Sum(s => s.Service!.Price) > 50m)
-                .OrderByDescending(a => a.AppointmentDateTime)
-                .ToList();
+            Clinics = new List<Clinic> { clinic1, clinic2, clinic3 };
+            Patients = new List<Patient> { patient1, patient2, patient3, patient4, patient5, patient6, patient7, patient8, patient9 };
+            Vets = new List<Vet> { vet1, vet2, vet3, vet4, vet5, vet6 };
+            Owners = new List<Owner> { owner1, owner2, owner3, owner4, owner5, owner6 };
+            Appointments = new List<Appointment> { appt1, appt2, appt3, appt4, appt5, appt6 };
+            Services = new List<Service> { svcCheckup, svcVaccination, svcSurgery, svcDental, svcXray };
 
-            Console.WriteLine("=== Completed appointments (last 7 days, total > 50€) ===");
-            foreach (var appt in recentExpensiveCompleted)
-            {
-                decimal total = appt.AppointmentServices.Sum(s => s.Service!.Price);
-                Console.WriteLine($"  [{appt.AppointmentDateTime:yyyy-MM-dd HH:mm}] {appt.Patient!.Name} - {appt.Reason} | Total: {total}€ | Status: {appt.Status}");
-            }
+            // --- Medical Records ---
+            var mr1 = new MedicalRecord { Id = 1, Diagnosis = "Healthy – routine exam", Treatment = "None required", RecordDate = today.AddDays(-2), Notes = "Annual visit – all vitals normal", PatientId = 1, Patient = patient1 };
+            var mr2 = new MedicalRecord { Id = 2, Diagnosis = "Lipoma (benign lump)", Treatment = "Surgical removal", RecordDate = today.AddDays(-5), Notes = "Post-op recovery good", PatientId = 3, Patient = patient3 };
+            var mr3 = new MedicalRecord { Id = 3, Diagnosis = "Healthy – routine exam", Treatment = "None required", RecordDate = today.AddDays(-1), Notes = "Weight stable", PatientId = 4, Patient = patient4 };
+            var mr4 = new MedicalRecord { Id = 4, Diagnosis = "Periodontal disease grade 2", Treatment = "Professional dental cleaning", RecordDate = today.AddDays(-20), Notes = "Follow-up in 6 months", PatientId = 7, Patient = patient7 };
+            var mr5 = new MedicalRecord { Id = 5, Diagnosis = "Dental tartar buildup", Treatment = "Teeth cleaning", RecordDate = today.AddDays(-6), Notes = "Resolved", PatientId = 2, Patient = patient2 };
 
-            // LINQ: Group appointments by VetId, calculate count and total revenue, order by revenue descending
-            var revenueByVet = allAppointments
-                .GroupBy(a => a.VetId)
-                .Select(g => new
-                {
-                    VetId = g.Key,
-                    VetName = g.First().Vet!.FirstName + " " + g.First().Vet!.LastName,
-                    TotalAppointments = g.Count(),
-                    TotalRevenue = g.Sum(a => a.AppointmentServices.Sum(s => s.Service!.Price))
-                })
-                .OrderByDescending(v => v.TotalRevenue)
-                .ToList();
+            patient1.MedicalRecords.Add(mr1);
+            patient3.MedicalRecords.Add(mr2);
+            patient4.MedicalRecords.Add(mr3);
+            patient7.MedicalRecords.Add(mr4);
+            patient2.MedicalRecords.Add(mr5);
 
-            Console.WriteLine("\n=== Revenue by Veterinarian (all appointments) ===");
-            foreach (var v in revenueByVet)
-            {
-                Console.WriteLine($"  Dr. {v.VetName} | Appointments: {v.TotalAppointments} | Revenue: {v.TotalRevenue}€");
-            }
-
-            // Test SaveAppointmentAsync
-            Console.WriteLine();
-            await SaveAppointmentAsync(appt1);
-        }
-
-        static async Task SaveAppointmentAsync(Appointment appointment)
-        {
-            Console.WriteLine($"Saving appointment (Id: {appointment.Id}, Patient: {appointment.Patient?.Name}, Reason: {appointment.Reason})...");
-            await Task.Delay(2000);
-            Console.WriteLine($"Appointment (Id: {appointment.Id}) saved successfully.");
+            MedicalRecords = new List<MedicalRecord> { mr1, mr2, mr3, mr4, mr5 };
         }
     }
 }
-#endif

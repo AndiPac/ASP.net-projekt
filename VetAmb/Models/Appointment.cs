@@ -15,6 +15,7 @@ namespace VetAmb.Models
         public string? Reason { get; set; }
         public AppointmentStatus Status { get; set; }
         public string? Notes { get; set; }
+        public string? RescheduleReason { get; set; }
 
         // Foreign key relationships
         public int PatientId { get; set; }

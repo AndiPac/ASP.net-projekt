@@ -1,0 +1,100 @@
+@page
+@model VetAmb.Pages.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="page-header">
+    <h1>Dashboard</h1>
+    <p class="subtitle">Welcome to VetAmb — Veterinary Ambulance Management</p>
+</div>
+
+<!-- Stat Tiles — CSS Grid -->
+<div class="card-grid" style="margin-bottom: 2rem;">
+    <a asp-controller="Patient" asp-action="Index" class="glass-card-link">
+        <div class="glass-card">
+            <div class="stat-tile">
+                <div class="stat-icon blue">🐾</div>
+                <div>
+                    <div class="stat-value">@Model.TotalPatients</div>
+                    <div class="stat-label">Patients</div>
+                </div>
+            </div>
+        </div>
+    </a>
+    <a asp-controller="Vet" asp-action="Index" class="glass-card-link">
+        <div class="glass-card">
+            <div class="stat-tile">
+                <div class="stat-icon cyan">🩺</div>
+                <div>
+                    <div class="stat-value">@Model.TotalVets</div>
+                    <div class="stat-label">Veterinarians</div>
+                </div>
+            </div>
+        </div>
+    </a>
+    <a asp-controller="Clinic" asp-action="Index" class="glass-card-link">
+        <div class="glass-card">
+            <div class="stat-tile">
+                <div class="stat-icon pink">🏥</div>
+                <div>
+                    <div class="stat-value">@Model.TotalClinics</div>
+                    <div class="stat-label">Clinics</div>
+                </div>
+            </div>
+        </div>
+    </a>
+    <a asp-controller="Owner" asp-action="Index" class="glass-card-link">
+        <div class="glass-card">
+            <div class="stat-tile">
+                <div class="stat-icon green">👤</div>
+                <div>
+                    <div class="stat-value">@Model.TotalOwners</div>
+                    <div class="stat-label">Owners</div>
+                </div>
+            </div>
+        </div>
+    </a>
+    <a asp-controller="Appointment" asp-action="Index" class="glass-card-link">
+        <div class="glass-card">
+            <div class="stat-tile">
+                <div class="stat-icon orange">📅</div>
+                <div>
+                    <div class="stat-value">@Model.TotalAppointments</div>
+                    <div class="stat-label">Appointments</div>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+
+<!-- Recent Appointments -->
+<div class="glass-card">
+    <h3 class="section-title">📅 Recent Appointments</h3>
+    @foreach (var appt in Model.RecentAppointments)
+    {
+        var statusClass = appt.Status switch
+        {
+            AppointmentStatus.Completed => "completed",
+            AppointmentStatus.Scheduled => "scheduled",
+            AppointmentStatus.InProgress => "inprogress",
+            AppointmentStatus.Cancelled => "cancelled",
+            AppointmentStatus.NoShow => "noshow",
+            AppointmentStatus.Rescheduled => "rescheduled",
+            _ => ""
+        };
+        <a asp-controller="Appointment" asp-action="Details" asp-route-id="@appt.Id" class="glass-card-link" style="display:block;">
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <span class="day">@appt.AppointmentDateTime.Day</span>
+                    <span class="month">@appt.AppointmentDateTime.ToString("MMM")</span>
+                </div>
+                <div class="timeline-body" style="flex:1;">
+                    <div class="tl-reason">@appt.Patient?.Name — @appt.Reason</div>
+                    <div class="tl-vet">Dr. @appt.Vet?.FirstName @appt.Vet?.LastName</div>
+                    <span class="status-badge @statusClass" style="margin-top:0.25rem;">@appt.Status</span>
+                </div>
+            </div>
+        </a>
+    }
+</div>

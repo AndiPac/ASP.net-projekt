@@ -1,31 +1,4 @@
-using VetAmb.Repositories;
-
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews();
-
-// Repository DI — Singleton (mock/in-memory data)
-builder.Services.AddSingleton<IClinicRepository, MockClinicRepository>();
-builder.Services.AddSingleton<IVetRepository, MockVetRepository>();
-builder.Services.AddSingleton<IOwnerRepository, MockOwnerRepository>();
-builder.Services.AddSingleton<IPatientRepository, MockPatientRepository>();
-builder.Services.AddSingleton<IAppointmentRepository, MockAppointmentRepository>();
-builder.Services.AddSingleton<IMedicalRecordRepository, MockMedicalRecordRepository>();
-builder.Services.AddSingleton<IServiceRepository, MockServiceRepository>();
-
-var app = builder.Build();
-app.UseStaticFiles();
-app.UseRouting();
-app.MapRazorPages();
-app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
-app.Run();
-
-// ============================================================
-// Original Lab 1 Console Code (preserved below)
-// ============================================================
-
-#if false
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,6 +6,11 @@ using VetAmb.Models;
 
 namespace VetAmb
 {
+    public static class SeedData
+    {
+        public static List<Patient> AllPatients { get; set; } = new();
+    }
+
     class Program
     {
         static async Task Main(string[] args)
@@ -239,6 +217,18 @@ namespace VetAmb
             // Test SaveAppointmentAsync
             Console.WriteLine();
             await SaveAppointmentAsync(appt1);
+
+            // Store all patients for the web UI
+            SeedData.AllPatients = new List<Patient> { patient1, patient2, patient3, patient4, patient5, patient6, patient7, patient8, patient9 };
+
+            // Start web application
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddRazorPages();
+            var app = builder.Build();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.MapRazorPages();
+            app.Run();
         }
 
         static async Task SaveAppointmentAsync(Appointment appointment)
@@ -249,4 +239,3 @@ namespace VetAmb
         }
     }
 }
-#endif

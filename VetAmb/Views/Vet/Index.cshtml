@@ -1,0 +1,71 @@
+@model List<Vet>
+@{
+    ViewData["Title"] = "Veterinarians";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Dashboard</a>
+    <span class="separator">/</span>
+    <span class="current">Veterinarians</span>
+</nav>
+
+<div class="page-header">
+    <h1>Veterinarians</h1>
+    <p class="subtitle">All registered veterinarians across clinics</p>
+</div>
+
+<div class="card-grid">
+    @foreach (var vet in Model)
+    {
+        var specColor = vet.Specialization switch
+        {
+            VeterinarySpecialization.GeneralPractice => "blue",
+            VeterinarySpecialization.Surgery => "pink",
+            VeterinarySpecialization.Cardiology => "pink",
+            VeterinarySpecialization.Dentistry => "cyan",
+            VeterinarySpecialization.Dermatology => "orange",
+            VeterinarySpecialization.Orthopedics => "green",
+            VeterinarySpecialization.InternalMedicine => "blue",
+            _ => "blue"
+        };
+
+        <a href="/Vet/Details/@vet.Id" class="glass-card-link">
+            <div class="glass-card patient-card">
+                <div class="card-top">
+                    <div class="avatar @specColor" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">🩺</div>
+                    <div>
+                        <div class="card-name">Dr. @vet.FirstName @vet.LastName</div>
+                        <div class="card-breed">@System.Text.RegularExpressions.Regex.Replace(vet.Specialization.ToString(), "(?<=.)([A-Z])", " $1")</div>
+                    </div>
+                    <span class="species-badge @specColor" style="margin-left:auto;">
+                        @System.Text.RegularExpressions.Regex.Replace(vet.Specialization.ToString(), "(?<=.)([A-Z])", " $1")
+                    </span>
+                </div>
+
+                <div class="card-details">
+                    <div class="detail-item">
+                        <span class="detail-label">License</span>
+                        <span class="detail-value">@vet.LicenseNumber</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Experience</span>
+                        <span class="detail-value">@vet.YearsOfExperience yrs</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Rate</span>
+                        <span class="detail-value">@vet.HourlyRate€/hr</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">@vet.Phone</span>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <span class="owner-tag">🏥 @vet.Clinic?.Name</span>
+                    <span class="view-link">DETAILS →</span>
+                </div>
+            </div>
+        </a>
+    }
+</div>
