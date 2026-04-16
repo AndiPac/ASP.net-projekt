@@ -1,40 +1,16 @@
 {
-  "hooks": {
-    "SessionStart": [
-      {
-        "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$input | & '.\\log-interaction.ps1'\""
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$input | & '.\\log-interaction.ps1'\""
-      }
-    ],
-    "PreToolUse": [
-      {
-        "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$input | & '.\\log-interaction.ps1'\""
-      }
-    ],
-    "PostToolUse": [
-      {
-        "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$input | & '.\\log-interaction.ps1'\""
-      }
-    ],
-    "Stop": [
-      {
-        "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$input | & '.\\log-interaction.ps1'\""
-      }
-    ],
-    "AgentResponse": [
-      {
-        "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$input | & '.\\log-interaction.ps1'\""
-      }
-    ]
-  }
+    "hooks": {
+        "UserPromptSubmit": [
+            {
+                "type": "command",
+                "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'C:\\git\\.github\\hooks\\log-interaction.ps1'"
+            }
+        ],
+        "AgentResponse": [
+            {
+                "type": "command",
+                "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"Add-Content -Path 'C:\\git\\.github\\hooks\\agent_log.txt' -Value 'LOG: UX Sub-Agent spawned using ux-agent-instructions.md'\""
+            }
+        ]
+    }
 }
