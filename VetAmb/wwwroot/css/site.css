@@ -594,6 +594,173 @@ html, body {
     font-size: 0.9rem;
 }
 
+/* ---------- Mascot — Pixel-Art Walking Cat ---------- */
+.mascot-cat {
+    position: absolute;
+    bottom: 16px;
+    left: -60px;
+    width: 48px;
+    height: 32px;
+    z-index: 1;               /* below sidebar links (z-index:100) */
+    pointer-events: none;     /* never blocks clicks */
+    animation: cat-walk 14s linear infinite;
+    opacity: 0.75;
+    image-rendering: pixelated;
+}
+
+/* The cat is a pure-CSS pixel sprite */
+.mascot-cat-sprite {
+    position: relative;
+    width: 48px;
+    height: 32px;
+}
+
+/* Body */
+.mascot-cat-sprite .body {
+    position: absolute;
+    bottom: 6px;
+    left: 10px;
+    width: 24px;
+    height: 14px;
+    background: #c4b5fd;
+    border-radius: 6px 6px 2px 2px;
+    box-shadow: 0 0 8px rgba(196, 181, 253, 0.4);
+}
+
+/* Head */
+.mascot-cat-sprite .head {
+    position: absolute;
+    bottom: 14px;
+    left: 2px;
+    width: 16px;
+    height: 14px;
+    background: #c4b5fd;
+    border-radius: 4px 4px 2px 6px;
+    box-shadow: 0 0 6px rgba(196, 181, 253, 0.3);
+}
+
+/* Ears */
+.mascot-cat-sprite .ear-l,
+.mascot-cat-sprite .ear-r {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 7px solid #a78bfa;
+}
+
+.mascot-cat-sprite .ear-l {
+    bottom: 26px;
+    left: 2px;
+}
+
+.mascot-cat-sprite .ear-r {
+    bottom: 26px;
+    left: 10px;
+}
+
+/* Eyes */
+.mascot-cat-sprite .eye-l,
+.mascot-cat-sprite .eye-r {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #1e1b4b;
+    border-radius: 50%;
+    bottom: 20px;
+}
+
+.mascot-cat-sprite .eye-l { left: 5px; }
+.mascot-cat-sprite .eye-r { left: 12px; }
+
+/* Eye blink */
+.mascot-cat-sprite .eye-l,
+.mascot-cat-sprite .eye-r {
+    animation: cat-blink 4s ease-in-out infinite;
+}
+
+/* Tail */
+.mascot-cat-sprite .tail {
+    position: absolute;
+    bottom: 10px;
+    left: 34px;
+    width: 14px;
+    height: 3px;
+    background: #a78bfa;
+    border-radius: 0 4px 4px 0;
+    transform-origin: left center;
+    animation: cat-tail-wag 0.6s ease-in-out infinite alternate;
+}
+
+/* Front legs — animated walk */
+.mascot-cat-sprite .leg-fl,
+.mascot-cat-sprite .leg-fr,
+.mascot-cat-sprite .leg-bl,
+.mascot-cat-sprite .leg-br {
+    position: absolute;
+    bottom: 0;
+    width: 4px;
+    height: 8px;
+    background: #a78bfa;
+    border-radius: 0 0 2px 2px;
+    transform-origin: top center;
+}
+
+.mascot-cat-sprite .leg-fl {
+    left: 12px;
+    animation: cat-leg-front 0.35s ease-in-out infinite alternate;
+}
+
+.mascot-cat-sprite .leg-fr {
+    left: 17px;
+    animation: cat-leg-front 0.35s ease-in-out infinite alternate-reverse;
+}
+
+.mascot-cat-sprite .leg-bl {
+    left: 26px;
+    animation: cat-leg-back 0.35s ease-in-out infinite alternate;
+}
+
+.mascot-cat-sprite .leg-br {
+    left: 31px;
+    animation: cat-leg-back 0.35s ease-in-out infinite alternate-reverse;
+}
+
+/* --- Keyframes --- */
+@keyframes cat-walk {
+    0%   { left: -60px;  }
+    45%  { left: calc(100% - 60px); transform: scaleX(1); }
+    50%  { left: calc(100% - 60px); transform: scaleX(-1); }
+    95%  { left: -60px; transform: scaleX(-1); }
+    100% { left: -60px; transform: scaleX(1); }
+}
+
+@keyframes cat-tail-wag {
+    0%   { transform: rotate(-15deg); }
+    100% { transform: rotate(15deg); }
+}
+
+@keyframes cat-leg-front {
+    0%   { transform: rotate(18deg); }
+    100% { transform: rotate(-18deg); }
+}
+
+@keyframes cat-leg-back {
+    0%   { transform: rotate(-14deg); }
+    100% { transform: rotate(14deg); }
+}
+
+@keyframes cat-blink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    95%           { transform: scaleY(0.1); }
+}
+
+/* Hide mascot on small screens when sidebar is hidden */
+@media (max-width: 1024px) {
+    .mascot-cat { display: none; }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
     .app-shell {
