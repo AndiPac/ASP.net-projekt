@@ -10,53 +10,53 @@
     <div class="app-shell">
         <!-- ===== Sidebar ===== -->
         <aside class="sidebar">
-            <a asp-page="/Index" class="sidebar-brand">
+            <a href="/" class="sidebar-brand">
                 <div class="brand-icon">🩺</div>
                 <span class="brand-text">VetAmb</span>
             </a>
 
             <ul class="sidebar-nav">
                 <li>
-                    <a asp-page="/Index" class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")">
+                    <a href="/" class="@(Context.Request.Path == "/" ? "active" : "")">
                         <span class="nav-icon">🏠</span> Dashboard
                     </a>
                 </li>
 
-                <li class="sidebar-section-label">Entities</li>
+                <li class="sidebar-section-label">Management</li>
 
                 <li>
-                    <a href="/Patient" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Patient" ? "active" : "")">
-                        <span class="nav-icon">🐾</span> Patients
-                    </a>
-                </li>
-                <li>
-                    <a href="/Vet" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Vet" ? "active" : "")">
-                        <span class="nav-icon">🩺</span> Veterinarians
-                    </a>
-                </li>
-                <li>
-                    <a href="/Owner" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Owner" ? "active" : "")">
-                        <span class="nav-icon">👤</span> Owners
-                    </a>
-                </li>
-                <li>
-                    <a href="/Appointment" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Appointment" ? "active" : "")">
+                    <a href="/appointments" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Appointment" ? "active" : "")">
                         <span class="nav-icon">📅</span> Appointments
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="MedicalRecord" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "MedicalRecord" ? "active" : "")">
+                    <a href="/clinics" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Clinic" ? "active" : "")">
+                        <span class="nav-icon">🏥</span> Clinics
+                    </a>
+                </li>
+                <li>
+                    <a href="/medical-records" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "MedicalRecord" ? "active" : "")">
                         <span class="nav-icon">📋</span> Medical Records
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Service" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Service" ? "active" : "")">
+                    <a href="/owners" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Owner" ? "active" : "")">
+                        <span class="nav-icon">👤</span> Owners
+                    </a>
+                </li>
+                <li>
+                    <a href="/patients" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Patient" ? "active" : "")">
+                        <span class="nav-icon">🐾</span> Patients
+                    </a>
+                </li>
+                <li>
+                    <a href="/services" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Service" ? "active" : "")">
                         <span class="nav-icon">💊</span> Services
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Clinic" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Clinic" ? "active" : "")">
-                        <span class="nav-icon">🏥</span> Clinics
+                    <a href="/vets" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Vet" ? "active" : "")">
+                        <span class="nav-icon">🩺</span> Vets
                     </a>
                 </li>
             </ul>

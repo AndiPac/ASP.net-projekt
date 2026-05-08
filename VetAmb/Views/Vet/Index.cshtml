@@ -1,16 +1,16 @@
 @model List<Vet>
 @{
-    ViewData["Title"] = "Veterinarians";
+    ViewData["Title"] = "Vets";
 }
 
 <nav class="breadcrumbs">
     <a href="/">Dashboard</a>
     <span class="separator">/</span>
-    <span class="current">Veterinarians</span>
+    <span class="current">Vets</span>
 </nav>
 
 <div class="page-header">
-    <h1>Veterinarians</h1>
+    <h1>Vets</h1>
     <p class="subtitle">All registered veterinarians across clinics</p>
 </div>
 
@@ -29,7 +29,7 @@
             _ => "blue"
         };
 
-        <a href="/Vet/Details/@vet.Id" class="glass-card-link">
+        <a href="/vets/@vet.Id" class="glass-card-link">
             <div class="glass-card patient-card">
                 <div class="card-top">
                     <div class="avatar @specColor" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">🩺</div>

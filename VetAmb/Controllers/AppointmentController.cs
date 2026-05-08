@@ -12,12 +12,14 @@ namespace VetAmb.Controllers
             _appointmentRepository = appointmentRepository;
         }
 
+        [Route("appointments")]
         public IActionResult Index()
         {
             var appointments = _appointmentRepository.GetAll();
             return View(appointments);
         }
 
+        [Route("appointments/{id}")]
         public IActionResult Details(int id)
         {
             var appointment = _appointmentRepository.GetById(id);

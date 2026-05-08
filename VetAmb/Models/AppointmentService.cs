@@ -1,4 +1,6 @@
 #nullable enable
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VetAmb.Models
 {
@@ -7,13 +9,16 @@ namespace VetAmb.Models
     /// </summary>
     public class AppointmentService
     {
+        [Key]
         public int Id { get; set; }
 
         // Foreign keys
+        [ForeignKey(nameof(Appointment))]
         public int AppointmentId { get; set; }
-        public Appointment? Appointment { get; set; }
+        public virtual Appointment? Appointment { get; set; }
 
+        [ForeignKey(nameof(Service))]
         public int ServiceId { get; set; }
-        public Service? Service { get; set; }
+        public virtual Service? Service { get; set; }
     }
 }

@@ -12,12 +12,14 @@ namespace VetAmb.Controllers
             _ownerRepository = ownerRepository;
         }
 
+        [Route("owners")]
         public IActionResult Index()
         {
             var owners = _ownerRepository.GetAll();
             return View(owners);
         }
 
+        [Route("owners/{id}")]
         public IActionResult Details(int id)
         {
             var owner = _ownerRepository.GetById(id);

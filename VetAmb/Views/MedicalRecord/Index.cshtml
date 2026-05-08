@@ -17,7 +17,7 @@
 <div class="card-grid">
     @foreach (var record in Model.OrderByDescending(r => r.RecordDate))
     {
-        <a href="/MedicalRecord/Details/@record.Id" class="glass-card-link">
+        <a href="/medical-records/@record.Id" class="glass-card-link">
             <div class="glass-card patient-card">
                 <div class="card-top">
                     <div class="avatar blue" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">📋</div>

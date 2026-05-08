@@ -1,5 +1,7 @@
 #nullable enable
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VetAmb.Models
 {
@@ -8,6 +10,7 @@ namespace VetAmb.Models
     /// </summary>
     public class MedicalRecord
     {
+        [Key]
         public int Id { get; set; }
         public string? Diagnosis { get; set; }
         public string? Treatment { get; set; }
@@ -15,7 +18,8 @@ namespace VetAmb.Models
         public string? Notes { get; set; }
 
         // Foreign key relationship (1-N with Patient)
+        [ForeignKey(nameof(Patient))]
         public int PatientId { get; set; }
-        public Patient? Patient { get; set; }
+        public virtual Patient? Patient { get; set; }
     }
 }

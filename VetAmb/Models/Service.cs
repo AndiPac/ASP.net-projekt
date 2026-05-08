@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable enable
 
@@ -9,6 +11,7 @@ namespace VetAmb.Models
     /// </summary>
     public class Service
     {
+        [Key]
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
@@ -16,7 +19,7 @@ namespace VetAmb.Models
         public int EstimatedDurationMinutes { get; set; }
 
         // N-N Relationship with Appointment through AppointmentService junction table
-        public ICollection<AppointmentService> AppointmentServices { get; set; } = new List<AppointmentService>();
+        public virtual ICollection<AppointmentService> AppointmentServices { get; set; } = new List<AppointmentService>();
     }
 }
 

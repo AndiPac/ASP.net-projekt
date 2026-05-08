@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable enable
 
@@ -10,6 +12,7 @@ namespace VetAmb.Models
     /// </summary>
     public class Vet
     {
+        [Key]
         public int Id { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
@@ -20,10 +23,11 @@ namespace VetAmb.Models
         public decimal HourlyRate { get; set; }
 
         // Foreign key relationship (1-N with Clinic)
+        [ForeignKey(nameof(Clinic))]
         public int ClinicId { get; set; }
-        public Clinic? Clinic { get; set; }
+        public virtual Clinic? Clinic { get; set; }
 
         // Relationships
-        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+        public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 }

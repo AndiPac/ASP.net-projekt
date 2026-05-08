@@ -1,6 +1,6 @@
 @model List<Patient>
 @{
-    ViewData["Title"] = "Patients (MVC)";
+    ViewData["Title"] = "Patients";
 }
 
 <nav class="breadcrumbs">
@@ -36,7 +36,7 @@
             _ => "default"
         };
 
-        <a href="/Patient/Details/@patient.Id" class="glass-card-link">
+        <a href="/patients/@patient.Id" class="glass-card-link">
             <div class="glass-card patient-card">
                 <div class="card-top">
                     <div class="avatar @avatarClass">@speciesEmoji</div>

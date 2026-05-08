@@ -1,17 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using VetAmb.Data;
 using VetAmb.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
-// Repository DI — Singleton (mock/in-memory data)
-builder.Services.AddSingleton<IClinicRepository, MockClinicRepository>();
-builder.Services.AddSingleton<IVetRepository, MockVetRepository>();
-builder.Services.AddSingleton<IOwnerRepository, MockOwnerRepository>();
-builder.Services.AddSingleton<IPatientRepository, MockPatientRepository>();
-builder.Services.AddSingleton<IAppointmentRepository, MockAppointmentRepository>();
-builder.Services.AddSingleton<IMedicalRecordRepository, MockMedicalRecordRepository>();
-builder.Services.AddSingleton<IServiceRepository, MockServiceRepository>();
+builder.Services.AddDbContext<VetAmbDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Repository DI — EF Core scoped repositories
+builder.Services.AddScoped<IClinicRepository, EfClinicRepository>();
+builder.Services.AddScoped<IVetRepository, EfVetRepository>();
+builder.Services.AddScoped<IOwnerRepository, EfOwnerRepository>();
+builder.Services.AddScoped<IPatientRepository, EfPatientRepository>();
+builder.Services.AddScoped<IAppointmentRepository, EfAppointmentRepository>();
+builder.Services.AddScoped<IMedicalRecordRepository, EfMedicalRecordRepository>();
+builder.Services.AddScoped<IServiceRepository, EfServiceRepository>();
 
 var app = builder.Build();
 app.UseStaticFiles();

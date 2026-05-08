@@ -12,12 +12,14 @@ namespace VetAmb.Controllers
             _serviceRepository = serviceRepository;
         }
 
+        [Route("services")]
         public IActionResult Index()
         {
             var services = _serviceRepository.GetAll();
             return View(services);
         }
 
+        [Route("services/{id}")]
         public IActionResult Details(int id)
         {
             var service = _serviceRepository.GetById(id);

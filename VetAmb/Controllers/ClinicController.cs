@@ -12,12 +12,14 @@ namespace VetAmb.Controllers
             _clinicRepository = clinicRepository;
         }
 
+        [Route("clinics")]
         public IActionResult Index()
         {
             var clinics = _clinicRepository.GetAll();
             return View(clinics);
         }
 
+        [Route("clinics/{id}")]
         public IActionResult Details(int id)
         {
             var clinic = _clinicRepository.GetById(id);
