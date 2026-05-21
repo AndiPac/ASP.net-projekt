@@ -14,5 +14,20 @@ namespace VetAmb.Repositories
         public List<Vet> GetAll() => _vets;
 
         public Vet? GetById(int id) => _vets.FirstOrDefault(v => v.Id == id);
+
+        public void Add(Vet vet)
+        {
+            vet.Id = _vets.Count > 0 ? _vets.Max(v => v.Id) + 1 : 1;
+            _vets.Add(vet);
+        }
+
+        // In-memory: entity is already the same reference, nothing to persist.
+        public void Update(Vet vet) { }
+
+        public void SoftDelete(int id)
+        {
+            var vet = _vets.FirstOrDefault(v => v.Id == id);
+            if (vet != null) vet.DeletedAt = DateTime.UtcNow;
+        }
     }
 }

@@ -18,6 +18,9 @@ namespace VetAmb.Models
         public decimal Price { get; set; }
         public int EstimatedDurationMinutes { get; set; }
 
+        // Soft delete — never physically remove service records.
+        public DateTime? DeletedAt { get; set; }
+
         // N-N Relationship with Appointment through AppointmentService junction table
         public virtual ICollection<AppointmentService> AppointmentServices { get; set; } = new List<AppointmentService>();
     }

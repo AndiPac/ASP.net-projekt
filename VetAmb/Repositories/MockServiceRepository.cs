@@ -14,5 +14,20 @@ namespace VetAmb.Repositories
         public List<Service> GetAll() => _services;
 
         public Service? GetById(int id) => _services.FirstOrDefault(s => s.Id == id);
+
+        public void Add(Service service)
+        {
+            service.Id = _services.Count > 0 ? _services.Max(s => s.Id) + 1 : 1;
+            _services.Add(service);
+        }
+
+        // In-memory: entity is already the same reference, nothing to persist.
+        public void Update(Service service) { }
+
+        public void SoftDelete(int id)
+        {
+            var service = _services.FirstOrDefault(s => s.Id == id);
+            if (service != null) service.DeletedAt = DateTime.UtcNow;
+        }
     }
 }

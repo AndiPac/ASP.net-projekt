@@ -4,36 +4,45 @@
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna plo&#269;a</a>
     <span class="separator">/</span>
-    <a href="/Service">Services</a>
+    <a href="/services">Usluge</a>
     <span class="separator">/</span>
     <span class="current">@Model.Name</span>
 </nav>
 
-<a href="/Service" class="btn-back">← Back to Services</a>
+<a href="/services" class="btn-back">&#8592; Natrag na Usluge</a>
+
+<div class="card-actions" style="margin-bottom:1.5rem;">
+    <a href="/services/@Model.Id/edit" class="btn-edit">&#9999; Uredi</a>
+    <form action="/services/@Model.Id/delete" method="post"
+          onsubmit="return confirm('Jeste li sigurni da želite ukloniti uslugu @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.Name ?? ""))?');">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn-danger">&#128465; Obriši</button>
+    </form>
+</div>
 
 <div class="details-grid">
     <div class="glass-card details-hero">
-        <div class="hero-avatar" style="width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(0,230,118,0.35),rgba(0,230,118,0.1));margin-bottom:1.25rem;">💊</div>
+        <div class="hero-avatar" style="width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(0,230,118,0.35),rgba(0,230,118,0.1));margin-bottom:1.25rem;">&#128138;</div>
         <div class="hero-name">@Model.Name</div>
         <div class="hero-breed">@Model.Description</div>
 
         <div class="info-grid" style="width:100%;">
             <div class="info-item">
-                <div class="info-label">Price</div>
-                <div class="info-value">@Model.Price€</div>
+                <div class="info-label">Cijena</div>
+                <div class="info-value">@Model.Price &#8364;</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Duration</div>
-                <div class="info-value">@Model.EstimatedDurationMinutes minutes</div>
+                <div class="info-label">Trajanje</div>
+                <div class="info-value">@Model.EstimatedDurationMinutes minuta</div>
             </div>
         </div>
     </div>
 
     <div>
         <div class="glass-card">
-            <h3 class="section-title">📅 Appointments Using This Service</h3>
+            <h3 class="section-title">&#128197; Termini koji koriste ovu uslugu</h3>
             @if (Model.AppointmentServices.Any())
             {
                 @foreach (var asvc in Model.AppointmentServices)
@@ -43,32 +52,35 @@
                     {
                         var statusClass = appt.Status switch
                         {
-                            AppointmentStatus.Completed => "completed",
-                            AppointmentStatus.Scheduled => "scheduled",
-                            AppointmentStatus.InProgress => "inprogress",
-                            AppointmentStatus.Cancelled => "cancelled",
-                            AppointmentStatus.NoShow => "noshow",
+                            AppointmentStatus.Completed   => "completed",
+                            AppointmentStatus.Scheduled   => "scheduled",
+                            AppointmentStatus.InProgress  => "inprogress",
+                            AppointmentStatus.Cancelled   => "cancelled",
+                            AppointmentStatus.NoShow      => "noshow",
                             AppointmentStatus.Rescheduled => "rescheduled",
                             _ => ""
                         };
-                        <div class="timeline-item">
-                            <div class="timeline-date">
-                                <span class="day">@appt.AppointmentDateTime.Day</span>
-                                <span class="month">@appt.AppointmentDateTime.ToString("MMM")</span>
+                        <a href="/appointments/@appt.Id" class="timeline-link">
+                            <div class="timeline-item">
+                                <div class="timeline-date">
+                                    <span class="day">@appt.AppointmentDateTime.Day</span>
+                                    <span class="month">@appt.AppointmentDateTime.ToString("MMM")</span>
+                                </div>
+                                <div class="timeline-body" style="flex:1;">
+                                    <div class="tl-reason">@appt.Patient?.Name &#8212; @appt.Reason</div>
+                                    <div class="tl-vet">Dr. @appt.Vet?.FirstName @appt.Vet?.LastName</div>
+                                    <span class="status-badge @statusClass">@appt.Status.GetDisplayName()</span>
+                                </div>
                             </div>
-                            <div class="timeline-body" style="flex:1;">
-                                <div class="tl-reason">@appt.Patient?.Name — @appt.Reason</div>
-                                <div class="tl-vet">Dr. @appt.Vet?.FirstName @appt.Vet?.LastName</div>
-                                <span class="status-badge @statusClass">@appt.Status</span>
-                            </div>
-                        </div>
+                        </a>
                     }
                 }
             }
             else
             {
-                <div class="empty-state">No appointments use this service yet.</div>
+                <div class="empty-state">Nema termina koji koriste ovu uslugu.</div>
             }
         </div>
     </div>
 </div>
+

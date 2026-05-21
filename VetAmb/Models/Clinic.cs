@@ -22,6 +22,9 @@ namespace VetAmb.Models
         public int MaxCapacity { get; set; }
         public string? RegistrationNumber { get; set; }
 
+        // Soft delete — never call Remove(); set this timestamp instead.
+        public DateTime? DeletedAt { get; set; }
+
         // Relationships
         public virtual ICollection<Vet> Vets { get; set; } = new List<Vet>();
         public virtual ICollection<Owner> Owners { get; set; } = new List<Owner>();

@@ -28,5 +28,29 @@ namespace VetAmb.Repositories
                 .Include(o => o.Patients)
                 .FirstOrDefault(o => o.Id == id);
         }
+
+        public void Add(Owner owner)
+        {
+            _context.Owners.Add(owner);
+            _context.SaveChanges();
+        }
+
+        public void Update(Owner owner)
+        {
+            // Entity must already be tracked (loaded via GetById before mutation).
+            _context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Marks an owner as deleted by setting DeletedAt. Never calls Remove().
+        /// The global EF query filter (o => o.DeletedAt == null) hides it from all queries.
+        /// </summary>
+        public void SoftDelete(int id)
+        {
+            var owner = _context.Owners.Find(id);
+            if (owner == null) return;
+            owner.DeletedAt = DateTime.UtcNow;
+            _context.SaveChanges();
+        }
     }
 }

@@ -1,6 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 using VetAmb.Data;
 using VetAmb.Repositories;
+using VetAmb.Middleware;
+
+var hrCulture = new CultureInfo("hr-HR");
+CultureInfo.DefaultThreadCurrentCulture = hrCulture;
+CultureInfo.DefaultThreadCurrentUICulture = hrCulture;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
@@ -19,7 +26,33 @@ builder.Services.AddScoped<IMedicalRecordRepository, EfMedicalRecordRepository>(
 builder.Services.AddScoped<IServiceRepository, EfServiceRepository>();
 
 var app = builder.Build();
+
+// Build localization options directly — bypasses any DI/configure ordering issues.
+// Supported cultures include both region-specific and neutral variants so that
+// Accept-Language values like "hr" (without region) are matched correctly.
+var supportedCultures = new[]
+{
+    new CultureInfo("hr-HR"),
+    new CultureInfo("hr"),
+    new CultureInfo("en-US"),
+    new CultureInfo("en")
+};
+
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("hr-HR"),
+    SupportedCultures     = supportedCultures,
+    SupportedUICultures   = supportedCultures
+};
+
+// Clear all default providers (QueryString, Cookie, OS-regional fallback) and
+// register ONLY the Accept-Language header provider so the browser is the sole authority.
+localizationOptions.RequestCultureProviders.Clear();
+localizationOptions.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
+
 app.UseStaticFiles();
+app.UseRequestLocalization(localizationOptions);
+app.UseMiddleware<CroatianMonthsMiddleware>();
 app.UseRouting();
 app.MapRazorPages();
 app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");

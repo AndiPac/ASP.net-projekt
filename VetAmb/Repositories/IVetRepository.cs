@@ -6,5 +6,8 @@ namespace VetAmb.Repositories
     {
         List<Vet> GetAll();
         Vet? GetById(int id);
+        void Add(Vet vet);
+        void Update(Vet vet);
+        void SoftDelete(int id);
     }
 }

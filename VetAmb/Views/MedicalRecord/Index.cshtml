@@ -1,56 +1,65 @@
 @model List<MedicalRecord>
 @{
-    ViewData["Title"] = "Medical Records";
+    ViewData["Title"] = "Medicinski Zapisi";
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna plo&#269;a</a>
     <span class="separator">/</span>
-    <span class="current">Medical Records</span>
+    <span class="current">Medicinski Zapisi</span>
 </nav>
 
 <div class="page-header">
-    <h1>Medical Records</h1>
-    <p class="subtitle">All patient medical records</p>
+    <h1>Medicinski Zapisi</h1>
+    <p class="subtitle">Svi medicinski zapisi pacijenata</p>
+</div>
+
+<div class="page-actions">
+    <a href="/medical-records/create" class="btn-primary">&#43; Novi Zapis</a>
 </div>
 
 <div class="card-grid">
     @foreach (var record in Model.OrderByDescending(r => r.RecordDate))
     {
-        <a href="/medical-records/@record.Id" class="glass-card-link">
-            <div class="glass-card patient-card">
+        <div class="glass-card patient-card" style="position:relative;">
+            <a href="/medical-records/@record.Id" class="glass-card-link-inner">
                 <div class="card-top">
-                    <div class="avatar blue" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">📋</div>
+                    <div class="avatar blue" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">&#128203;</div>
                     <div>
                         <div class="card-name">@record.Diagnosis</div>
-                        <div class="card-breed">@record.RecordDate.ToString("MMM dd, yyyy")</div>
+                        <div class="card-breed">@record.RecordDate.ToString("d")</div>
                     </div>
                 </div>
 
                 <div class="card-details">
                     <div class="detail-item">
-                        <span class="detail-label">Treatment</span>
+                        <span class="detail-label">Terapija</span>
                         <span class="detail-value">@record.Treatment</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Patient</span>
+                        <span class="detail-label">Pacijent</span>
                         <span class="detail-value">@record.Patient?.Name</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Date</span>
-                        <span class="detail-value">@record.RecordDate.ToString("dd/MM/yyyy")</span>
+                        <span class="detail-label">Datum</span>
+                        <span class="detail-value">@record.RecordDate.ToString("d")</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Notes</span>
-                        <span class="detail-value">@(string.IsNullOrWhiteSpace(record.Notes) ? "—" : (record.Notes.Length > 30 ? record.Notes.Substring(0, 30) + "…" : record.Notes))</span>
+                        <span class="detail-label">Napomene</span>
+                        <span class="detail-value">@(string.IsNullOrWhiteSpace(record.Notes) ? "—" : (record.Notes.Length > 30 ? record.Notes.Substring(0, 30) + "..." : record.Notes))</span>
                     </div>
                 </div>
 
-                <div class="card-footer">
-                    <span class="owner-tag">🐾 @record.Patient?.Name</span>
-                    <span class="view-link">DETAILS →</span>
-                </div>
+            </a>
+
+            <div class="card-actions">
+                <a href="/medical-records/@record.Id/edit" class="btn-edit">&#9999; Uredi</a>
+                <form action="/medical-records/@record.Id/delete" method="post"
+                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti zapis @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(record.Diagnosis ?? ""))?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-danger">&#128465; Obriši</button>
+                </form>
             </div>
-        </a>
+        </div>
     }
 </div>

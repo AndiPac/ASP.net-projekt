@@ -1,0 +1,69 @@
+@model VetAmb.ViewModels.ServiceFormModel
+@{
+    ViewData["Title"] = "Nova Usluga";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Nadzorna plo&#269;a</a>
+    <span class="separator">/</span>
+    <a href="/services">Usluge</a>
+    <span class="separator">/</span>
+    <span class="current">Nova Usluga</span>
+</nav>
+
+<div class="page-actions">
+    <div class="page-header" style="margin-bottom:0;">
+        <h1>Nova Usluga</h1>
+        <p class="subtitle">Unesite podatke nove veterinarske usluge</p>
+    </div>
+    <a href="/services" class="btn-back">&#8592; Natrag</a>
+</div>
+
+<form asp-action="Create" asp-controller="Service" method="post" class="form-glass">
+    @Html.AntiForgeryToken()
+
+        <!-- Row 1: Name + Price -->
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" asp-for="Name">Naziv usluge</label>
+                <input asp-for="Name" class="form-input"
+                       placeholder="Npr. Godišnje cijepljenje" />
+                <span asp-validation-for="Name" class="form-validation"></span>
+            </div>
+            <div class="form-group">
+                <label class="form-label" asp-for="Price">Cijena (€)</label>
+                <input asp-for="Price" type="number" step="0.01"
+                       class="form-input" placeholder="Npr. 45.00" />
+                <span asp-validation-for="Price" class="form-validation"></span>
+            </div>
+        </div>
+
+        <!-- Row 2: EstimatedDurationMinutes (half-width) -->
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" asp-for="EstimatedDurationMinutes">Trajanje (minute)</label>
+                <input asp-for="EstimatedDurationMinutes" type="number"
+                       class="form-input" placeholder="Npr. 30" />
+                <span asp-validation-for="EstimatedDurationMinutes" class="form-validation"></span>
+            </div>
+            <div class="form-group"><!-- spacer --></div>
+        </div>
+
+        <!-- Description (full width) -->
+        <div class="form-group">
+            <label class="form-label" asp-for="Description">Opis</label>
+            <textarea asp-for="Description" class="form-textarea" rows="4"
+                      placeholder="Unesite opis usluge..."></textarea>
+            <span asp-validation-for="Description" class="form-validation"></span>
+        </div>
+
+    <div class="form-footer">
+        <a href="/services" class="btn-secondary">Odustani</a>
+        <button type="submit" class="btn-primary">&#128190; Spremi Uslugu</button>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

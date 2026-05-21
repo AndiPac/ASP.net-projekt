@@ -26,5 +26,29 @@ namespace VetAmb.Repositories
                 .Include(r => r.Patient)
                 .FirstOrDefault(r => r.Id == id);
         }
+
+        public void Add(MedicalRecord record)
+        {
+            _context.MedicalRecords.Add(record);
+            _context.SaveChanges();
+        }
+
+        public void Update(MedicalRecord record)
+        {
+            // Entity must already be tracked (loaded via GetById before mutation).
+            _context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Marks a record as deleted by setting DeletedAt. Never calls Remove().
+        /// The global EF query filter (m => m.DeletedAt == null) hides it from all queries.
+        /// </summary>
+        public void SoftDelete(int id)
+        {
+            var record = _context.MedicalRecords.Find(id);
+            if (record == null) return;
+            record.DeletedAt = DateTime.UtcNow;
+            _context.SaveChanges();
+        }
     }
 }

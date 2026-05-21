@@ -33,6 +33,9 @@ namespace VetAmb.Migrations
                     b.Property<DateTime>("AppointmentDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
@@ -64,9 +67,9 @@ namespace VetAmb.Migrations
                         {
                             Id = 1,
                             AppointmentDateTime = new DateTime(2026, 5, 6, 9, 0, 0, 0, DateTimeKind.Unspecified),
-                            Notes = "All good",
+                            Notes = "Sve u redu, vitalni znakovi uredni",
                             PatientId = 1,
-                            Reason = "Annual checkup",
+                            Reason = "Godišnji pregled",
                             Status = 2,
                             VetId = 1
                         },
@@ -74,9 +77,9 @@ namespace VetAmb.Migrations
                         {
                             Id = 2,
                             AppointmentDateTime = new DateTime(2026, 5, 3, 14, 0, 0, 0, DateTimeKind.Unspecified),
-                            Notes = "Successful",
+                            Notes = "Zahvat uspješan, oporavak teče uredno",
                             PatientId = 3,
-                            Reason = "Lump removal",
+                            Reason = "Uklanjanje lipoma",
                             Status = 2,
                             VetId = 2
                         },
@@ -84,9 +87,9 @@ namespace VetAmb.Migrations
                         {
                             Id = 3,
                             AppointmentDateTime = new DateTime(2026, 5, 7, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            Notes = "Healthy",
+                            Notes = "Zdrava, bez promjena",
                             PatientId = 4,
-                            Reason = "Routine visit",
+                            Reason = "Rutinski pregled",
                             Status = 2,
                             VetId = 3
                         },
@@ -94,9 +97,9 @@ namespace VetAmb.Migrations
                         {
                             Id = 4,
                             AppointmentDateTime = new DateTime(2026, 4, 18, 11, 0, 0, 0, DateTimeKind.Unspecified),
-                            Notes = "Treated",
+                            Notes = "Zubni kamenac uklonjen, preporučuje se kontrola za 6 mj.",
                             PatientId = 7,
-                            Reason = "Dental issues",
+                            Reason = "Problemi sa zubima",
                             Status = 2,
                             VetId = 6
                         },
@@ -104,10 +107,10 @@ namespace VetAmb.Migrations
                         {
                             Id = 5,
                             AppointmentDateTime = new DateTime(2026, 5, 5, 15, 0, 0, 0, DateTimeKind.Unspecified),
-                            Notes = "Rescheduled to May 12, 2026 - 15:00",
+                            Notes = "Odgođeno na 12. svibnja 2026. – 15:00",
                             PatientId = 9,
-                            Reason = "Leg pain",
-                            RescheduleReason = "Owner unavailable due to travel",
+                            Reason = "Bol u nozi",
+                            RescheduleReason = "Vlasnik nedostupan zbog puta",
                             Status = 5,
                             VetId = 5
                         },
@@ -115,9 +118,9 @@ namespace VetAmb.Migrations
                         {
                             Id = 6,
                             AppointmentDateTime = new DateTime(2026, 5, 2, 13, 0, 0, 0, DateTimeKind.Unspecified),
-                            Notes = "Done",
+                            Notes = "Zahvat obavljen bez komplikacija",
                             PatientId = 2,
-                            Reason = "Teeth cleaning",
+                            Reason = "Čišćenje zubi",
                             Status = 2,
                             VetId = 1
                         });
@@ -208,6 +211,9 @@ namespace VetAmb.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -234,34 +240,34 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 1,
-                            Address = "123 Main St",
-                            Email = "info@pawsclaws.com",
+                            Address = "Ilica 42, Zagreb",
+                            Email = "info@vetklinika.hr",
                             FoundationDate = new DateTime(2010, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MaxCapacity = 50,
                             Name = "Paws & Claws Vet",
-                            Phone = "555-1000",
+                            Phone = "01 234 5678",
                             RegistrationNumber = "CLN-001"
                         },
                         new
                         {
                             Id = 2,
-                            Address = "456 Park Rd",
-                            Email = "contact@happytails.com",
+                            Address = "Varšavska 15, Zagreb",
+                            Email = "kontakt@vetambulanta.hr",
                             FoundationDate = new DateTime(2015, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MaxCapacity = 30,
                             Name = "Happy Tails Clinic",
-                            Phone = "555-3000",
+                            Phone = "01 345 6789",
                             RegistrationNumber = "CLN-002"
                         },
                         new
                         {
                             Id = 3,
-                            Address = "789 River Blvd",
-                            Email = "hello@vetcareplus.com",
+                            Address = "Marmontova 3, Split",
+                            Email = "info@vetcentar-split.hr",
                             FoundationDate = new DateTime(2018, 11, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MaxCapacity = 40,
                             Name = "VetCare Plus",
-                            Phone = "555-5000",
+                            Phone = "021 456 7890",
                             RegistrationNumber = "CLN-003"
                         });
                 });
@@ -273,6 +279,9 @@ namespace VetAmb.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Diagnosis")
                         .HasColumnType("nvarchar(max)");
@@ -299,47 +308,47 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 1,
-                            Diagnosis = "Healthy - routine exam",
-                            Notes = "Annual visit - all vitals normal",
+                            Diagnosis = "Zdrav pacijent – rutinski pregled",
+                            Notes = "Godišnji pregled – svi vitalni znakovi uredni",
                             PatientId = 1,
                             RecordDate = new DateTime(2026, 5, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Treatment = "None required"
+                            Treatment = "Nije potrebno liječenje"
                         },
                         new
                         {
                             Id = 2,
-                            Diagnosis = "Lipoma (benign lump)",
-                            Notes = "Post-op recovery good",
+                            Diagnosis = "Lipom (benigna tvorba)",
+                            Notes = "Postoperativni oporavak teče uredno",
                             PatientId = 3,
                             RecordDate = new DateTime(2026, 5, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Treatment = "Surgical removal"
+                            Treatment = "Kirurško uklanjanje"
                         },
                         new
                         {
                             Id = 3,
-                            Diagnosis = "Healthy - routine exam",
-                            Notes = "Weight stable",
+                            Diagnosis = "Zdrav pacijent – rutinski pregled",
+                            Notes = "Tjelesna masa stabilna",
                             PatientId = 4,
                             RecordDate = new DateTime(2026, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Treatment = "None required"
+                            Treatment = "Nije potrebno liječenje"
                         },
                         new
                         {
                             Id = 4,
-                            Diagnosis = "Periodontal disease grade 2",
-                            Notes = "Follow-up in 6 months",
+                            Diagnosis = "Parodontna bolest stupanj 2",
+                            Notes = "Kontrola za 6 mjeseci",
                             PatientId = 7,
                             RecordDate = new DateTime(2026, 4, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Treatment = "Professional dental cleaning"
+                            Treatment = "Profesionalno čišćenje zubi"
                         },
                         new
                         {
                             Id = 5,
-                            Diagnosis = "Dental tartar buildup",
-                            Notes = "Resolved",
+                            Diagnosis = "Nakupljanje zubnog kamenca",
+                            Notes = "Problem riješen",
                             PatientId = 2,
                             RecordDate = new DateTime(2026, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Treatment = "Teeth cleaning"
+                            Treatment = "Čišćenje zubi"
                         });
                 });
 
@@ -356,6 +365,9 @@ namespace VetAmb.Migrations
 
                     b.Property<int>("ClinicId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -385,73 +397,73 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 1,
-                            Address = "10 Oak Ave",
+                            Address = "Ilica 10, Zagreb",
                             ClinicId = 1,
-                            Email = "ivan@mail.com",
+                            Email = "ivan.horvat@gmail.com",
                             FirstName = "Ivan",
                             IdNumber = "OWN-001",
                             LastName = "Horvat",
-                            Phone = "555-2001",
+                            Phone = "091 234 5678",
                             RegistrationDate = new DateTime(2020, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
-                            Address = "22 Elm St",
+                            Address = "Maksimirska 22, Zagreb",
                             ClinicId = 1,
-                            Email = "petra@mail.com",
+                            Email = "petra.babic@gmail.com",
                             FirstName = "Petra",
                             IdNumber = "OWN-002",
                             LastName = "Babić",
-                            Phone = "555-2002",
+                            Phone = "098 765 4321",
                             RegistrationDate = new DateTime(2021, 6, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
-                            Address = "5 Pine Ln",
+                            Address = "Gajeva 5, Zagreb",
                             ClinicId = 2,
-                            Email = "tomi@mail.com",
+                            Email = "tomislav.knezevic@gmail.com",
                             FirstName = "Tomislav",
                             IdNumber = "OWN-003",
                             LastName = "Knežević",
-                            Phone = "555-4001",
+                            Phone = "095 111 2233",
                             RegistrationDate = new DateTime(2019, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 4,
-                            Address = "8 Birch Dr",
+                            Address = "Šubićeva 8, Zagreb",
                             ClinicId = 2,
-                            Email = "sara@mail.com",
+                            Email = "sara.petrovic@gmail.com",
                             FirstName = "Sara",
                             IdNumber = "OWN-004",
                             LastName = "Petrović",
-                            Phone = "555-4002",
+                            Phone = "099 876 5432",
                             RegistrationDate = new DateTime(2022, 2, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 5,
-                            Address = "3 Cedar Ct",
+                            Address = "Marmontova 3, Split",
                             ClinicId = 3,
-                            Email = "nina@mail.com",
+                            Email = "nina.vukovic@gmail.com",
                             FirstName = "Nina",
                             IdNumber = "OWN-005",
                             LastName = "Vuković",
-                            Phone = "555-6001",
+                            Phone = "091 500 6001",
                             RegistrationDate = new DateTime(2021, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 6,
-                            Address = "17 Maple Way",
+                            Address = "Obala 17, Split",
                             ClinicId = 3,
-                            Email = "filip@mail.com",
+                            Email = "filip.radic@gmail.com",
                             FirstName = "Filip",
                             IdNumber = "OWN-006",
                             LastName = "Radić",
-                            Phone = "555-6002",
+                            Phone = "098 600 1700",
                             RegistrationDate = new DateTime(2023, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -471,6 +483,9 @@ namespace VetAmb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("MicrochipId")
@@ -498,8 +513,8 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 1,
-                            Breed = "German Shepherd",
-                            Color = "Black/Tan",
+                            Breed = "Njemački ovčar",
+                            Color = "Crno-smeđa",
                             DateOfBirth = new DateTime(2018, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MicrochipId = "MC-0001",
                             Name = "Rex",
@@ -510,8 +525,8 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 2,
-                            Breed = "Siamese",
-                            Color = "Cream",
+                            Breed = "Sijamska",
+                            Color = "Kremasta",
                             DateOfBirth = new DateTime(2020, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MicrochipId = "MC-0002",
                             Name = "Mici",
@@ -522,11 +537,11 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 3,
-                            Breed = "Labrador",
-                            Color = "Golden",
+                            Breed = "Labrador retriver",
+                            Color = "Zlatna",
                             DateOfBirth = new DateTime(2019, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MicrochipId = "MC-0003",
-                            Name = "Buddy",
+                            Name = "Bruno",
                             OwnerId = 2,
                             Species = 0,
                             Weight = 28.0m
@@ -534,8 +549,8 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 4,
-                            Breed = "Persian",
-                            Color = "White",
+                            Breed = "Perzijska",
+                            Color = "Bijela",
                             DateOfBirth = new DateTime(2021, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MicrochipId = "MC-0004",
                             Name = "Luna",
@@ -546,8 +561,8 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 5,
-                            Breed = "Cockatiel",
-                            Color = "Yellow",
+                            Breed = "Kakadu",
+                            Color = "Žuta",
                             DateOfBirth = new DateTime(2022, 4, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MicrochipId = "MC-0005",
                             Name = "Kiki",
@@ -558,11 +573,11 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 6,
-                            Breed = "Holland Lop",
-                            Color = "Brown",
+                            Breed = "Patuljasti kunić",
+                            Color = "Smeđa",
                             DateOfBirth = new DateTime(2023, 6, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MicrochipId = "MC-0006",
-                            Name = "Rocky",
+                            Name = "Šarko",
                             OwnerId = 4,
                             Species = 3,
                             Weight = 1.8m
@@ -570,11 +585,11 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 7,
-                            Breed = "Poodle",
-                            Color = "White",
+                            Breed = "Pudl",
+                            Color = "Bijela",
                             DateOfBirth = new DateTime(2020, 12, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MicrochipId = "MC-0007",
-                            Name = "Max",
+                            Name = "Pahuljica",
                             OwnerId = 5,
                             Species = 0,
                             Weight = 7.5m
@@ -582,11 +597,11 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 8,
-                            Breed = "Syrian",
-                            Color = "Orange",
+                            Breed = "Sirijski hrčak",
+                            Color = "Narančasta",
                             DateOfBirth = new DateTime(2024, 2, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MicrochipId = "MC-0008",
-                            Name = "Coco",
+                            Name = "Hrčko",
                             OwnerId = 5,
                             Species = 4,
                             Weight = 0.15m
@@ -595,7 +610,7 @@ namespace VetAmb.Migrations
                         {
                             Id = 9,
                             Breed = "Maine Coon",
-                            Color = "Tabby",
+                            Color = "Tigrasta",
                             DateOfBirth = new DateTime(2019, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             MicrochipId = "MC-0009",
                             Name = "Zara",
@@ -612,6 +627,9 @@ namespace VetAmb.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -633,41 +651,41 @@ namespace VetAmb.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Routine health examination",
+                            Description = "Rutinski zdravstveni pregled životinje",
                             EstimatedDurationMinutes = 30,
-                            Name = "General Checkup",
+                            Name = "Opći pregled",
                             Price = 30m
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Standard vaccination",
+                            Description = "Standardno cijepljenje prema protokolu",
                             EstimatedDurationMinutes = 15,
-                            Name = "Vaccination",
+                            Name = "Cijepljenje",
                             Price = 25m
                         },
                         new
                         {
                             Id = 3,
-                            Description = "Minor surgical procedure",
+                            Description = "Manja kirurška intervencija",
                             EstimatedDurationMinutes = 60,
-                            Name = "Minor Surgery",
+                            Name = "Manji kirurški zahvat",
                             Price = 150m
                         },
                         new
                         {
                             Id = 4,
-                            Description = "Professional teeth cleaning",
+                            Description = "Profesionalno čišćenje zubnog kamenca",
                             EstimatedDurationMinutes = 45,
-                            Name = "Dental Cleaning",
+                            Name = "Čišćenje zubi",
                             Price = 80m
                         },
                         new
                         {
                             Id = 5,
-                            Description = "Diagnostic imaging",
+                            Description = "Dijagnostičko slikanje rentgenom",
                             EstimatedDurationMinutes = 20,
-                            Name = "X-Ray",
+                            Name = "Rendgensko snimanje",
                             Price = 60m
                         });
                 });
@@ -682,6 +700,9 @@ namespace VetAmb.Migrations
 
                     b.Property<int>("ClinicId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -719,7 +740,7 @@ namespace VetAmb.Migrations
                             HourlyRate = 80m,
                             LastName = "Kovač",
                             LicenseNumber = "VET-101",
-                            Phone = "555-1001",
+                            Phone = "091 234 1001",
                             Specialization = 0,
                             YearsOfExperience = 10
                         },
@@ -731,7 +752,7 @@ namespace VetAmb.Migrations
                             HourlyRate = 100m,
                             LastName = "Novak",
                             LicenseNumber = "VET-102",
-                            Phone = "555-1002",
+                            Phone = "092 456 1002",
                             Specialization = 1,
                             YearsOfExperience = 7
                         },
@@ -743,7 +764,7 @@ namespace VetAmb.Migrations
                             HourlyRate = 120m,
                             LastName = "Jurić",
                             LicenseNumber = "VET-201",
-                            Phone = "555-3001",
+                            Phone = "095 678 3001",
                             Specialization = 3,
                             YearsOfExperience = 12
                         },
@@ -755,7 +776,7 @@ namespace VetAmb.Migrations
                             HourlyRate = 90m,
                             LastName = "Tomić",
                             LicenseNumber = "VET-202",
-                            Phone = "555-3002",
+                            Phone = "099 321 3002",
                             Specialization = 4,
                             YearsOfExperience = 5
                         },
@@ -767,7 +788,7 @@ namespace VetAmb.Migrations
                             HourlyRate = 130m,
                             LastName = "Matić",
                             LicenseNumber = "VET-301",
-                            Phone = "555-5001",
+                            Phone = "098 123 5001",
                             Specialization = 5,
                             YearsOfExperience = 15
                         },
@@ -779,7 +800,7 @@ namespace VetAmb.Migrations
                             HourlyRate = 95m,
                             LastName = "Šimić",
                             LicenseNumber = "VET-302",
-                            Phone = "555-5002",
+                            Phone = "091 765 5002",
                             Specialization = 2,
                             YearsOfExperience = 8
                         });

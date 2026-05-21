@@ -22,37 +22,47 @@
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna plo&#269;a</a>
     <span class="separator">/</span>
-    <a href="/Patient">Patients</a>
+    <a href="/patients">Pacijenti</a>
     <span class="separator">/</span>
     <span class="current">@Model.Name</span>
 </nav>
 
-<a href="/Patient" class="btn-back">← Back to Patients</a>
+<a href="/patients" class="btn-back">&#8592; Natrag na Pacijente</a>
+
+<div class="card-actions" style="margin-bottom:1rem;">
+    <a href="/patients/@Model.Id/edit" class="btn-edit">&#9999; Uredi</a>
+    <form asp-action="Delete" asp-controller="Patient" asp-route-id="@Model.Id"
+          method="post"
+          onsubmit="return confirm('Trajno ukloniti pacijenta @Model.Name?');">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn-danger">&#128465; Ukloni</button>
+    </form>
+</div>
 
 <div class="details-grid">
     <div class="glass-card details-hero">
         <div class="hero-avatar avatar @avatarClass">@speciesEmoji</div>
         <div class="hero-name">@Model.Name</div>
         <div class="hero-breed">@Model.Breed</div>
-        <span class="species-badge @avatarClass" style="margin-bottom:1.5rem;">@Model.Species</span>
+        <span class="species-badge @avatarClass" style="margin-bottom:1.5rem;">@Model.Species.GetDisplayName()</span>
 
         <div class="info-grid" style="width:100%;">
             <div class="info-item">
-                <div class="info-label">Weight</div>
+                <div class="info-label">Težina</div>
                 <div class="info-value">@Model.Weight kg</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Color</div>
+                <div class="info-label">Boja</div>
                 <div class="info-value">@Model.Color</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Date of Birth</div>
-                <div class="info-value">@Model.DateOfBirth.ToString("MMMM dd, yyyy")</div>
+                <div class="info-label">Datum rođenja</div>
+                <div class="info-value">@Model.DateOfBirth.ToString("d")</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Microchip</div>
+                <div class="info-label">Mikročip</div>
                 <div class="info-value">@Model.MicrochipId</div>
             </div>
         </div>
@@ -60,29 +70,29 @@
 
     <div>
         <div class="glass-card" style="margin-bottom:1.5rem;">
-            <h3 class="section-title">👤 Owner Information</h3>
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">Name</div>
-                    <div class="info-value">@Model.Owner?.FirstName @Model.Owner?.LastName</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Phone</div>
-                    <div class="info-value">@Model.Owner?.Phone</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Email</div>
-                    <div class="info-value">@Model.Owner?.Email</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Address</div>
-                    <div class="info-value">@Model.Owner?.Address</div>
-                </div>
-            </div>
+            <h3 class="section-title">👤 Podaci o Vlasniku</h3>
+            @if (Model.Owner != null)
+            {
+                <a href="/owners/@Model.Owner.Id" class="timeline-link">
+                    <div class="timeline-item">
+                        <div class="timeline-date" style="background:rgba(0,230,118,0.15);">
+                            <span class="day" style="font-size:1.3rem;">&#128100;</span>
+                        </div>
+                        <div class="timeline-body" style="flex:1;">
+                            <div class="tl-reason">@Model.Owner.FirstName @Model.Owner.LastName</div>
+                            <div class="tl-vet">@Model.Owner.Phone &middot; @Model.Owner.Email</div>
+                        </div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="empty-state">Nema registriranog vlasnika.</div>
+            }
         </div>
 
         <div class="glass-card">
-            <h3 class="section-title">📅 Appointment History</h3>
+            <h3 class="section-title">📅 Povijest Termina</h3>
             @if (Model.Appointments.Any())
             {
                 @foreach (var appt in Model.Appointments.OrderByDescending(a => a.AppointmentDateTime))
@@ -97,22 +107,24 @@
                         AppointmentStatus.Rescheduled => "rescheduled",
                         _ => ""
                     };
-                    <div class="timeline-item">
-                        <div class="timeline-date">
-                            <span class="day">@appt.AppointmentDateTime.Day</span>
-                            <span class="month">@appt.AppointmentDateTime.ToString("MMM")</span>
+                    <a href="/appointments/@appt.Id" class="timeline-link">
+                        <div class="timeline-item">
+                            <div class="timeline-date">
+                                <span class="day">@appt.AppointmentDateTime.Day</span>
+                                <span class="month">@appt.AppointmentDateTime.ToString("MMM")</span>
+                            </div>
+                            <div class="timeline-body" style="flex:1;">
+                                <div class="tl-reason">@appt.Reason</div>
+                                <div class="tl-vet">Dr. @appt.Vet?.FirstName @appt.Vet?.LastName</div>
+                                <span class="status-badge @statusClass" style="margin-top:0.25rem;">@appt.Status.GetDisplayName()</span>
+                            </div>
                         </div>
-                        <div class="timeline-body" style="flex:1;">
-                            <div class="tl-reason">@appt.Reason</div>
-                            <div class="tl-vet">Dr. @appt.Vet?.FirstName @appt.Vet?.LastName</div>
-                            <span class="status-badge @statusClass" style="margin-top:0.25rem;">@appt.Status</span>
-                        </div>
-                    </div>
+                    </a>
                 }
             }
             else
             {
-                <div class="empty-state">No appointments recorded yet.</div>
+                <div class="empty-state">Nema evidentiranih termina.</div>
             }
         </div>
     </div>

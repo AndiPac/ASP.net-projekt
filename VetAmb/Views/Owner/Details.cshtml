@@ -4,14 +4,24 @@
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna plo&#269;a</a>
     <span class="separator">/</span>
-    <a href="/Owner">Owners</a>
+    <a href="/owners">Vlasnici</a>
     <span class="separator">/</span>
     <span class="current">@Model.FirstName @Model.LastName</span>
 </nav>
 
-<a href="/Owner" class="btn-back">← Back to Owners</a>
+<a href="/owners" class="btn-back">&#8592; Natrag na Vlasnike</a>
+
+<div class="card-actions" style="margin-bottom:1rem;">
+    <a href="/owners/@Model.Id/edit" class="btn-edit">&#9999; Uredi</a>
+    <form asp-action="Delete" asp-controller="Owner" asp-route-id="@Model.Id"
+          method="post"
+          onsubmit="return confirm('Trajno ukloniti vlasnika @Model.FirstName @Model.LastName?')">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn-danger">&#128465; Ukloni</button>
+    </form>
+</div>
 
 <div class="details-grid">
     <div class="glass-card details-hero">
@@ -25,37 +35,45 @@
                 <div class="info-value">@Model.Email</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Phone</div>
+                <div class="info-label">Telefon</div>
                 <div class="info-value">@Model.Phone</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Address</div>
+                <div class="info-label">Adresa</div>
                 <div class="info-value">@Model.Address</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Registered</div>
-                <div class="info-value">@Model.RegistrationDate.ToString("MMMM dd, yyyy")</div>
+                <div class="info-label">Registriran</div>
+                <div class="info-value">@Model.RegistrationDate.ToString("d")</div>
             </div>
         </div>
     </div>
 
     <div>
         <div class="glass-card" style="margin-bottom:1.5rem;">
-            <h3 class="section-title">🏥 Clinic</h3>
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">Name</div>
-                    <div class="info-value">@Model.Clinic?.Name</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Address</div>
-                    <div class="info-value">@Model.Clinic?.Address</div>
-                </div>
-            </div>
+            <h3 class="section-title">🏥 Klinika</h3>
+            @if (Model.Clinic != null)
+            {
+                <a href="/clinics/@Model.Clinic.Id" class="timeline-link">
+                    <div class="timeline-item">
+                        <div class="timeline-date" style="background:rgba(0,188,212,0.15);">
+                            <span class="day" style="font-size:1.3rem;">&#127973;</span>
+                        </div>
+                        <div class="timeline-body" style="flex:1;">
+                            <div class="tl-reason">@Model.Clinic.Name</div>
+                            <div class="tl-vet">@Model.Clinic.Address</div>
+                        </div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="empty-state">Nema dodijeljene klinike.</div>
+            }
         </div>
 
         <div class="glass-card">
-            <h3 class="section-title">🐾 Pets</h3>
+            <h3 class="section-title">🐾 Ljubimci</h3>
             @if (Model.Patients.Any())
             {
                 @foreach (var pet in Model.Patients)
@@ -69,20 +87,22 @@
                         AnimalSpecies.Hamster => "🐹",
                         _ => "🐾"
                     };
-                    <div class="timeline-item">
-                        <div class="timeline-date" style="background:rgba(108,99,255,0.15);font-size:1.5rem;">
-                            <span>@emoji</span>
+                    <a href="/patients/@pet.Id" class="timeline-link">
+                        <div class="timeline-item">
+                            <div class="timeline-date" style="background:rgba(108,99,255,0.15);font-size:1.5rem;">
+                                <span>@emoji</span>
+                            </div>
+                            <div class="timeline-body" style="flex:1;">
+                                <div class="tl-reason">@pet.Name</div>
+                                <div class="tl-vet">@pet.Breed · @pet.Species.GetDisplayName() · @pet.Weight kg</div>
+                            </div>
                         </div>
-                        <div class="timeline-body" style="flex:1;">
-                            <div class="tl-reason">@pet.Name</div>
-                            <div class="tl-vet">@pet.Breed · @pet.Species · @pet.Weight kg</div>
-                        </div>
-                    </div>
+                    </a>
                 }
             }
             else
             {
-                <div class="empty-state">No pets registered.</div>
+                <div class="empty-state">Nema registriranih ljubimaca.</div>
             }
         </div>
     </div>

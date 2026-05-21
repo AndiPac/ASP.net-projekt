@@ -258,6 +258,13 @@ html, body {
     display: block;
 }
 
+/* Inner link variant — used when a card also has card-actions below it */
+.glass-card-link-inner {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
 /* ---------- Card Grid (CSS Grid — Asymmetrical) ---------- */
 .card-grid {
     display: grid;
@@ -310,9 +317,34 @@ html, body {
 /* ---------- Patient Card ---------- */
 .patient-card .card-top {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 1rem;
     margin-bottom: 1rem;
+    min-height: 110px;
+    position: relative;
+    padding-right: 7rem;
+}
+
+.patient-card .card-top .card-name {
+    overflow: visible;
+    display: block;
+    -webkit-line-clamp: unset;
+}
+
+.patient-card .card-top .card-breed {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+/* Corner badges — absolutely positioned so they never affect name text layout */
+.patient-card .card-top .species-badge,
+.patient-card .card-top .status-badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    white-space: nowrap;
 }
 
 .patient-card .avatar {
@@ -344,14 +376,22 @@ html, body {
 }
 
 .patient-card .card-details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.6rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .patient-card .detail-item {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.patient-card .detail-item:last-child {
+    border-bottom: none;
 }
 
 .patient-card .detail-label {
@@ -360,12 +400,17 @@ html, body {
     letter-spacing: 1px;
     color: var(--text-muted);
     font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-right: 0.5rem;
 }
 
 .patient-card .detail-value {
     font-size: 0.85rem;
     color: var(--text-primary);
     font-weight: 500;
+    text-align: right;
+    word-break: break-word;
 }
 
 .patient-card .card-footer {
@@ -392,6 +437,22 @@ html, body {
 
 .glass-card:hover .view-link {
     letter-spacing: 1.5px;
+}
+
+/* ---------- Fixed footer buttons — flex column layout ---------- */
+/* Makes every index card a flex column so card-actions always sits at the bottom */
+.glass-card.patient-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.glass-card.patient-card .glass-card-link-inner {
+    flex: 1 0 auto;
+}
+
+.glass-card.patient-card .card-actions {
+    margin-top: auto;
 }
 
 /* ---------- Species Badge ---------- */
@@ -499,6 +560,41 @@ html, body {
 
 .timeline-item:hover {
     background: rgba(255, 255, 255, 0.06);
+}
+
+/* Clickable timeline row — wraps entire .timeline-item in an <a> */
+a.timeline-link {
+    display: block;
+    width: 100%;
+    text-decoration: none !important;
+    color: inherit !important;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.75rem;
+    transition: background 0.2s ease;
+}
+a.timeline-link:hover,
+a.timeline-link:focus,
+a.timeline-link:visited {
+    text-decoration: none !important;
+    color: inherit !important;
+    background: rgba(255, 255, 255, 0.07);
+    cursor: pointer;
+}
+a.timeline-link *,
+a.timeline-link *:hover {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+a.timeline-link .timeline-item {
+    margin-bottom: 0;
+}
+
+/* Inline entity links inside info-value cells */
+.info-value a,
+.info-value a:visited,
+.info-value a:hover {
+    text-decoration: none !important;
+    color: inherit !important;
 }
 
 .timeline-date {
@@ -779,4 +875,460 @@ html, body {
     .card-grid-3 {
         grid-template-columns: 1fr;
     }
+}
+
+/* ============================================================
+   Lab 4 — Glassmorphism Form System & Action Buttons
+   ============================================================ */
+
+/* ---------- Validation spans (ASP.NET Core unobtrusive) ---------- */
+.field-validation-error {
+    display: block;
+    font-size: 0.78rem;
+    color: #ff6b9d;
+    margin-top: 0.3rem;
+    min-height: 1rem;
+}
+.field-validation-valid { display: none; }
+
+/* ---------- Form container ---------- */
+.form-glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    padding: 2rem;
+    max-width: 760px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.form-group { margin-bottom: 1.25rem; }
+
+.form-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    color: #f0f0f0;
+    font-family: inherit;
+    font-size: 0.92rem;
+    padding: 0.65rem 0.9rem;
+    outline: none;
+    transition: border-color 0.2s cubic-bezier(0.4,0,0.2,1),
+                box-shadow   0.2s cubic-bezier(0.4,0,0.2,1);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder { color: rgba(255,255,255,0.28); }
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: rgba(108,99,255,0.6);
+    box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+}
+
+/* jQuery Validate error class */
+.form-input.input-validation-error,
+.form-select.input-validation-error,
+.form-textarea.input-validation-error {
+    border-color: rgba(255,107,157,0.6);
+    box-shadow: 0 0 0 3px rgba(255,107,157,0.1);
+}
+
+.form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='rgba(255,255,255,0.45)' d='M0 0l6 8 6-8z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    background-size: 10px;
+    padding-right: 2.25rem;
+    cursor: pointer;
+}
+
+.form-select option {
+    background: #1a1830;
+    color: #f0f0f0;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.6;
+}
+
+/* Validation message below each field */
+.form-validation {
+    display: block;
+    font-size: 0.78rem;
+    color: #ff6b9d;
+    margin-top: 0.3rem;
+    min-height: 1rem;
+}
+
+/* ---------- Action Buttons ---------- */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, rgba(108,99,255,0.7), rgba(0,210,255,0.5));
+    border: 1px solid rgba(108,99,255,0.5);
+    color: #f0f0f0;
+    border-radius: 12px;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.3px;
+    font-family: inherit;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, rgba(108,99,255,0.9), rgba(0,210,255,0.7));
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.75);
+    border-radius: 12px;
+    padding: 0.45rem 1rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+    font-family: inherit;
+}
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    color: #f0f0f0;
+}
+
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(0,210,255,0.12);
+    border: 1px solid rgba(0,210,255,0.35);
+    color: #00d2ff;
+    border-radius: 10px;
+    padding: 0.38rem 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.18s, transform 0.13s;
+    font-family: inherit;
+}
+.btn-edit:hover {
+    background: rgba(0,210,255,0.22);
+    transform: translateY(-1px);
+    color: #00d2ff;
+}
+
+.btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255,107,157,0.12);
+    border: 1px solid rgba(255,107,157,0.4);
+    color: #ff6b9d;
+    border-radius: 10px;
+    padding: 0.38rem 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.18s, transform 0.13s;
+    font-family: inherit;
+}
+.btn-danger:hover {
+    background: rgba(255,107,157,0.24);
+    transform: translateY(-1px);
+}
+
+/* Page actions bar (title + create button side by side) */
+.page-actions {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Card action strip at bottom of each list card */
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    align-items: stretch;
+}
+
+/* Make the delete <form> wrapper invisible to layout so the <button>
+   participates directly in the flex row and matches the <a> height */
+.card-actions form {
+    display: contents;
+}
+
+/* Form footer divider */
+.form-footer {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+
+/* ============================================================
+   Lab 4 - Glassmorphism Form System and Action Buttons
+   ============================================================ */
+
+/* ---------- Validation spans (ASP.NET Core unobtrusive) ---------- */
+.field-validation-error {
+    display: block;
+    font-size: 0.78rem;
+    color: #ff6b9d;
+    margin-top: 0.3rem;
+    min-height: 1rem;
+}
+.field-validation-valid { display: none; }
+
+/* ---------- Form container ---------- */
+.form-glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    padding: 2rem;
+    max-width: 760px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.form-group { margin-bottom: 1.25rem; }
+
+.form-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    color: #f0f0f0;
+    font-family: inherit;
+    font-size: 0.92rem;
+    padding: 0.65rem 0.9rem;
+    outline: none;
+    transition: border-color 0.2s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s cubic-bezier(0.4,0,0.2,1);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder { color: rgba(255,255,255,0.28); }
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: rgba(108,99,255,0.6);
+    box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+}
+
+.form-input.input-validation-error,
+.form-select.input-validation-error,
+.form-textarea.input-validation-error {
+    border-color: rgba(255,107,157,0.6);
+    box-shadow: 0 0 0 3px rgba(255,107,157,0.1);
+}
+
+.form-select {
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    background-size: 10px;
+    padding-right: 2.25rem;
+    cursor: pointer;
+}
+
+.form-select option {
+    background: #1a1830;
+    color: #f0f0f0;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.6;
+}
+
+.form-validation {
+    display: block;
+    font-size: 0.78rem;
+    color: #ff6b9d;
+    margin-top: 0.3rem;
+    min-height: 1rem;
+}
+
+/* ---------- Action Buttons ---------- */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, rgba(108,99,255,0.7), rgba(0,210,255,0.5));
+    border: 1px solid rgba(108,99,255,0.5);
+    color: #f0f0f0;
+    border-radius: 12px;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.3px;
+    font-family: inherit;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, rgba(108,99,255,0.9), rgba(0,210,255,0.7));
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.75);
+    border-radius: 12px;
+    padding: 0.45rem 1rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+    font-family: inherit;
+}
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    color: #f0f0f0;
+}
+
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(0,210,255,0.12);
+    border: 1px solid rgba(0,210,255,0.35);
+    color: #00d2ff;
+    border-radius: 10px;
+    padding: 0.38rem 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.18s, transform 0.13s;
+    font-family: inherit;
+}
+.btn-edit:hover {
+    background: rgba(0,210,255,0.22);
+    transform: translateY(-1px);
+    color: #00d2ff;
+}
+
+.btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255,107,157,0.12);
+    border: 1px solid rgba(255,107,157,0.4);
+    color: #ff6b9d;
+    border-radius: 10px;
+    padding: 0.38rem 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.18s, transform 0.13s;
+    font-family: inherit;
+}
+.btn-danger:hover {
+    background: rgba(255,107,157,0.24);
+    transform: translateY(-1px);
+}
+
+.page-actions {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    align-items: stretch;
+}
+
+.card-actions form {
+    display: contents;
+}
+
+.form-footer {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
 }

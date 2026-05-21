@@ -27,6 +27,9 @@ namespace VetAmb.Models
         public int ClinicId { get; set; }
         public virtual Clinic? Clinic { get; set; }
 
+        // Soft delete — never physically remove vet records.
+        public DateTime? DeletedAt { get; set; }
+
         // Relationships
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }

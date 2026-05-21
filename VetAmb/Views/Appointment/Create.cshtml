@@ -1,0 +1,144 @@
+@model VetAmb.ViewModels.AppointmentFormModel
+@using VetAmb.Models
+@{
+    ViewData["Title"] = "Novi Termin";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Nadzorna plo&#269;a</a>
+    <span class="separator">/</span>
+    <a href="/appointments">Termini</a>
+    <span class="separator">/</span>
+    <span class="current">Novi Termin</span>
+</nav>
+
+<div class="page-actions">
+    <div class="page-header" style="margin-bottom:0;">
+        <h1>Novi Termin</h1>
+        <p class="subtitle">Unesite podatke o novom veterinarskom terminu</p>
+    </div>
+    <a href="/appointments" class="btn-back">← Natrag</a>
+</div>
+
+<form method="post" action="/appointments/create" class="form-glass" novalidate>
+    @Html.AntiForgeryToken()
+
+    <div class="form-row">
+        <!-- Custom Date+Time Picker (no native browser picker) -->
+        <div class="form-group">
+            @await Html.PartialAsync("_CustomDateTimePicker",
+                new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
+                {
+                    ["FieldName"] = "AppointmentDateTime",
+                    ["FieldId"]   = "appointmentDateTime",
+                    ["LabelText"] = "Datum i Vrijeme",
+                    ["Value"]     = null
+                })
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" asp-for="Status">Status</label>
+            <select asp-for="Status"
+                    asp-items="Html.GetEnumSelectList<AppointmentStatus>()"
+                    class="form-select">
+            </select>
+            <span asp-validation-for="Status" class="form-validation"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" asp-for="Reason">Razlog Posjete</label>
+        <input asp-for="Reason" class="form-input"
+               placeholder="Opišite razlog posjete..." />
+        <span asp-validation-for="Reason" class="form-validation"></span>
+    </div>
+
+    <div class="form-row">
+        <!-- Patient AJAX Autocomplete -->
+        <div class="form-group">
+            @await Html.PartialAsync("_AjaxAutocomplete",
+                new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
+                {
+                    ["FieldName"]       = "PatientId",
+                    ["FieldId"]         = "patientId",
+                    ["LabelText"]       = "Pacijent",
+                    ["Endpoint"]        = "/appointments/search-patients",
+                    ["Placeholder"]     = "Upišite ime pacijenta...",
+                    ["RequiredMessage"] = "Odabir pacijenta je obavezan.",
+                    ["InitialId"]       = Model.PatientId > 0 ? (object)Model.PatientId : null,
+                    ["InitialText"]     = ViewBag.InitialPatientText as string ?? ""
+                })
+        </div>
+
+        <!-- Vet AJAX Autocomplete -->
+        <div class="form-group">
+            @await Html.PartialAsync("_AjaxAutocomplete",
+                new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
+                {
+                    ["FieldName"]       = "VetId",
+                    ["FieldId"]         = "vetId",
+                    ["LabelText"]       = "Veterinar",
+                    ["Endpoint"]        = "/appointments/search-vets",
+                    ["Placeholder"]     = "Upišite ime veterinara...",
+                    ["RequiredMessage"] = "Odabir veterinara je obavezan.",
+                    ["InitialId"]       = Model.VetId > 0 ? (object)Model.VetId : null,
+                    ["InitialText"]     = ViewBag.InitialVetText as string ?? ""
+                })
+        </div>
+    </div>
+
+    @await Html.PartialAsync("_ServiceAutocompletePartial",
+        new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
+        {
+            ["FieldId"]      = "serviceIds",
+            ["LabelText"]    = "Usluge",
+            ["Endpoint"]     = "/appointments/search-services",
+            ["Placeholder"]  = "Pretraži usluge...",
+            ["SelectedJson"] = ViewBag.SelectedServicesJson as string ?? "[]"
+        })
+
+    <div class="form-group">
+        <label class="form-label" asp-for="Notes">Napomene</label>
+        <textarea asp-for="Notes" class="form-textarea"
+                  placeholder="Dodatne napomene o terminu..."></textarea>
+        <span asp-validation-for="Notes" class="form-validation"></span>
+    </div>
+
+    <div class="form-group" id="reschedule-reason-group" style="display:none">
+        <label class="form-label" asp-for="RescheduleReason">Razlog Odgode</label>
+        <textarea asp-for="RescheduleReason" class="form-textarea"
+                  placeholder="Unesite razlog odgode ako je primjenjivo..."></textarea>
+        <span asp-validation-for="RescheduleReason" class="form-validation"></span>
+    </div>
+
+    <div class="form-footer">
+        <a href="/appointments" class="btn-secondary">Odustani</a>
+        <button type="submit" class="btn-primary">&#128190; Spremi Termin</button>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof jQuery === 'undefined') { return; }
+        (function ($) {
+            // Show Razlog Odgode only when Status = Rescheduled (5)
+            var RESCHEDULED_VALUE = '@((int)VetAmb.Models.AppointmentStatus.Rescheduled)';
+            var $statusSelect  = $('#Status');
+            var $reasonGroup   = $('#reschedule-reason-group');
+
+            function toggleRescheduleReason() {
+                if ($statusSelect.val() === RESCHEDULED_VALUE) {
+                    $reasonGroup.slideDown(200);
+                } else {
+                    $reasonGroup.slideUp(200);
+                }
+            }
+
+            $statusSelect.on('change', toggleRescheduleReason);
+            toggleRescheduleReason(); // apply on page load
+        })(jQuery);
+    });
+    </script>
+}

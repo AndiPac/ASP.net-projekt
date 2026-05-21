@@ -4,73 +4,75 @@
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna plo&#269;a</a>
     <span class="separator">/</span>
-    <a href="/MedicalRecord">Medical Records</a>
+    <a href="/medical-records">Medicinski Zapisi</a>
     <span class="separator">/</span>
     <span class="current">@Model.Diagnosis</span>
 </nav>
 
-<a href="/MedicalRecord" class="btn-back">← Back to Medical Records</a>
+<a href="/medical-records" class="btn-back">&#8592; Natrag na Medicinske Zapise</a>
+
+<div class="card-actions" style="margin-bottom:1.5rem;">
+    <a href="/medical-records/@Model.Id/edit" class="btn-edit">&#9999; Uredi</a>
+    <form action="/medical-records/@Model.Id/delete" method="post"
+          onsubmit="return confirm('Jeste li sigurni da želite ukloniti zapis @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.Diagnosis ?? ""))?');">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn-danger">&#128465; Obriši</button>
+    </form>
+</div>
 
 <div class="details-grid">
     <div class="glass-card details-hero">
-        <div class="hero-avatar" style="width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));margin-bottom:1.25rem;">📋</div>
+        <div class="hero-avatar" style="width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));margin-bottom:1.25rem;">&#128203;</div>
         <div class="hero-name">@Model.Diagnosis</div>
-        <div class="hero-breed">@Model.RecordDate.ToString("MMMM dd, yyyy")</div>
+        <div class="hero-breed">@Model.RecordDate.ToString("d")</div>
 
         <div class="info-grid" style="width:100%;">
             <div class="info-item">
-                <div class="info-label">Treatment</div>
+                <div class="info-label">Terapija</div>
                 <div class="info-value">@Model.Treatment</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Record Date</div>
-                <div class="info-value">@Model.RecordDate.ToString("dd/MM/yyyy")</div>
+                <div class="info-label">Datum pregleda</div>
+                <div class="info-value">@Model.RecordDate.ToString("d")</div>
             </div>
             <div class="info-item full-width">
-                <div class="info-label">Notes</div>
-                <div class="info-value">@(string.IsNullOrWhiteSpace(Model.Notes) ? "—" : Model.Notes)</div>
+                <div class="info-label">Napomene</div>
+                <div class="info-value">@(string.IsNullOrWhiteSpace(Model.Notes) ? "&#8212;" : Model.Notes)</div>
             </div>
         </div>
     </div>
 
     <div>
         <div class="glass-card">
-            <h3 class="section-title">🐾 Patient</h3>
+            <h3 class="section-title">&#128062; Pacijent</h3>
             @if (Model.Patient != null)
             {
                 var speciesEmoji = Model.Patient.Species switch
                 {
-                    AnimalSpecies.Dog => "🐕",
-                    AnimalSpecies.Cat => "🐈",
-                    AnimalSpecies.Bird => "🐦",
-                    AnimalSpecies.Rabbit => "🐇",
-                    AnimalSpecies.Hamster => "🐹",
-                    _ => "🐾"
+                    AnimalSpecies.Dog     => "&#128021;",
+                    AnimalSpecies.Cat     => "&#128008;",
+                    AnimalSpecies.Bird    => "&#128038;",
+                    AnimalSpecies.Rabbit  => "&#128007;",
+                    AnimalSpecies.Hamster => "&#128057;",
+                    _ => "&#128062;"
                 };
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Name</div>
-                        <div class="info-value">@speciesEmoji @Model.Patient.Name</div>
+                <a href="/patients/@Model.Patient.Id" class="timeline-link">
+                    <div class="timeline-item">
+                        <div class="timeline-date" style="background:rgba(108,99,255,0.15);">
+                            <span class="day" style="font-size:1.3rem;">@Html.Raw(speciesEmoji)</span>
+                        </div>
+                        <div class="timeline-body" style="flex:1;">
+                            <div class="tl-reason">@Model.Patient.Name</div>
+                            <div class="tl-vet">@Model.Patient.Breed &middot; @Model.Patient.Species.GetDisplayName() &middot; @Model.Patient.Weight kg</div>
+                        </div>
                     </div>
-                    <div class="info-item">
-                        <div class="info-label">Breed</div>
-                        <div class="info-value">@Model.Patient.Breed</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Species</div>
-                        <div class="info-value">@Model.Patient.Species</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Weight</div>
-                        <div class="info-value">@Model.Patient.Weight kg</div>
-                    </div>
-                </div>
+                </a>
             }
             else
             {
-                <div class="empty-state">No patient information available.</div>
+                <div class="empty-state">Nema podataka o pacijentu.</div>
             }
         </div>
     </div>

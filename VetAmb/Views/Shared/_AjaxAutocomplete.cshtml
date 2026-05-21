@@ -1,0 +1,355 @@
+@* ============================================================
+   _AjaxAutocomplete.cshtml — Reusable AJAX Autocomplete Component
+   Usage:
+     @await Html.PartialAsync("_AjaxAutocomplete",
+         new ViewDataDictionary(ViewData)
+         {
+             ["FieldName"]   = "PatientId",                // POST binding name
+             ["FieldId"]     = "patientId",                // element id base (no dots)
+             ["LabelText"]   = "Pacijent",                 // visible label
+             ["Endpoint"]    = "/appointments/search-patients", // AJAX URL
+             ["Placeholder"] = "Upišite ime pacijenta...", // input placeholder
+             ["InitialId"]   = Model.PatientId,            // pre-selected id (int, 0 = empty)
+             ["InitialText"] = ViewBag.InitialPatientText as string ?? ""
+         })
+   CONTRACT:
+     - Hidden input (name=FieldName) holds the numeric ID for model binding.
+       class="force-validate" opts it in to jQuery Validate (bypasses :hidden ignore).
+     - Visible text input is display-only; user types here to search.
+     - Selected ID is committed to the hidden input on item click or keyboard Enter.
+     - On selection, triggers .change() + .blur() on hidden input so jQuery Validate
+       re-evaluates the field immediately (satisfies Lab 4 blur-validation requirement).
+   ============================================================ *@
+
+@{
+    var fieldName   = ViewData["FieldName"]   as string ?? "Field";
+    var fieldId     = ViewData["FieldId"]     as string ?? "field";
+    var labelText   = ViewData["LabelText"]   as string ?? "Search";
+    var endpoint    = ViewData["Endpoint"]    as string ?? "#";
+    var placeholder = ViewData["Placeholder"] as string ?? "Type to search...";
+    var initialText = ViewData["InitialText"] as string ?? "";
+    // MinId controls data-val-range-min and the pre-select condition.
+    // Use 0 for 0-based enums (e.g. AnimalSpecies), default 1 for FK IDs.
+    var minId = ViewData["MinId"] is int m ? m : 1;
+    // Optional override for the required validation message (Croatian genitive case).
+    var requiredMsg = ViewData["RequiredMessage"] as string
+                      ?? $"Odabir {labelText.ToLower()} je obavezan.";
+
+    // Resolve initial ID — accept int >= minId.
+    var initIdStr = "";
+    if (ViewData["InitialId"] is int iid && iid >= minId) initIdStr = iid.ToString();
+}
+
+<div class="acp-wrapper" id="acp-wrapper-@fieldId">
+    <label class="form-label" for="@(fieldId)_search">@labelText</label>
+
+    <!-- Hidden input — ASP.NET Core model binding + jQuery Validate via .force-validate -->
+    <input type="hidden"
+           id="@fieldId"
+           name="@fieldName"
+           value="@initIdStr"
+           class="force-validate"
+           data-val="true"
+           data-val-required="@requiredMsg"
+           data-val-range="Odaberite stavku s popisa."
+           data-val-range-min="@minId"
+           data-val-range-max="2147483647" />
+
+    <!-- Visible text input for typing a search query -->
+    <div class="acp-input-wrap">
+        <input type="text"
+               id="@(fieldId)_search"
+               class="form-input acp-search"
+               placeholder="@placeholder"
+               value="@initialText"
+               autocomplete="off"
+               data-target="@fieldId"
+               data-endpoint="@endpoint"
+               aria-autocomplete="list"
+               aria-expanded="false" />
+        <button type="button"
+                class="acp-clear"
+                data-target="@fieldId"
+                title="Clear selection"
+                aria-label="Clear selection"
+                tabindex="-1"
+                style="@(string.IsNullOrEmpty(initialText) ? "display:none;" : "")">&#10005;</button>
+    </div>
+
+    <span class="field-validation-valid text-danger"
+          data-valmsg-for="@fieldName"
+          data-valmsg-replace="true"></span>
+
+    <!-- Glassmorphism dropdown results panel -->
+    <ul class="acp-dropdown"
+        id="acp-dropdown-@fieldId"
+        role="listbox"
+        style="display:none;"
+        aria-label="@labelText results"></ul>
+</div>
+
+@* ─── Styles: emitted once per page via HttpContext.Items guard ──────────── *@
+@if (!(ViewContext.HttpContext.Items.ContainsKey("__acp_styles")))
+{
+    ViewContext.HttpContext.Items["__acp_styles"] = true;
+    <style>
+    /* === AJAX Autocomplete — Glassmorphism ================================ */
+    .acp-wrapper {
+        position: relative;
+    }
+
+    .acp-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    /* The text input grows to fill the wrap; right padding reserves room for X */
+    .acp-search {
+        flex: 1;
+        padding-right: 2.5rem !important;
+    }
+
+    /* Clear (×) button — absolute over the right edge of the text input */
+    .acp-clear {
+        position: absolute;
+        right: 0.75rem;
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.35);
+        cursor: pointer;
+        font-size: 0.8rem;
+        padding: 0.25rem;
+        line-height: 1;
+        transition: color 0.15s;
+    }
+    .acp-clear:hover { color: #ff6b9d; }
+
+    /* Results dropdown panel */
+    .acp-dropdown {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        z-index: 1100;
+        background: rgba(15, 12, 41, 0.96);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+        list-style: none;
+        margin: 0;
+        padding: 0.3rem 0;
+        max-height: 220px;
+        overflow-y: auto;
+    }
+
+    /* Scrollbar inside dropdown */
+    .acp-dropdown::-webkit-scrollbar { width: 4px; }
+    .acp-dropdown::-webkit-scrollbar-track { background: transparent; }
+    .acp-dropdown::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    .acp-item {
+        padding: 0.55rem 1rem;
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.8);
+        cursor: pointer;
+        transition: background 0.14s, color 0.14s;
+        border-radius: 8px;
+        margin: 0 0.3rem;
+    }
+    .acp-item:hover,
+    .acp-item.acp-active {
+        background: rgba(108, 99, 255, 0.28);
+        color: #fff;
+    }
+    .acp-item.acp-no-results {
+        color: rgba(255, 255, 255, 0.3);
+        cursor: default;
+        font-style: italic;
+    }
+    .acp-item.acp-loading {
+        color: rgba(255, 255, 255, 0.35);
+        cursor: default;
+        font-size: 0.8rem;
+    }
+    </style>
+}
+
+@* ─── JS: emitted once per page via HttpContext.Items guard ─────────────── *@
+@if (!(ViewContext.HttpContext.Items.ContainsKey("__acp_js")))
+{
+    ViewContext.HttpContext.Items["__acp_js"] = true;
+    <script>
+    document.addEventListener('DOMContentLoaded', function init() {
+        if (typeof jQuery === 'undefined') { setTimeout(init, 50); return; }
+        (function ($) {
+        'use strict';
+
+        // Per-instance debounce timers.
+        var _timers = {};
+
+        // ── Dropdown visibility ──────────────────────────────────────────
+
+        function openDropdown(id) {
+            $('#acp-dropdown-' + id).show();
+            $('#' + id + '_search').attr('aria-expanded', 'true');
+        }
+
+        function closeDropdown(id) {
+            $('#acp-dropdown-' + id).hide().empty();
+            $('#' + id + '_search').attr('aria-expanded', 'false');
+        }
+
+        // ── Render results into the dropdown ────────────────────────────
+
+        function renderResults(id, items) {
+            var $drop = $('#acp-dropdown-' + id).empty();
+            if (!items || !items.length) {
+                $drop.append('<li class="acp-item acp-no-results">Nema rezultata.</li>');
+            } else {
+                $.each(items, function (_, item) {
+                    $('<li>')
+                        .addClass('acp-item')
+                        .text(item.text)
+                        .attr({ 'role': 'option', 'data-id': item.id, 'data-text': item.text })
+                        .appendTo($drop);
+                });
+            }
+            openDropdown(id);
+        }
+
+        // ── Commit a selection ───────────────────────────────────────────
+
+        function selectItem(id, itemId, itemText) {
+            $('#' + id).val(itemId);                    // hidden — model binding
+            $('#' + id + '_search').val(itemText);      // visible text
+            // Show the clear button.
+            $('#acp-wrapper-' + id + ' .acp-clear').show();
+            closeDropdown(id);
+            // Trigger change + blur on hidden input so jQuery Validate re-evaluates.
+            // This satisfies the Lab 4 blur-validation requirement for autocomplete fields.
+            $('#' + id).trigger('change').trigger('blur');
+        }
+
+        // ── Clear a selection ────────────────────────────────────────────
+
+        function clearSelection(id) {
+            $('#' + id).val('');
+            $('#' + id + '_search').val('').focus();
+            $('#acp-wrapper-' + id + ' .acp-clear').hide();
+            closeDropdown(id);
+            $('#' + id).trigger('change').trigger('blur');
+        }
+
+        // ── Delegated events (work for dynamically inserted partials) ────
+
+        $(document)
+
+            // User types in the search box — debounced AJAX fetch
+            .on('input', '.acp-search', function () {
+                var $input   = $(this);
+                var id       = $input.data('target');
+                var endpoint = $input.data('endpoint');
+                var term     = $.trim($input.val());
+
+                // Clear hidden id immediately when user modifies the text.
+                $('#' + id).val('');
+
+                clearTimeout(_timers[id]);
+
+                if (term.length < 1) {
+                    closeDropdown(id);
+                    return;
+                }
+
+                // Loading indicator while debouncing.
+                $('#acp-dropdown-' + id).empty()
+                    .append('<li class="acp-item acp-loading">&#8987; Tražim...</li>');
+                openDropdown(id);
+
+                _timers[id] = setTimeout(function () {
+                    $.getJSON(endpoint, { term: term })
+                        .done(function (data) { renderResults(id, data); })
+                        .fail(function () {
+                            $('#acp-dropdown-' + id).empty()
+                                .append('<li class="acp-item acp-no-results">Greška pri dohvatu podataka.</li>');
+                        });
+                }, 280);
+            })
+
+            // Click on a result item
+            .on('click', '.acp-item:not(.acp-no-results):not(.acp-loading)', function () {
+                var id = $(this).closest('.acp-dropdown').attr('id').replace('acp-dropdown-', '');
+                selectItem(id, $(this).attr('data-id'), $(this).attr('data-text'));
+            })
+
+            // Click the clear (×) button
+            .on('click', '.acp-clear', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                clearSelection($(this).data('target'));
+            })
+
+            // Keyboard navigation inside the search box
+            .on('keydown', '.acp-search', function (e) {
+                var id     = $(this).data('target');
+                var $drop  = $('#acp-dropdown-' + id);
+                if (!$drop.is(':visible')) { return; }
+
+                var $items = $drop.find('.acp-item:not(.acp-no-results):not(.acp-loading)');
+                var $cur   = $items.filter('.acp-active');
+                var idx    = $items.index($cur);
+
+                switch (e.key) {
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        $items.removeClass('acp-active');
+                        $items.eq(idx < $items.length - 1 ? idx + 1 : 0).addClass('acp-active');
+                        break;
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        $items.removeClass('acp-active');
+                        $items.eq(idx > 0 ? idx - 1 : $items.length - 1).addClass('acp-active');
+                        break;
+                    case 'Enter':
+                        e.preventDefault();
+                        if ($cur.length) {
+                            selectItem(id, $cur.attr('data-id'), $cur.attr('data-text'));
+                        }
+                        break;
+                    case 'Escape':
+                        closeDropdown(id);
+                        break;
+                }
+            })
+
+            // Blur on the search box: close dropdown and run validation on hidden input.
+            .on('blur', '.acp-search', function () {
+                var id = $(this).data('target');
+                // Delay so a click on a dropdown item can fire before we close.
+                setTimeout(function () {
+                    closeDropdown(id);
+                    var $form = $('#' + id).closest('form');
+                    var v     = $form.data('validator');
+                    if (v) { v.element('#' + id); }
+                }, 200);
+            })
+
+            // Close all dropdowns on outside click
+            .on('click', function (e) {
+                if (!$(e.target).closest('.acp-wrapper').length) {
+                    $('.acp-dropdown:visible').each(function () {
+                        closeDropdown($(this).attr('id').replace('acp-dropdown-', ''));
+                    });
+                }
+            });
+
+        // Prevent clicks inside the dropdown from bubbling to document.
+        $(document).on('click', '.acp-dropdown', function (e) { e.stopPropagation(); });
+
+        })(jQuery);
+    });
+    </script>
+}

@@ -1,0 +1,123 @@
+@model VetAmb.ViewModels.PatientFormModel
+@using VetAmb.Models
+@{
+    ViewData["Title"] = "Novi Pacijent";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Nadzorna plo&#269;a</a>
+    <span class="separator">/</span>
+    <a href="/patients">Pacijenti</a>
+    <span class="separator">/</span>
+    <span class="current">Novi Pacijent</span>
+</nav>
+
+<div class="page-actions">
+    <div class="page-header" style="margin-bottom:0;">
+        <h1>Novi Pacijent</h1>
+        <p class="subtitle">Unesite podatke novog pacijenta</p>
+    </div>
+    <a href="/patients" class="btn-back">&#8592; Natrag</a>
+</div>
+
+<form asp-action="Create" asp-controller="Patient" method="post" class="form-glass">
+    @Html.AntiForgeryToken()
+
+        <!-- Row 1: Name + Species -->
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" asp-for="Name">Ime pacijenta</label>
+                <input asp-for="Name" class="form-input" placeholder="Npr. Rex, Mačak Garo..." />
+                <span asp-validation-for="Name" class="form-validation"></span>
+            </div>
+
+            <div class="form-group">
+                @await Html.PartialAsync("_AjaxAutocomplete",
+                    new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
+                    {
+                        ["FieldName"]   = "Species",
+                        ["FieldId"]     = "species",
+                        ["LabelText"]   = "Vrsta životinje",
+                        ["Endpoint"]    = "/patients/search-species",
+                        ["Placeholder"] = "Upišite vrstu životinje...",
+                        ["InitialId"]   = null,
+                        ["InitialText"] = "",
+                        ["MinId"]       = 0,
+                        ["RequiredMessage"] = "Odabir vrste životinje je obavezan."
+                    })
+            </div>
+        </div>
+
+        <!-- Row 2: Breed + Color -->
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" asp-for="Breed">Pasmina</label>
+                <input asp-for="Breed" class="form-input" placeholder="Npr. Labrador, Perzijska..." />
+                <span asp-validation-for="Breed" class="form-validation"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Color">Boja</label>
+                <input asp-for="Color" class="form-input" placeholder="Npr. Zlatna, Crno-bijela..." />
+                <span asp-validation-for="Color" class="form-validation"></span>
+            </div>
+        </div>
+
+        <!-- Row 3: Date of Birth (custom picker) + Weight -->
+        <div class="form-row">
+            <div class="form-group">
+                @await Html.PartialAsync("_CustomDateTimePicker",
+                    new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
+                    {
+                        ["FieldName"]  = "DateOfBirth",
+                        ["FieldId"]    = "dateOfBirth",
+                        ["LabelText"]  = "Datum rođenja",
+                        ["Value"]      = null,
+                        ["Required"]   = true,
+                        ["RequiredMessage"] = "Datum rođenja je obavezan."
+                    })
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Weight">Težina (kg)</label>
+                <input asp-for="Weight" type="number" step="0.01"
+                       class="form-input" placeholder="Npr. 28.5" />
+                <span asp-validation-for="Weight" class="form-validation"></span>
+            </div>
+        </div>
+
+        <!-- Row 4: MicrochipId + Owner autocomplete -->
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" asp-for="MicrochipId">Broj mikročipa</label>
+                <input asp-for="MicrochipId" class="form-input" placeholder="Npr. 191100000123456" />
+                <span asp-validation-for="MicrochipId" class="form-validation"></span>
+            </div>
+
+            <!-- Owner AJAX Autocomplete -->
+            <div class="form-group">
+                @await Html.PartialAsync("_AjaxAutocomplete",
+                    new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
+                    {
+                        ["FieldName"]   = "OwnerId",
+                        ["FieldId"]     = "ownerId",
+                        ["LabelText"]   = "Vlasnik",
+                        ["Endpoint"]    = "/patients/search-owners",
+                        ["Placeholder"] = "Upišite ime vlasnika...",
+                        ["InitialId"]   = Model.OwnerId > 0 ? (object)Model.OwnerId : null,
+                        ["InitialText"] = ViewBag.InitialOwnerText as string ?? "",
+                        ["RequiredMessage"] = "Odabir vlasnika je obavezan."
+                    })
+            </div>
+        </div>
+
+    <div class="form-footer">
+        <a href="/patients" class="btn-secondary">Odustani</a>
+        <button type="submit" class="btn-primary">&#128190; Spremi Pacijenta</button>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

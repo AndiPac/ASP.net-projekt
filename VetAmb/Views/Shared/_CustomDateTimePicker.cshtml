@@ -1,0 +1,723 @@
+@* ============================================================
+   _CustomDateTimePicker.cshtml — VetAmb Custom Date+Time Picker
+   Usage:
+     @await Html.PartialAsync("_CustomDateTimePicker", new ViewDataDictionary(ViewData)
+     {
+         ["FieldName"]  = "AppointmentDateTime",   // model binding name
+         ["FieldId"]    = "appointmentDateTime",    // element id (no dots)
+         ["LabelText"]  = "Appointment Date & Time",
+         ["Value"]      = Model.AppointmentDateTime // nullable DateTime?
+     })
+   RULES:
+     - No type="date" or type="datetime-local" — native picker is bypassed entirely.
+     - All visual language follows the site-wide Modern Glassmorphism design system.
+     - JS formats selected value as  dd.MM.yyyy HH:mm  (hr) or  MM/dd/yyyy hh:mm tt (en-US).
+   ============================================================ *@
+
+@using System.Globalization
+
+@{
+    var fieldName   = ViewData["FieldName"]  as string ?? "DateField";
+    var fieldId     = ViewData["FieldId"]    as string ?? "dateField";
+    var labelText   = ViewData["LabelText"]  as string ?? "Date & Time";
+    var rawValue    = ViewData["Value"];
+    // Optional client-side required validation.
+    var isRequired   = ViewData["Required"] is bool rb && rb;
+    var requiredMsg  = ViewData["RequiredMessage"] as string ?? "Ovo polje je obavezno.";
+    // Read browser's actual locale from Accept-Language header — bypasses DefaultThreadCurrentCulture
+    // being globally pinned to hr-HR, which would make CultureInfo.CurrentCulture always Croatian.
+    var acceptLang  = Context.Request.Headers.AcceptLanguage.FirstOrDefault() ?? "";
+    var primaryLang = acceptLang.Split(',', ';')[0].Trim();
+    var isHr        = string.IsNullOrEmpty(primaryLang)
+                      || primaryLang.StartsWith("hr", StringComparison.OrdinalIgnoreCase);
+    var dateFormat  = isHr ? "dd.MM.yyyy HH:mm" : "MM/dd/yyyy hh:mm tt";
+    var placeholder = isHr ? "dd.MM.yyyy HH:mm" : "MM/dd/yyyy hh:mm tt";
+    var formattedValue = "";
+    if (rawValue is DateTime dtVal && dtVal != default)
+        // Use InvariantCulture + explicit pattern so output exactly matches both the
+        // JS parseFormattedDate regexes and the controller's ParseDate TryParseExact patterns.
+        formattedValue = dtVal.ToString(dateFormat, CultureInfo.InvariantCulture);
+    else if (rawValue is string strVal && !string.IsNullOrEmpty(strVal))
+        formattedValue = strVal; // Pre-formatted string passed from Edit view
+}
+
+<div class="cdp-wrapper" id="cdp-wrapper-@fieldId">
+    <label class="cdp-label" for="@(fieldId)_display">@labelText</label>
+
+    <!-- Hidden input that ASP.NET Core model binding reads -->
+    <input type="hidden"
+           id="@fieldId"
+           name="@fieldName"
+           class="force-validate"
+           value="@formattedValue"
+           @(isRequired ? $"data-val=\"true\" data-val-required=\"{requiredMsg}\"" : "") />
+
+    <!-- Visible styled text input - no native picker -->
+    <div class="cdp-input-group">
+        <input type="text"
+               id="@(fieldId)_display"
+               class="cdp-input"
+               placeholder="@placeholder"
+               value="@formattedValue"
+               autocomplete="off"
+               readonly />
+        <span class="cdp-toggle-btn" data-target="@fieldId" title="Pick date and time">
+            &#128197;
+        </span>
+    </div>
+
+    @Html.ValidationMessage(fieldName, null, new { @class = "text-danger cdp-validation" })
+
+    <!-- Dropdown panel -->
+    <div class="cdp-panel" id="cdp-panel-@fieldId" style="display:none;" aria-hidden="true">
+
+        <!-- Calendar header -->
+        <div class="cdp-cal-header">
+            <button type="button" class="cdp-nav" data-dir="prev" data-target="@fieldId">&#8249;</button>
+            <span class="cdp-month-year" id="cdp-title-@fieldId"></span>
+            <button type="button" class="cdp-nav" data-dir="next" data-target="@fieldId">&#8250;</button>
+        </div>
+
+        <!-- Day-of-week headers -->
+        <div class="cdp-dow-row">
+            @if (isHr)
+            {
+                <span>Po</span><span>Ut</span><span>Sr</span>
+                <span>&#268;e</span><span>Pe</span><span>Su</span><span>Ne</span>
+            }
+            else
+            {
+                <span>Mo</span><span>Tu</span><span>We</span>
+                <span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+            }
+        </div>
+
+        <!-- Day cells injected by JS -->
+        <div class="cdp-days" id="cdp-days-@fieldId"></div>
+
+        <!-- Time row -->
+        <div class="cdp-time-row">
+            <span class="cdp-time-label">@(isHr ? "Sat" : "Time")</span>
+            <div class="cdp-time-spinner">
+                <button type="button" class="cdp-spin" data-unit="hour" data-dir="up"   data-target="@fieldId">&#9650;</button>
+                <span   class="cdp-time-val"  id="cdp-hour-@fieldId">00</span>
+                <button type="button" class="cdp-spin" data-unit="hour" data-dir="down" data-target="@fieldId">&#9660;</button>
+            </div>
+            <span class="cdp-colon">:</span>
+            <div class="cdp-time-spinner">
+                <button type="button" class="cdp-spin" data-unit="min" data-dir="up"   data-target="@fieldId">&#9650;</button>
+                <span   class="cdp-time-val" id="cdp-min-@fieldId">00</span>
+                <button type="button" class="cdp-spin" data-unit="min" data-dir="down" data-target="@fieldId">&#9660;</button>
+            </div>
+            <div class="cdp-ampm-wrap" id="cdp-ampm-wrap-@fieldId" style="display:none;">
+                <button type="button" class="cdp-ampm-btn" id="cdp-ampm-@fieldId">AM</button>
+            </div>
+        </div>
+
+        <!-- Confirm -->
+        <div class="cdp-footer">
+            <button type="button" class="cdp-confirm-btn" data-target="@fieldId">@(isHr ? "Potvrdi" : "Confirm")</button>
+        </div>
+    </div>
+</div>
+
+@* ─── Scoped Styles ──────────────────────────────────────────────────────── *@
+@section Styles {
+<style>
+/* Only emit once — guard via flag in ViewData (handled below) */
+</style>
+}
+
+@* ─── Inline CSS emitted once per page via a flag ───────────────────────── *@
+@if (!(ViewContext.HttpContext.Items.ContainsKey("__cdp_styles")))
+{
+    ViewContext.HttpContext.Items["__cdp_styles"] = true;
+    <style>
+    /* === Custom DateTime Picker — Glassmorphism ===================== */
+    .cdp-wrapper {
+        position: relative;
+        margin-bottom: 1.25rem;
+    }
+
+    .cdp-label {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.65);
+        margin-bottom: 0.4rem;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+
+    .cdp-input-group {
+        display: flex;
+        align-items: stretch;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: border-color 0.2s cubic-bezier(0.4,0,0.2,1),
+                    box-shadow  0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .cdp-input-group:focus-within {
+        border-color: rgba(108,99,255,0.6);
+        box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+    }
+
+    .cdp-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #f0f0f0;
+        font-family: inherit;
+        font-size: 0.92rem;
+        padding: 0.65rem 0.9rem;
+        cursor: pointer;
+        caret-color: transparent;
+    }
+
+    .cdp-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    .cdp-toggle-btn {
+        padding: 0 0.85rem;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 1.05rem;
+        color: rgba(255,255,255,0.5);
+        border-left: 1px solid rgba(255,255,255,0.08);
+        transition: color 0.2s;
+        user-select: none;
+    }
+
+    .cdp-toggle-btn:hover { color: #6c63ff; }
+
+    .cdp-validation {
+        display: block;
+        font-size: 0.78rem;
+        color: #ff6b9d;
+        margin-top: 0.3rem;
+        min-height: 1rem;
+    }
+
+    /* Panel */
+    .cdp-panel {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        z-index: 1000;
+        width: 280px;
+        background: rgba(15,12,41,0.92);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+        padding: 1rem;
+        animation: cdp-fade-in 0.18s ease;
+    }
+
+    @@keyframes cdp-fade-in {
+        from { opacity: 0; transform: translateY(-6px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Calendar header */
+    .cdp-cal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.6rem;
+    }
+
+    .cdp-month-year {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #f0f0f0;
+        letter-spacing: 0.3px;
+    }
+
+    .cdp-nav {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.7);
+        border-radius: 8px;
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s, color 0.15s;
+    }
+
+    .cdp-nav:hover {
+        background: rgba(108,99,255,0.25);
+        color: #fff;
+    }
+
+    /* Day-of-week row */
+    .cdp-dow-row {
+        display: grid;
+        grid-template-columns: repeat(7,1fr);
+        margin-bottom: 0.25rem;
+    }
+
+    .cdp-dow-row span {
+        text-align: center;
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.35);
+        letter-spacing: 0.5px;
+        padding: 0.15rem 0;
+    }
+
+    /* Day cells */
+    .cdp-days {
+        display: grid;
+        grid-template-columns: repeat(7,1fr);
+        gap: 2px;
+        margin-bottom: 0.75rem;
+    }
+
+    .cdp-day {
+        text-align: center;
+        padding: 0.35rem 0.1rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.8);
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+    }
+
+    .cdp-day:hover           { background: rgba(108,99,255,0.3); color: #fff; }
+    .cdp-day.cdp-today       { border: 1px solid rgba(0,210,255,0.4); color: #00d2ff; }
+    .cdp-day.cdp-selected    { background: linear-gradient(135deg,#6c63ff,#00d2ff); color: #fff; font-weight: 600; }
+    .cdp-day.cdp-other-month { color: rgba(255,255,255,0.2); cursor: default; }
+    .cdp-day.cdp-disabled    { color: rgba(255,255,255,0.15); cursor: not-allowed; }
+
+    /* Time row */
+    .cdp-time-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-content: center;
+        padding: 0.5rem 0;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        margin-bottom: 0.65rem;
+    }
+
+    .cdp-time-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.35);
+        letter-spacing: 0.5px;
+        margin-right: 0.25rem;
+    }
+
+    .cdp-time-spinner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .cdp-spin {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.6);
+        border-radius: 5px;
+        width: 22px;
+        height: 18px;
+        cursor: pointer;
+        font-size: 0.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s;
+    }
+
+    .cdp-spin:hover { background: rgba(108,99,255,0.3); color: #fff; }
+
+    .cdp-time-val {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #f0f0f0;
+        min-width: 26px;
+        text-align: center;
+    }
+
+    .cdp-colon {
+        font-size: 1rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.5);
+        align-self: center;
+        margin-top: 2px;
+    }
+
+    .cdp-ampm-btn {
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: rgba(255,255,255,0.7);
+        border-radius: 8px;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .cdp-ampm-btn:hover { background: rgba(108,99,255,0.3); color: #fff; }
+
+    /* Error state on the visible input group (set programmatically on close) */
+    .cdp-input-group.cdp-input-error {
+        border-color: rgba(255, 107, 157, 0.7);
+        box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.15);
+    }
+
+    /* Footer confirm */
+    .cdp-footer {
+        text-align: center;
+    }
+
+    .cdp-confirm-btn {
+        background: linear-gradient(135deg, rgba(108,99,255,0.55), rgba(0,210,255,0.35));
+        border: 1px solid rgba(108,99,255,0.5);
+        color: #f0f0f0;
+        border-radius: 10px;
+        padding: 0.45rem 1.5rem;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: background 0.2s, transform 0.15s;
+        letter-spacing: 0.4px;
+    }
+
+    .cdp-confirm-btn:hover {
+        background: linear-gradient(135deg, rgba(108,99,255,0.8), rgba(0,210,255,0.55));
+        transform: translateY(-1px);
+    }
+    </style>
+}
+
+@* ─── Inline JS emitted once per page via a flag ────────────────────────── *@
+@if (!(ViewContext.HttpContext.Items.ContainsKey("__cdp_js")))
+{
+    ViewContext.HttpContext.Items["__cdp_js"] = true;
+    <script>
+    document.addEventListener('DOMContentLoaded', function init() {
+        if (typeof jQuery === 'undefined' || typeof jQuery.validator === 'undefined') { setTimeout(init, 50); return; }
+        (function ($) {
+        'use strict';
+
+        // jQuery Validate ignores :hidden elements by default, which silently skips
+        // our hidden date binding inputs.  Override globally so ALL elements are
+        // validated regardless of visibility state.
+        $.validator.setDefaults({
+            ignore: ''
+        });
+
+        // ── Per-instance state ───────────────────────────────────────────
+        var cdpState = {};
+
+        // Mirrors the server-side Accept-Language header detection:
+        // both use the browser's own language preference as the single source of truth.
+        function isHrCulture() {
+            var lang = (navigator.language || navigator.userLanguage || 'hr').toLowerCase();
+            return lang.startsWith('hr');
+        }
+
+        function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+        // ── Format a Date object into the culture-correct string ─────────
+        function formatDateTime(date, hour, min, ampm) {
+            var h = parseInt(hour, 10);
+            var m = parseInt(min, 10);
+            if (!isHrCulture()) {
+                // en-US: 12-hour with AM/PM
+                var hh = h % 12 || 12;
+                return pad(date.getMonth() + 1) + '/' + pad(date.getDate()) + '/' + date.getFullYear()
+                    + ' ' + pad(hh) + ':' + pad(m) + ' ' + ampm;
+            }
+            // hr: 24-hour
+            return pad(date.getDate()) + '.' + pad(date.getMonth() + 1) + '.' + date.getFullYear()
+                + ' ' + pad(h) + ':' + pad(m);
+        }
+
+        // Croatian month names always used regardless of browser locale
+        var HR_MONTHS = [
+            'Siječanj','Veljača','Ožujak','Travanj','Svibanj','Lipanj',
+            'Srpanj','Kolovoz','Rujan','Listopad','Studeni','Prosinac'
+        ];
+
+        // ── Build / rebuild the calendar grid ───────────────────────────
+        function renderCalendar(id) {
+            var s = cdpState[id];
+            var year  = s.viewYear;
+            var month = s.viewMonth; // 0-based
+            var today = new Date();
+
+            $('#cdp-title-' + id).text(HR_MONTHS[month] + ' ' + year);
+
+            var daysEl = $('#cdp-days-' + id).empty();
+
+            // Leading blanks — week starts Monday
+            var firstDow = new Date(year, month, 1).getDay(); // 0=Sun
+            var blanks = (firstDow === 0) ? 6 : firstDow - 1;
+            for (var b = 0; b < blanks; b++) {
+                daysEl.append('<div class="cdp-day cdp-other-month"></div>');
+            }
+
+            var daysInMonth = new Date(year, month + 1, 0).getDate();
+            for (var d = 1; d <= daysInMonth; d++) {
+                var cls = 'cdp-day';
+                if (d === today.getDate() && month === today.getMonth() && year === today.getFullYear())
+                    cls += ' cdp-today';
+                if (s.selectedDate && d === s.selectedDate.getDate()
+                    && month === s.selectedDate.getMonth()
+                    && year  === s.selectedDate.getFullYear())
+                    cls += ' cdp-selected';
+
+                daysEl.append(
+                    $('<div>').addClass(cls).text(d)
+                        .data('day', d).data('month', month).data('year', year)
+                        .data('cdp-target', id)
+                );
+            }
+        }
+
+        // ── Open / close panel ──────────────────────────────────────────
+        function openPanel(id) {
+            var s = cdpState[id];
+            if (!s.selectedDate) {
+                var now = new Date();
+                s.viewYear  = now.getFullYear();
+                s.viewMonth = now.getMonth();
+            } else {
+                s.viewYear  = s.selectedDate.getFullYear();
+                s.viewMonth = s.selectedDate.getMonth();
+            }
+            renderCalendar(id);
+            updateTimeDisplay(id);
+            // AM/PM visibility
+            var ampmWrap = $('#cdp-ampm-wrap-' + id);
+            isHrCulture() ? ampmWrap.hide() : ampmWrap.show();
+
+            var panel = $('#cdp-panel-' + id);
+            panel.stop(true, true).fadeIn(160).attr('aria-hidden', 'false');
+            s.open = true;
+        }
+
+        function closePanel(id) {
+            var panel = $('#cdp-panel-' + id);
+            panel.stop(true, true).fadeOut(130).attr('aria-hidden', 'true');
+            cdpState[id].open = false;
+
+            var $hidden = $('#' + id);
+            if (!$hidden.length) { return; }
+
+            // Dispatch a native change event so jQuery Validate's own event bindings
+            // fire immediately (they target the hidden input because ignore is '').
+            $hidden.trigger('change');
+
+            // Run the validator after the event propagates so we get the final result.
+            setTimeout(function () {
+                var $form = $hidden.closest('form');
+                if (!$form.length) { return; }
+
+                var validator = $form.data('validator');
+                if (!validator) { return; }
+
+                // Re-ensure ignore is '' on this specific instance (defensive).
+                validator.settings.ignore = '';
+
+                // Invoke element-level validation directly.  This runs the full
+                // unobtrusive pipeline: check() → invalid[] → showErrors() →
+                // errorPlacement() → updates the data-valmsg-for span beneath the picker.
+                var isValid = validator.element($hidden[0]);
+
+                // Mirror the error state on the glassmorphism input group so the
+                // border turns pink while the field is empty / invalid.
+                var $wrapper    = $hidden.closest('.cdp-wrapper');
+                var $inputGroup = $wrapper.find('.cdp-input-group');
+                if (isValid === false) {
+                    $inputGroup.addClass('cdp-input-error');
+                } else {
+                    $inputGroup.removeClass('cdp-input-error');
+                    // Clear the message span when the field becomes valid.
+                    $wrapper.find('[data-valmsg-for]')
+                            .removeClass('field-validation-error')
+                            .addClass('field-validation-valid')
+                            .text('');
+                }
+            }, 0);
+        }
+
+        function updateTimeDisplay(id) {
+            var s = cdpState[id];
+            if (isHrCulture()) {
+                // 24-hour display: show raw internal hour value directly (00–23).
+                $('#cdp-hour-' + id).text(pad(s.hour));
+            } else {
+                // 12-hour display: convert the internal 24-hour value (0–23) to a
+                // 1–12 visual range for the picker UI.  The internal s.hour stays
+                // in 24-hour form at all times so formatDateTime can build the
+                // correct model-binding string without a second conversion.
+                var h12 = s.hour % 12 || 12;
+                $('#cdp-hour-' + id).text(pad(h12));
+                s.ampm = (s.hour < 12) ? 'AM' : 'PM';
+                $('#cdp-ampm-' + id).text(s.ampm);
+            }
+            $('#cdp-min-' + id).text(pad(s.min));
+        }
+
+        // ── Commit selection into hidden + visible inputs ────────────────
+        function commitValue(id) {
+            var s = cdpState[id];
+            if (!s.selectedDate) return;
+            var formatted = formatDateTime(s.selectedDate, s.hour, s.min, s.ampm);
+            $('#' + id).val(formatted);                      // hidden
+            $('#' + id + '_display').val(formatted);         // visible text
+        }
+
+        // ── Initialise a single picker instance ─────────────────────────
+        function initPicker(id) {
+            if (cdpState[id]) return; // already initialised
+
+            // Parse any pre-existing value
+            var hiddenVal = $('#' + id).val();
+            var parsed = hiddenVal ? parseFormattedDate(hiddenVal) : null;
+
+            cdpState[id] = {
+                open:         false,
+                selectedDate: parsed ? parsed.date : null,
+                viewYear:     parsed ? parsed.date.getFullYear()  : new Date().getFullYear(),
+                viewMonth:    parsed ? parsed.date.getMonth()     : new Date().getMonth(),
+                hour:         parsed ? parsed.hour : 0,
+                min:          parsed ? parsed.min  : 0,
+                ampm:         parsed ? parsed.ampm : 'AM'
+            };
+        }
+
+        // ── Parse either culture format back to a Date ───────────────────
+        function parseFormattedDate(str) {
+            if (!str) return null;
+            var d, h, m, ampm = 'AM';
+            // Try hr format: "dd.MM.yyyy HH:mm" (from formatDateTime JS) or "d.M.yyyy. H:mm" (from ToString("g") hr-HR)
+            var mHr = str.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})\.?\s+(\d{1,2}):(\d{2})$/);
+            if (mHr) {
+                d    = new Date(+mHr[3], +mHr[2]-1, +mHr[1]);
+                h    = +mHr[4]; m = +mHr[5];
+                return { date: d, hour: h, min: m, ampm: ampm };
+            }
+            // Try en-US format: MM/dd/yyyy hh:mm tt
+            var mEn = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})\s+(AM|PM)$/i);
+            if (mEn) {
+                d    = new Date(+mEn[3], +mEn[1]-1, +mEn[2]);
+                h    = +mEn[4]; m = +mEn[5]; ampm = mEn[6].toUpperCase();
+                if (ampm === 'PM' && h < 12) h += 12;
+                if (ampm === 'AM' && h === 12) h = 0;
+                return { date: d, hour: h, min: m, ampm: ampm };
+            }
+            return null;
+        }
+
+        // ── Delegated event wiring (works for dynamically inserted partials)
+        $(document)
+
+            // Toggle open/close via button or text input click
+            .on('click', '.cdp-toggle-btn, .cdp-input', function (e) {
+                e.stopPropagation();
+                var id = $(this).data('target') || $(this).closest('.cdp-wrapper').find('input[type=hidden]').attr('id');
+                initPicker(id);
+                if (cdpState[id].open) { closePanel(id); } else { openPanel(id); }
+            })
+
+            // Day selection
+            .on('click', '.cdp-day:not(.cdp-other-month):not(.cdp-disabled)', function (e) {
+                e.stopPropagation();
+                var id = $(this).data('cdp-target');
+                var s  = cdpState[id];
+                s.selectedDate = new Date($(this).data('year'), $(this).data('month'), $(this).data('day'));
+                renderCalendar(id);
+            })
+
+            // Month nav
+            .on('click', '.cdp-nav', function (e) {
+                e.stopPropagation();
+                var id  = $(this).data('target');
+                var dir = $(this).data('dir') === 'prev' ? -1 : 1;
+                var s   = cdpState[id];
+                s.viewMonth += dir;
+                if (s.viewMonth > 11) { s.viewMonth = 0;  s.viewYear++; }
+                if (s.viewMonth < 0)  { s.viewMonth = 11; s.viewYear--; }
+                renderCalendar(id);
+            })
+
+            // Time spinners
+            .on('click', '.cdp-spin', function (e) {
+                e.stopPropagation();
+                var id   = $(this).data('target');
+                var unit = $(this).data('unit');
+                var dir  = $(this).data('dir') === 'up' ? 1 : -1;
+                var s    = cdpState[id];
+
+                if (unit === 'hour') {
+                    if (isHrCulture()) {
+                        s.hour = (s.hour + dir + 24) % 24;
+                    } else {
+                        // 12-hour mode: cycle 1-12
+                        var h12 = (s.hour % 12 || 12) + dir;
+                        if (h12 > 12) h12 = 1;
+                        if (h12 < 1)  h12 = 12;
+                        s.hour = (s.ampm === 'PM') ? (h12 % 12) + 12 : h12 % 12;
+                    }
+                } else {
+                    s.min = (s.min + dir * 5 + 60) % 60;
+                }
+                updateTimeDisplay(id);
+            })
+
+            // AM/PM toggle (en-US only)
+            .on('click', '.cdp-ampm-btn', function (e) {
+                e.stopPropagation();
+                var id = $(this).closest('.cdp-panel').attr('id').replace('cdp-panel-', '');
+                var s  = cdpState[id];
+                s.ampm = (s.ampm === 'AM') ? 'PM' : 'AM';
+                if (s.ampm === 'PM' && s.hour < 12) s.hour += 12;
+                if (s.ampm === 'AM' && s.hour >= 12) s.hour -= 12;
+                updateTimeDisplay(id);
+            })
+
+            // Confirm button
+            .on('click', '.cdp-confirm-btn', function (e) {
+                e.stopPropagation();
+                var id = $(this).data('target');
+                commitValue(id);
+                closePanel(id);
+                // Trigger change so jQuery Validate picks up the new value
+                $('#' + id).trigger('change');
+                $('#' + id + '_display').trigger('blur');
+            })
+
+            // Close on outside click
+            .on('click', function () {
+                $.each(cdpState, function (id, s) {
+                    if (s.open) closePanel(id);
+                });
+            });
+
+        // Prevent panel clicks from bubbling to document
+        $(document).on('click', '.cdp-panel', function (e) { e.stopPropagation(); });
+
+        })(jQuery);
+    });
+    </script>
+}

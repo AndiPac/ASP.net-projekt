@@ -1,12 +1,12 @@
 @page
 @model VetAmb.Pages.IndexModel
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Nadzorna ploča";
 }
 
 <div class="page-header">
-    <h1>Dashboard</h1>
-    <p class="subtitle">Welcome to VetAmb — Veterinary Ambulance Management</p>
+    <h1>Nadzorna ploča</h1>
+    <p class="subtitle">Dobrodošli u VetAmb — Sustav upravljanja veterinarskim ambulantama</p>
 </div>
 
 <!-- Stat Tiles — CSS Grid -->
@@ -17,7 +17,7 @@
                 <div class="stat-icon blue">🐾</div>
                 <div>
                     <div class="stat-value">@Model.TotalPatients</div>
-                    <div class="stat-label">Patients</div>
+                    <div class="stat-label">Pacijenti</div>
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
                 <div class="stat-icon cyan">🩺</div>
                 <div>
                     <div class="stat-value">@Model.TotalVets</div>
-                    <div class="stat-label">Veterinarians</div>
+                    <div class="stat-label">Veterinari</div>
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                 <div class="stat-icon pink">🏥</div>
                 <div>
                     <div class="stat-value">@Model.TotalClinics</div>
-                    <div class="stat-label">Clinics</div>
+                    <div class="stat-label">Klinike</div>
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
                 <div class="stat-icon green">👤</div>
                 <div>
                     <div class="stat-value">@Model.TotalOwners</div>
-                    <div class="stat-label">Owners</div>
+                    <div class="stat-label">Vlasnici</div>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
                 <div class="stat-icon orange">📅</div>
                 <div>
                     <div class="stat-value">@Model.TotalAppointments</div>
-                    <div class="stat-label">Appointments</div>
+                    <div class="stat-label">Termini</div>
                 </div>
             </div>
         </div>
@@ -70,7 +70,7 @@
 
 <!-- Recent Appointments -->
 <div class="glass-card">
-    <h3 class="section-title">📅 Recent Appointments</h3>
+    <h3 class="section-title">📅 Nedavni Termini</h3>
     @foreach (var appt in Model.RecentAppointments)
     {
         var statusClass = appt.Status switch
@@ -92,7 +92,7 @@
                 <div class="timeline-body" style="flex:1;">
                     <div class="tl-reason">@appt.Patient?.Name — @appt.Reason</div>
                     <div class="tl-vet">Dr. @appt.Vet?.FirstName @appt.Vet?.LastName</div>
-                    <span class="status-badge @statusClass" style="margin-top:0.25rem;">@appt.Status</span>
+                    <span class="status-badge @statusClass" style="margin-top:0.25rem;">@appt.Status.GetDisplayName()</span>
                 </div>
             </div>
         </a>

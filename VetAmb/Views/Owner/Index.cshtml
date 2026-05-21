@@ -1,29 +1,33 @@
 @model List<Owner>
 @{
-    ViewData["Title"] = "Owners";
+    ViewData["Title"] = "Vlasnici";
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna ploča</a>
     <span class="separator">/</span>
-    <span class="current">Owners</span>
+    <span class="current">Vlasnici</span>
 </nav>
 
 <div class="page-header">
-    <h1>Owners</h1>
-    <p class="subtitle">All registered pet owners</p>
+    <h1>Vlasnici</h1>
+    <p class="subtitle">Svi registrirani vlasnici kućnih ljubimaca</p>
+</div>
+
+<div class="page-actions">
+    <a href="/owners/create" class="btn-primary">&#43; Novi Vlasnik</a>
 </div>
 
 <div class="card-grid">
     @foreach (var owner in Model)
     {
-        <a href="/owners/@owner.Id" class="glass-card-link">
-            <div class="glass-card patient-card">
+        <div class="glass-card patient-card" style="position:relative;">
+            <a href="/owners/@owner.Id" class="glass-card-link-inner">
                 <div class="card-top">
-                    <div class="avatar dog" style="background:linear-gradient(135deg,rgba(0,230,118,0.35),rgba(0,230,118,0.1));">👤</div>
+                    <div class="avatar dog" style="background:linear-gradient(135deg,rgba(0,230,118,0.35),rgba(0,230,118,0.1));">&#128100;</div>
                     <div>
                         <div class="card-name">@owner.FirstName @owner.LastName</div>
-                        <div class="card-breed">@owner.Patients.Count pet(s)</div>
+                        <div class="card-breed">@owner.Patients.Count ljubimac(a)</div>
                     </div>
                 </div>
 
@@ -33,24 +37,29 @@
                         <span class="detail-value">@owner.Email</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Phone</span>
+                        <span class="detail-label">Telefon</span>
                         <span class="detail-value">@owner.Phone</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Address</span>
+                        <span class="detail-label">Adresa</span>
                         <span class="detail-value">@owner.Address</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Registered</span>
-                        <span class="detail-value">@owner.RegistrationDate.ToString("MMM dd, yyyy")</span>
+                        <span class="detail-label">Registriran</span>
+                        <span class="detail-value">@owner.RegistrationDate.ToString("d")</span>
                     </div>
                 </div>
 
-                <div class="card-footer">
-                    <span class="owner-tag">🏥 @owner.Clinic?.Name</span>
-                    <span class="view-link">DETAILS →</span>
-                </div>
+            </a>
+
+            <div class="card-actions">
+                <a href="/owners/@owner.Id/edit" class="btn-edit">&#9999; Uredi</a>
+                <form action="/owners/@owner.Id/delete" method="post"
+                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti vlasnika @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode((owner.FirstName + " " + owner.LastName).Trim()))?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-danger">&#128465; Obriši</button>
+                </form>
             </div>
-        </a>
+        </div>
     }
 </div>

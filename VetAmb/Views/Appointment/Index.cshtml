@@ -1,17 +1,21 @@
 @model List<Appointment>
 @{
-    ViewData["Title"] = "Appointments";
+    ViewData["Title"] = "Termini";
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna plo&#269;a</a>
     <span class="separator">/</span>
-    <span class="current">Appointments</span>
+    <span class="current">Termini</span>
 </nav>
 
 <div class="page-header">
-    <h1>Appointments</h1>
-    <p class="subtitle">All scheduled and completed appointments</p>
+    <h1>Termini</h1>
+    <p class="subtitle">Svi zakazani i dovršeni veterinarski termini</p>
+</div>
+
+<div class="page-actions">
+    <a href="/appointments/create" class="btn-primary">&#43; Novi Termin</a>
 </div>
 
 <div class="card-grid">
@@ -28,41 +32,46 @@
             _ => ""
         };
 
-        <a href="/appointments/@appt.Id" class="glass-card-link">
-            <div class="glass-card patient-card">
+        <div class="glass-card patient-card" style="position:relative;">
+            <a href="/appointments/@appt.Id" class="glass-card-link-inner">
                 <div class="card-top">
-                    <div class="avatar dog" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">📅</div>
+                    <div class="avatar dog" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">&#128197;</div>
                     <div>
                         <div class="card-name">@appt.Reason</div>
-                        <div class="card-breed">@appt.AppointmentDateTime.ToString("MMM dd, yyyy – HH:mm")</div>
+                        <div class="card-breed">@appt.AppointmentDateTime.ToString("g")</div>
                     </div>
-                    <span class="status-badge @statusClass" style="margin-left:auto;">@appt.Status</span>
+                    <span class="status-badge @statusClass">@appt.Status.GetDisplayName()</span>
                 </div>
 
                 <div class="card-details">
                     <div class="detail-item">
-                        <span class="detail-label">Patient</span>
+                        <span class="detail-label">Pacijent</span>
                         <span class="detail-value">@appt.Patient?.Name</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Veterinarian</span>
+                        <span class="detail-label">Veterinar</span>
                         <span class="detail-value">Dr. @appt.Vet?.FirstName @appt.Vet?.LastName</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Services</span>
-                        <span class="detail-value">@appt.AppointmentServices.Count</span>
+                        <span class="detail-label">Usluge</span>
+                        <span class="detail-value">@(appt.AppointmentServices.Any() ? string.Join(", ", appt.AppointmentServices.Select(s => s.Service?.Name ?? "")) : "—")</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Total</span>
-                        <span class="detail-value">@appt.AppointmentServices.Sum(s => s.Service?.Price ?? 0)€</span>
+                        <span class="detail-label">Ukupno</span>
+                        <span class="detail-value">@appt.AppointmentServices.Sum(s => s.Service?.Price ?? 0)&#8364;</span>
                     </div>
                 </div>
 
-                <div class="card-footer">
-                    <span class="owner-tag">🏥 @appt.Vet?.Clinic?.Name</span>
-                    <span class="view-link">DETAILS →</span>
-                </div>
+            </a>
+
+            <div class="card-actions">
+                <a href="/appointments/@appt.Id/edit" class="btn-edit">&#9999; Uredi</a>
+                <form method="post" action="/appointments/@appt.Id/delete"
+                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti termin?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-danger">&#128465; Obriši</button>
+                </form>
             </div>
-        </a>
+        </div>
     }
 </div>

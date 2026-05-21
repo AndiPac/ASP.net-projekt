@@ -1,0 +1,102 @@
+@*
+  _ValidationScriptsPartial.cshtml — VetAmb Centralised Validation Bootstrap
+  ============================================================================
+  Include once per form page inside @section Scripts:
+
+      @section Scripts {
+          @await Html.PartialAsync("_ValidationScriptsPartial")
+      }
+
+  Architecture note
+  -----------------
+  jQuery Validate's built-in default is  ignore: ':hidden'  which silently
+  skips input[type=hidden] elements during all validation passes.  Our custom
+  datepicker and AjaxAutocomplete widgets store their bound values in hidden
+  inputs, so that default prevents on-blur validation from ever firing on them.
+
+  The fix must happen SYNCHRONOUSLY, right after jquery.validate.js is parsed
+  and before jquery.validate.unobtrusive.js loads.  Unobtrusive registers a
+  $(document).ready() handler that eventually calls $form.validate(), creating
+  the validator instance.  $.validator.setDefaults() only affects instances
+  created AFTER the call, so if we call it before unobtrusive loads, every
+  instance — including the auto-parsed one — inherits  ignore: ''  and all
+  elements are evaluated regardless of their visibility state.
+
+  A defensive re-apply inside DOMContentLoaded also patches the instance
+  settings directly, guarding against any scenario where validate() was called
+  before our setDefaults executed (e.g., a cached inline script).
+*@
+
+@* ── 1. Load jQuery Validate ─────────────────────────────────────────────── *@
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.21.0/dist/jquery.validate.min.js"></script>
+
+@* ── 2. Override global defaults IMMEDIATELY ─────────────────────────────── *@
+@* This executes synchronously as a classic script block — no DOMContentLoaded
+   wrapper — so it runs the instant the previous <script> finishes parsing.
+   At this point jQuery.validator is defined but no form validator instances
+   have been created yet, making the setDefaults call fully effective. *@
+<script>
+(function () {
+    'use strict';
+    if (typeof jQuery === 'undefined' || typeof jQuery.validator === 'undefined') {
+        // Extremely unlikely (both scripts are synchronous), but guard anyway.
+        return;
+    }
+    // Stop ignoring hidden elements entirely.
+    // Our .force-validate hidden inputs (datepicker, autocomplete) must be
+    // included in every validation pass — both element-level (on-blur) and
+    // form-level (on-submit).
+    jQuery.validator.setDefaults({
+        ignore: ''
+    });
+})();
+</script>
+
+@* ── 3. Load jQuery Validate Unobtrusive ─────────────────────────────────── *@
+@* Loads AFTER setDefaults so its $(document).ready auto-parse creates the
+   validator instance with the correct ignore filter already in $.validator.defaults. *@
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
+
+@* ── 4. DOMContentLoaded: parse form + attach on-blur validation ─────────── *@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function initValidation() {
+        if (typeof jQuery === 'undefined') { setTimeout(initValidation, 50); return; }
+        (function ($) {
+            'use strict';
+
+            var $form = $('form.form-glass');
+            if (!$form.length) { return; }
+
+            // Re-parse any data-val attributes added after initial page load
+            // (e.g., partials rendered into the DOM after ready).
+            if ($.validator && $.validator.unobtrusive) {
+                $.validator.unobtrusive.parse($form);
+            }
+
+            // Defensively patch the live instance as well — guards against any
+            // code path that may have called $form.validate() before setDefaults.
+            var v = $form.data('validator');
+            if (v) {
+                v.settings.ignore = '';
+            }
+
+            // Bind on-blur validation to every visible interactive field so the
+            // user sees errors the moment they leave a control, not only on submit.
+            function attachBlurValidation() {
+                var vv = $form.data('validator');
+                if (!vv) { return; }
+                $form.find('input:not([type=hidden]), select, textarea')
+                    .off('blur.lab4')
+                    .on('blur.lab4', function () { vv.element(this); });
+            }
+            attachBlurValidation();
+            // Run again after a short delay to catch any dynamically inserted inputs
+            // (Select2, AjaxAutocomplete trigger elements, etc.).
+            setTimeout(attachBlurValidation, 300);
+
+        })(jQuery);
+    }
+    initValidation();
+});
+</script>

@@ -21,5 +21,8 @@ namespace VetAmb.Models
         [ForeignKey(nameof(Patient))]
         public int PatientId { get; set; }
         public virtual Patient? Patient { get; set; }
+
+        // Soft delete — never call Remove(); set this timestamp instead.
+        public DateTime? DeletedAt { get; set; }
     }
 }

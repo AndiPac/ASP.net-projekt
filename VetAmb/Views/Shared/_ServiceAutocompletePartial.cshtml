@@ -1,0 +1,189 @@
+@*
+   _ServiceAutocompletePartial.cshtml — Multi-choice AJAX Service Autocomplete
+   Usage:
+     @await Html.PartialAsync("_ServiceAutocompletePartial",
+         new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
+         {
+             ["FieldId"]      = "serviceIds",
+             ["LabelText"]    = "Usluge",
+             ["Endpoint"]     = "/appointments/search-services",
+             ["Placeholder"]  = "Pretraži usluge...",
+             ["SelectedJson"] = ViewBag.SelectedServicesJson as string ?? "[]"
+         })
+*@
+
+@{
+    var fieldId     = ViewData["FieldId"]      as string ?? "serviceIds";
+    var labelText   = ViewData["LabelText"]    as string ?? "Usluge";
+    var endpoint    = ViewData["Endpoint"]     as string ?? "/appointments/search-services";
+    var placeholder = ViewData["Placeholder"]  as string ?? "Pretraži usluge...";
+    var preselected = ViewData["SelectedJson"] as string ?? "[]";
+}
+
+@* ─── Select2 CSS (emitted once per page) ────────────────────────────────── *@
+@if (!ViewContext.HttpContext.Items.ContainsKey("__svc_select2_styles"))
+{
+    ViewContext.HttpContext.Items["__svc_select2_styles"] = true;
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <style>
+    /* ── Select2 × Glassmorphism overrides ─────────────────────────── */
+    .select2-container { width: 100% !important; }
+
+    .select2-container--default .select2-selection--multiple {
+        background: rgba(255,255,255,0.06) !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        border-radius: 12px !important;
+        min-height: 46px !important;
+        padding: 0.3rem 0.5rem !important;
+        cursor: text !important;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .select2-container--default.select2-container--focus .select2-selection--multiple,
+    .select2-container--default.select2-container--open  .select2-selection--multiple {
+        border-color: rgba(108,99,255,0.6) !important;
+        box-shadow: 0 0 0 3px rgba(108,99,255,0.15) !important;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background: rgba(108,99,255,0.35) !important;
+        border: 1px solid rgba(108,99,255,0.5) !important;
+        color: rgba(255,255,255,0.95) !important;
+        border-radius: 8px !important;
+        padding: 2px 10px 2px 8px !important;
+        font-size: 0.82rem !important;
+        line-height: 1.6 !important;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: rgba(255,255,255,0.55) !important;
+        font-weight: 700 !important;
+        margin-right: 5px !important;
+        border-right: 1px solid rgba(255,255,255,0.2) !important;
+        padding-right: 5px !important;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+        color: #ff6b9d !important;
+        background: transparent !important;
+    }
+    .select2-container--default .select2-selection--multiple .select2-search__field {
+        color: rgba(255,255,255,0.9) !important;
+        background: transparent !important;
+        margin-top: 5px !important;
+    }
+    .select2-container--default .select2-selection--multiple .select2-search__field::placeholder {
+        color: rgba(255,255,255,0.35) !important;
+    }
+    .select2-dropdown {
+        background: #1a1832 !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+    }
+    .select2-container--default .select2-results__option {
+        color: rgba(255,255,255,0.85) !important;
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.9rem !important;
+    }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background: rgba(108,99,255,0.35) !important;
+        color: #fff !important;
+    }
+    .select2-container--default .select2-results__option[aria-selected="true"] {
+        background: rgba(108,99,255,0.15) !important;
+        color: rgba(255,255,255,0.55) !important;
+    }
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        background: rgba(255,255,255,0.06) !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        border-radius: 8px !important;
+        color: rgba(255,255,255,0.9) !important;
+        padding: 0.35rem 0.6rem !important;
+        outline: none !important;
+    }
+    .select2-results__message {
+        color: rgba(255,255,255,0.45) !important;
+        font-size: 0.85rem !important;
+    }
+    </style>
+}
+
+<div class="form-group" id="svc-form-group-@fieldId" style="visibility:hidden;">
+    <label class="form-label">@labelText</label>
+    <select name="ServiceIds"
+            id="@fieldId"
+            class="svc-select2-multi"
+            multiple="multiple"
+            style="width:100%;"
+            data-endpoint="@endpoint"
+            data-placeholder="@placeholder"
+            data-preselected="@preselected">
+    </select>
+    <small style="color:rgba(255,255,255,0.4);font-size:0.75rem;margin-top:0.35rem;display:block;">
+        Pretraži i odaberi jednu ili više usluga
+    </small>
+</div>
+
+@* ─── Select2 init (Select2 JS is loaded globally by _Layout.cshtml) ───────── *@
+@if (!ViewContext.HttpContext.Items.ContainsKey("__svc_select2_js"))
+{
+    ViewContext.HttpContext.Items["__svc_select2_js"] = true;
+    <script>
+    (function pollForSelect2() {
+        // Keep polling every 50 ms until jQuery, jQuery.fn, and Select2 are all ready.
+        if (typeof window.jQuery === 'undefined' ||
+            typeof window.jQuery.fn === 'undefined' ||
+            typeof window.jQuery.fn.select2 === 'undefined') {
+            setTimeout(pollForSelect2, 50);
+            return;
+        }
+        mountSvcSelect2(window.jQuery);
+    })();
+
+    function mountSvcSelect2($) {
+        document.querySelectorAll('.svc-select2-multi').forEach(function (el) {
+            // Skip elements already upgraded to avoid double-init.
+            if ($(el).hasClass('select2-hidden-accessible')) { return; }
+
+            var $el      = $(el);
+            var endpoint = $el.data('endpoint');
+            var ph       = $el.data('placeholder');
+            var presel   = [];
+            try { presel = JSON.parse($el.attr('data-preselected') || '[]'); } catch (e) {}
+
+            // Pre-populate <option selected> elements so Select2 shows existing tokens on load.
+            presel.forEach(function (item) {
+                if (!$el.find('option[value="' + item.id + '"]').length) {
+                    $el.append(new Option(item.text, item.id, true, true));
+                }
+            });
+
+            $el.select2({
+                placeholder:        ph,
+                allowClear:         true,
+                minimumInputLength: 0,
+                language: {
+                    noResults:     function () { return 'Nema rezultata'; },
+                    searching:     function () { return 'Pretraživanje...'; },
+                    inputTooShort: function () { return ''; }
+                },
+                ajax: {
+                    url:            endpoint,
+                    dataType:       'json',
+                    delay:          250,
+                    data:           function (params) { return { term: params.term || '' }; },
+                    processResults: function (data)   { return { results: data }; },
+                    cache:          true
+                }
+            });
+
+            // Trigger blur on close so jquery.validate runs on-blur client-side validation.
+            $el.on('select2:close', function () {
+                $(this).trigger('blur');
+            });
+
+            // Reveal wrapper now that Select2 has replaced the native select — eliminates FOUC.
+            var wrapper = document.getElementById('svc-form-group-' + el.id);
+            if (wrapper) { wrapper.style.visibility = ''; }
+        });
+    }
+    </script>
+}

@@ -19,6 +19,7 @@ namespace VetAmb.Models
         public AppointmentStatus Status { get; set; }
         public string? Notes { get; set; }
         public string? RescheduleReason { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
         // Foreign key relationships
         [ForeignKey(nameof(Patient))]

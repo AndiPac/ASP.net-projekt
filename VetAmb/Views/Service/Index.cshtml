@@ -1,51 +1,58 @@
 @model List<Service>
 @{
-    ViewData["Title"] = "Services";
+    ViewData["Title"] = "Usluge";
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna plo&#269;a</a>
     <span class="separator">/</span>
-    <span class="current">Services</span>
+    <span class="current">Usluge</span>
 </nav>
 
 <div class="page-header">
-    <h1>Services</h1>
-    <p class="subtitle">All available veterinary services</p>
+    <h1>Usluge</h1>
+    <p class="subtitle">Sve dostupne veterinarske usluge</p>
+</div>
+
+<div class="page-actions">
+    <a href="/services/create" class="btn-primary">&#43; Nova Usluga</a>
 </div>
 
 <div class="card-grid">
     @foreach (var service in Model)
     {
-        <a href="/services/@service.Id" class="glass-card-link">
-            <div class="glass-card patient-card">
+        <div class="glass-card patient-card" style="position:relative;">
+            <a href="/services/@service.Id" class="glass-card-link-inner">
                 <div class="card-top">
-                    <div class="avatar green" style="background:linear-gradient(135deg,rgba(0,230,118,0.35),rgba(0,230,118,0.1));">💊</div>
+                    <div class="avatar green" style="background:linear-gradient(135deg,rgba(0,230,118,0.35),rgba(0,230,118,0.1));">&#128138;</div>
                     <div>
                         <div class="card-name">@service.Name</div>
                         <div class="card-breed">@service.Description</div>
                     </div>
-                    <span class="species-badge green" style="margin-left:auto;">
-                        @service.Price€
-                    </span>
                 </div>
 
                 <div class="card-details">
                     <div class="detail-item">
-                        <span class="detail-label">Price</span>
-                        <span class="detail-value">@service.Price€</span>
+                        <span class="detail-label">Cijena</span>
+                        <span class="detail-value">@service.Price &#8364;</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Duration</span>
+                        <span class="detail-label">Trajanje</span>
                         <span class="detail-value">@service.EstimatedDurationMinutes min</span>
                     </div>
                 </div>
 
-                <div class="card-footer">
-                    <span class="owner-tag">@service.AppointmentServices.Count appointment(s)</span>
-                    <span class="view-link">DETAILS →</span>
-                </div>
+            </a>
+
+            <div class="card-actions">
+                <a href="/services/@service.Id/edit" class="btn-edit">&#9999; Uredi</a>
+                <form action="/services/@service.Id/delete" method="post"
+                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti uslugu @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(service.Name ?? ""))?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-danger">&#128465; Obriši</button>
+                </form>
             </div>
-        </a>
+        </div>
     }
 </div>
+

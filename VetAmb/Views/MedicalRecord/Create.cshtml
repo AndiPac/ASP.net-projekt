@@ -1,0 +1,86 @@
+@model VetAmb.ViewModels.MedicalRecordFormModel
+@{
+    ViewData["Title"] = "Novi Medicinski Zapis";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Nadzorna plo&#269;a</a>
+    <span class="separator">/</span>
+    <a href="/medical-records">Medicinski Zapisi</a>
+    <span class="separator">/</span>
+    <span class="current">Novi Zapis</span>
+</nav>
+
+<div class="page-actions">
+    <div class="page-header" style="margin-bottom:0;">
+        <h1>Novi Medicinski Zapis</h1>
+        <p class="subtitle">Unesite podatke novog medicinskog zapisa</p>
+    </div>
+    <a href="/medical-records" class="btn-back">&#8592; Natrag</a>
+</div>
+
+<form asp-action="Create" asp-controller="MedicalRecord" method="post" class="form-glass">
+    @Html.AntiForgeryToken()
+
+        <!-- Row 1: DateRecorded (custom picker) + Patient autocomplete -->
+        <div class="form-row">
+            <div class="form-group">
+                @await Html.PartialAsync("_CustomDateTimePicker",
+                    new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
+                    {
+                        ["FieldName"] = "DateRecorded",
+                        ["FieldId"]   = "dateRecorded",
+                        ["LabelText"] = "Datum pregleda",
+                        ["Value"]     = Model.DateRecorded
+                    })
+            </div>
+            <div class="form-group">
+                @await Html.PartialAsync("_AjaxAutocomplete",
+                    new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
+                    {
+                        ["FieldName"]       = "PatientId",
+                        ["FieldId"]         = "patientId",
+                        ["LabelText"]       = "Pacijent",
+                        ["Endpoint"]        = "/medicalrecords/search-patients",
+                        ["Placeholder"]     = "Upišite ime pacijenta...",
+                        ["RequiredMessage"] = "Odabir pacijenta je obavezan.",
+                        ["InitialId"]       = Model.PatientId > 0 ? (object)Model.PatientId : null,
+                        ["InitialText"]     = ViewBag.InitialPatientText as string ?? ""
+                    })
+            </div>
+        </div>
+
+        <!-- Row 2: Diagnosis -->
+        <div class="form-group">
+            <label class="form-label" asp-for="Diagnosis">Dijagnoza</label>
+            <input asp-for="Diagnosis" class="form-input"
+                   placeholder="Npr. Upala uha — otitis externa" />
+            <span asp-validation-for="Diagnosis" class="form-validation"></span>
+        </div>
+
+        <!-- Row 3: Treatment -->
+        <div class="form-group">
+            <label class="form-label" asp-for="Treatment">Terapija</label>
+            <input asp-for="Treatment" class="form-input"
+                   placeholder="Npr. Antibiotske kapi 2× dnevno / 7 dana" />
+            <span asp-validation-for="Treatment" class="form-validation"></span>
+        </div>
+
+        <!-- Row 4: Notes -->
+        <div class="form-group">
+            <label class="form-label" asp-for="Notes">Napomene</label>
+            <textarea asp-for="Notes" class="form-textarea" rows="4"
+                      placeholder="Dodatne napomene o pregledu..."></textarea>
+            <span asp-validation-for="Notes" class="form-validation"></span>
+        </div>
+
+    <div class="form-footer">
+        <a href="/medical-records" class="btn-secondary">Odustani</a>
+        <button type="submit" class="btn-primary">&#128190; Spremi Medicinski Zapis</button>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

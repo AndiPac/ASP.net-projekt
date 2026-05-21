@@ -14,39 +14,55 @@
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna plo&#269;a</a>
     <span class="separator">/</span>
-    <a href="/Appointment">Appointments</a>
+    <a href="/appointments">Termini</a>
     <span class="separator">/</span>
     <span class="current">@Model.Reason</span>
 </nav>
 
-<a href="/Appointment" class="btn-back">← Back to Appointments</a>
+<a href="/appointments" class="btn-back">&#8592; Natrag na Termine</a>
+
+<div class="card-actions" style="margin-bottom:1.5rem;">
+    <a href="/appointments/@Model.Id/edit" class="btn-edit">&#9999; Uredi</a>
+    <form method="post" action="/appointments/@Model.Id/delete"
+          onsubmit="return confirm('Jeste li sigurni da želite ukloniti termin?');">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn-danger">&#128465; Obriši</button>
+    </form>
+</div>
 
 <div class="details-grid">
     <div class="glass-card details-hero">
         <div class="hero-avatar" style="width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));margin-bottom:1.25rem;">📅</div>
         <div class="hero-name">@Model.Reason</div>
-        <div class="hero-breed">@Model.AppointmentDateTime.ToString("MMMM dd, yyyy – HH:mm")</div>
-        <span class="status-badge @statusClass" style="margin-bottom:1.5rem;font-size:0.8rem;">@Model.Status</span>
+        <div class="hero-breed">@Model.AppointmentDateTime.ToString("g")</div>
+        <span class="status-badge @statusClass" style="margin-bottom:1.5rem;font-size:0.8rem;">@Model.Status.GetDisplayName()</span>
 
         <div class="info-grid" style="width:100%;">
             <div class="info-item">
-                <div class="info-label">Patient</div>
-                <div class="info-value">@Model.Patient?.Name</div>
+                <div class="info-label">Pacijent</div>
+                <div class="info-value">
+                    <a href="/patients/@Model.PatientId" style="color:inherit;text-decoration:none;font-weight:inherit;">@Model.Patient?.Name</a>
+                </div>
             </div>
             <div class="info-item">
-                <div class="info-label">Veterinarian</div>
-                <div class="info-value">Dr. @Model.Vet?.FirstName @Model.Vet?.LastName</div>
+                <div class="info-label">Veterinar</div>
+                <div class="info-value">
+                    <a href="/vets/@Model.VetId" style="color:inherit;text-decoration:none;font-weight:inherit;">Dr. @Model.Vet?.FirstName @Model.Vet?.LastName</a>
+                </div>
             </div>
-            <div class="info-item full-width">
-                <div class="info-label">Notes</div>
-                <div class="info-value">@(string.IsNullOrWhiteSpace(Model.Notes) ? "—" : Model.Notes)</div>
-            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.Notes))
+            {
+                <div class="info-item full-width">
+                    <div class="info-label">Napomene</div>
+                    <div class="info-value">@Model.Notes</div>
+                </div>
+            }
             @if (Model.Status == AppointmentStatus.Rescheduled && !string.IsNullOrWhiteSpace(Model.RescheduleReason))
             {
                 <div class="info-item full-width">
-                    <div class="info-label">Reschedule Reason</div>
+                    <div class="info-label">Razlog Odgode</div>
                     <div class="info-value">@Model.RescheduleReason</div>
                 </div>
             }
@@ -55,29 +71,31 @@
 
     <div>
         <div class="glass-card">
-            <h3 class="section-title">💊 Services Performed</h3>
+            <h3 class="section-title">&#128138; Obavljene Usluge</h3>
             @if (Model.AppointmentServices.Any())
             {
                 @foreach (var asvc in Model.AppointmentServices)
                 {
-                    <div class="timeline-item">
-                        <div class="timeline-date" style="background:rgba(0,230,118,0.15);">
-                            <span class="day" style="font-size:0.9rem;">@asvc.Service?.Price€</span>
-                            <span class="month">@asvc.Service?.EstimatedDurationMinutes min</span>
+                    <a href="/services/@asvc.ServiceId" class="timeline-link">
+                        <div class="timeline-item">
+                            <div class="timeline-date" style="background:rgba(0,230,118,0.15);">
+                                <span class="day" style="font-size:0.9rem;">@asvc.Service?.Price€</span>
+                                <span class="month">@asvc.Service?.EstimatedDurationMinutes min</span>
+                            </div>
+                            <div class="timeline-body" style="flex:1;">
+                                <div class="tl-reason">@asvc.Service?.Name</div>
+                                <div class="tl-vet">@asvc.Service?.Description</div>
+                            </div>
                         </div>
-                        <div class="timeline-body" style="flex:1;">
-                            <div class="tl-reason">@asvc.Service?.Name</div>
-                            <div class="tl-vet">@asvc.Service?.Description</div>
-                        </div>
-                    </div>
+                    </a>
                 }
                 <div style="margin-top:1rem;text-align:right;font-weight:600;color:var(--accent-green);">
-                    Total: @Model.AppointmentServices.Sum(s => s.Service?.Price ?? 0)€
+                    Ukupno: @Model.AppointmentServices.Sum(s => s.Service?.Price ?? 0)€
                 </div>
             }
             else
             {
-                <div class="empty-state">No services recorded.</div>
+                <div class="empty-state">Nema zabilježenih usluga.</div>
             }
         </div>
     </div>

@@ -1,17 +1,21 @@
 @model List<Patient>
 @{
-    ViewData["Title"] = "Patients";
+    ViewData["Title"] = "Pacijenti";
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna ploča</a>
     <span class="separator">/</span>
-    <span class="current">Patients</span>
+    <span class="current">Pacijenti</span>
 </nav>
 
 <div class="page-header">
-    <h1>Patients</h1>
-    <p class="subtitle">Browse all registered patients across clinics</p>
+    <h1>Pacijenti</h1>
+    <p class="subtitle">Pregled svih registriranih pacijenata kroz klinike</p>
+</div>
+
+<div class="page-actions">
+    <a href="/patients/create" class="btn-primary">&#43; Novi Pacijent</a>
 </div>
 
 <div class="card-grid">
@@ -36,39 +40,44 @@
             _ => "default"
         };
 
-        <a href="/patients/@patient.Id" class="glass-card-link">
-            <div class="glass-card patient-card">
+        <div class="glass-card patient-card" style="position:relative;">
+            <a href="/patients/@patient.Id" class="glass-card-link-inner">
                 <div class="card-top">
                     <div class="avatar @avatarClass">@speciesEmoji</div>
                     <div>
                         <div class="card-name">@patient.Name</div>
                         <div class="card-breed">@patient.Breed</div>
                     </div>
-                    <span class="species-badge @avatarClass" style="margin-left:auto;">@patient.Species</span>
+                    <span class="species-badge @avatarClass">@patient.Species.GetDisplayName()</span>
                 </div>
                 <div class="card-details">
                     <div class="detail-item">
-                        <span class="detail-label">Weight</span>
+                        <span class="detail-label">Težina</span>
                         <span class="detail-value">@patient.Weight kg</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Color</span>
+                        <span class="detail-label">Boja</span>
                         <span class="detail-value">@patient.Color</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Born</span>
-                        <span class="detail-value">@patient.DateOfBirth.ToString("MMM dd, yyyy")</span>
+                        <span class="detail-label">Rođen</span>
+                        <span class="detail-value">@patient.DateOfBirth.ToString("d")</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Microchip</span>
+                        <span class="detail-label">Mikročip</span>
                         <span class="detail-value">@patient.MicrochipId</span>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <span class="owner-tag">👤 @patient.Owner?.FirstName @patient.Owner?.LastName</span>
-                    <span class="view-link">DETAILS →</span>
-                </div>
+            </a>
+
+            <div class="card-actions">
+                <a href="/patients/@patient.Id/edit" class="btn-edit">&#9999; Uredi</a>
+                <form action="/patients/@patient.Id/delete" method="post"
+                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti pacijenta @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(patient.Name ?? ""))?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-danger">&#128465; Obriši</button>
+                </form>
             </div>
-        </a>
+        </div>
     }
 </div>

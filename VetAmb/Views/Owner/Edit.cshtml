@@ -1,0 +1,103 @@
+@model VetAmb.ViewModels.OwnerFormModel
+@{
+    ViewData["Title"] = "Uredi vlasnika – " + Model.FirstName + " " + Model.LastName;
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<nav class="breadcrumbs">
+    <a href="/">Nadzorna plo&#269;a</a>
+    <span class="separator">/</span>
+    <a href="/owners">Vlasnici</a>
+    <span class="separator">/</span>
+    <a href="/owners/@Model.Id">@Model.FirstName @Model.LastName</a>
+    <span class="separator">/</span>
+    <span class="current">Uredi</span>
+</nav>
+
+<div class="page-actions">
+    <div class="page-header" style="margin-bottom:0;">
+        <h1>&#9999; Uredi vlasnika</h1>
+        <p class="subtitle">Ažurirajte podatke vlasnika @Model.FirstName @Model.LastName</p>
+    </div>
+    <a href="/owners/@Model.Id" class="btn-back">&#8592; Natrag</a>
+</div>
+
+<form asp-action="Edit" asp-controller="Owner" asp-route-id="@Model.Id"
+      method="post" class="form-glass">
+    @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <!-- Row 1: FirstName + LastName -->
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" asp-for="FirstName">Ime</label>
+                <input asp-for="FirstName" class="form-input" placeholder="Npr. Ana" />
+                <span asp-validation-for="FirstName" class="form-validation"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="LastName">Prezime</label>
+                <input asp-for="LastName" class="form-input" placeholder="Npr. Horvat" />
+                <span asp-validation-for="LastName" class="form-validation"></span>
+            </div>
+        </div>
+
+        <!-- Row 2: Email + Phone -->
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" asp-for="Email">E-mail</label>
+                <input asp-for="Email" type="email" class="form-input"
+                       placeholder="Npr. ana.horvat@email.com" />
+                <span asp-validation-for="Email" class="form-validation"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Phone">Telefon</label>
+                <input asp-for="Phone" class="form-input" placeholder="Npr. 091 234 5678" />
+                <span asp-validation-for="Phone" class="form-validation"></span>
+            </div>
+        </div>
+
+        <!-- Row 3: Address + IdNumber -->
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" asp-for="Address">Adresa</label>
+                <input asp-for="Address" class="form-input"
+                       placeholder="Npr. Ilica 42, Zagreb" />
+                <span asp-validation-for="Address" class="form-validation"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="IdNumber">Broj osobne iskaznice</label>
+                <input asp-for="IdNumber" class="form-input" placeholder="Npr. 123456789" />
+                <span asp-validation-for="IdNumber" class="form-validation"></span>
+            </div>
+        </div>
+
+        <!-- Row 4: Clinic AJAX Autocomplete (pre-populated) -->
+        <div class="form-row">
+            <div class="form-group" style="flex:1;">
+                @await Html.PartialAsync("_AjaxAutocomplete",
+                    new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
+                    {
+                        ["FieldName"]       = "ClinicId",
+                        ["FieldId"]         = "clinicId",
+                        ["LabelText"]       = "Klinika",
+                        ["Endpoint"]        = "/owners/search-clinics",
+                        ["Placeholder"]     = "Upišite naziv klinike...",
+                        ["RequiredMessage"] = "Odabir klinike je obavezan.",
+                        ["InitialId"]       = Model.ClinicId > 0 ? (object)Model.ClinicId : null,
+                        ["InitialText"]     = ViewBag.InitialClinicText as string ?? ""
+                    })
+            </div>
+        </div>
+
+    <div class="form-footer">
+        <a href="/owners/@Model.Id" class="btn-secondary">Odustani</a>
+        <button type="submit" class="btn-primary">&#128190; Spremi Izmjene</button>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

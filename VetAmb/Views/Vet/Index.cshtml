@@ -1,17 +1,21 @@
 @model List<Vet>
 @{
-    ViewData["Title"] = "Vets";
+    ViewData["Title"] = "Veterinari";
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna plo&#269;a</a>
     <span class="separator">/</span>
-    <span class="current">Vets</span>
+    <span class="current">Veterinari</span>
 </nav>
 
 <div class="page-header">
-    <h1>Vets</h1>
-    <p class="subtitle">All registered veterinarians across clinics</p>
+    <h1>Veterinari</h1>
+    <p class="subtitle">Svi registrirani veterinari po klinikama</p>
+</div>
+
+<div class="page-actions">
+    <a href="/vets/create" class="btn-primary">&#43; Novi Veterinar</a>
 </div>
 
 <div class="card-grid">
@@ -29,43 +33,46 @@
             _ => "blue"
         };
 
-        <a href="/vets/@vet.Id" class="glass-card-link">
-            <div class="glass-card patient-card">
+        <div class="glass-card patient-card" style="position:relative;">
+            <a href="/vets/@vet.Id" class="glass-card-link-inner">
                 <div class="card-top">
-                    <div class="avatar @specColor" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">🩺</div>
+                    <div class="avatar @specColor" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">&#129657;</div>
                     <div>
                         <div class="card-name">Dr. @vet.FirstName @vet.LastName</div>
-                        <div class="card-breed">@System.Text.RegularExpressions.Regex.Replace(vet.Specialization.ToString(), "(?<=.)([A-Z])", " $1")</div>
+                        <div class="card-breed">@vet.Specialization.GetDisplayName()</div>
                     </div>
-                    <span class="species-badge @specColor" style="margin-left:auto;">
-                        @System.Text.RegularExpressions.Regex.Replace(vet.Specialization.ToString(), "(?<=.)([A-Z])", " $1")
-                    </span>
                 </div>
 
                 <div class="card-details">
                     <div class="detail-item">
-                        <span class="detail-label">License</span>
+                        <span class="detail-label">Licenca</span>
                         <span class="detail-value">@vet.LicenseNumber</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Experience</span>
-                        <span class="detail-value">@vet.YearsOfExperience yrs</span>
+                        <span class="detail-label">Iskustvo</span>
+                        <span class="detail-value">@vet.YearsOfExperience god.</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Rate</span>
-                        <span class="detail-value">@vet.HourlyRate€/hr</span>
+                        <span class="detail-label">Satnica</span>
+                        <span class="detail-value">@vet.HourlyRate &#8364;/h</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Phone</span>
+                        <span class="detail-label">Telefon</span>
                         <span class="detail-value">@vet.Phone</span>
                     </div>
                 </div>
 
-                <div class="card-footer">
-                    <span class="owner-tag">🏥 @vet.Clinic?.Name</span>
-                    <span class="view-link">DETAILS →</span>
-                </div>
+            </a>
+
+            <div class="card-actions">
+                <a href="/vets/@vet.Id/edit" class="btn-edit">&#9999; Uredi</a>
+                <form action="/vets/@vet.Id/delete" method="post"
+                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti veterinara Dr. @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(vet.FirstName + " " + vet.LastName))?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-danger">&#128465; Obriši</button>
+                </form>
             </div>
-        </a>
+        </div>
     }
 </div>
+

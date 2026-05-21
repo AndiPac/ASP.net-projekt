@@ -27,6 +27,9 @@ namespace VetAmb.Models
         public int OwnerId { get; set; }
         public virtual Owner? Owner { get; set; }
 
+        // Soft delete — never physically remove patient records.
+        public DateTime? DeletedAt { get; set; }
+
         // Relationships
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();

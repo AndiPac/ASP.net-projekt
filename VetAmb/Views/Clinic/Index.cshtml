@@ -1,26 +1,30 @@
 @model List<Clinic>
 @{
-    ViewData["Title"] = "Clinics";
+    ViewData["Title"] = "Klinike";
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna plo&#269;a</a>
     <span class="separator">/</span>
-    <span class="current">Clinics</span>
+    <span class="current">Klinike</span>
 </nav>
 
 <div class="page-header">
-    <h1>Clinics</h1>
-    <p class="subtitle">All registered veterinary clinics</p>
+    <h1>Klinike</h1>
+    <p class="subtitle">Sve registrirane veterinarske klinike</p>
+</div>
+
+<div class="page-actions">
+    <a href="/clinics/create" class="btn-primary">&#43; Nova Klinika</a>
 </div>
 
 <div class="card-grid">
     @foreach (var clinic in Model)
     {
-        <a href="/clinics/@clinic.Id" class="glass-card-link">
-            <div class="glass-card patient-card">
+        <div class="glass-card patient-card" style="position:relative;">
+            <a href="/clinics/@clinic.Id" class="glass-card-link-inner">
                 <div class="card-top">
-                    <div class="avatar cyan" style="background:linear-gradient(135deg,rgba(0,188,212,0.35),rgba(0,188,212,0.1));">🏥</div>
+                    <div class="avatar cyan" style="background:linear-gradient(135deg,rgba(0,188,212,0.35),rgba(0,188,212,0.1));">&#127973;</div>
                     <div>
                         <div class="card-name">@clinic.Name</div>
                         <div class="card-breed">@clinic.Address</div>
@@ -29,7 +33,7 @@
 
                 <div class="card-details">
                     <div class="detail-item">
-                        <span class="detail-label">Phone</span>
+                        <span class="detail-label">Telefon</span>
                         <span class="detail-value">@clinic.Phone</span>
                     </div>
                     <div class="detail-item">
@@ -37,28 +41,33 @@
                         <span class="detail-value">@clinic.Email</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Founded</span>
-                        <span class="detail-value">@clinic.FoundationDate.ToString("MMM yyyy")</span>
+                        <span class="detail-label">Osnovana</span>
+                        <span class="detail-value">@clinic.FoundationDate.ToString("MM/yyyy")</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Capacity</span>
+                        <span class="detail-label">Kapacitet</span>
                         <span class="detail-value">@clinic.MaxCapacity</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Reg. No.</span>
+                        <span class="detail-label">Reg. br.</span>
                         <span class="detail-value">@clinic.RegistrationNumber</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Vets</span>
+                        <span class="detail-label">Veterinari</span>
                         <span class="detail-value">@clinic.Vets.Count</span>
                     </div>
                 </div>
 
-                <div class="card-footer">
-                    <span class="owner-tag">👤 @clinic.Owners.Count owner(s)</span>
-                    <span class="view-link">DETAILS →</span>
-                </div>
+            </a>
+
+            <div class="card-actions">
+                <a href="/clinics/@clinic.Id/edit" class="btn-edit">&#9999; Uredi</a>
+                <form action="/clinics/@clinic.Id/delete" method="post"
+                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti kliniku @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(clinic.Name ?? ""))?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-danger">&#128465; Obriši</button>
+                </form>
             </div>
-        </a>
+        </div>
     }
 </div>

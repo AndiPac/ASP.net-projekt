@@ -4,24 +4,33 @@
 }
 
 <nav class="breadcrumbs">
-    <a href="/">Dashboard</a>
+    <a href="/">Nadzorna plo&#269;a</a>
     <span class="separator">/</span>
-    <a href="/Clinic">Clinics</a>
+    <a href="/clinics">Klinike</a>
     <span class="separator">/</span>
     <span class="current">@Model.Name</span>
 </nav>
 
-<a href="/Clinic" class="btn-back">← Back to Clinics</a>
+<a href="/clinics" class="btn-back">&#8592; Natrag na Klinike</a>
+
+<div class="card-actions" style="margin-bottom:1.5rem;">
+    <a href="/clinics/@Model.Id/edit" class="btn-edit">&#9999; Uredi</a>
+    <form action="/clinics/@Model.Id/delete" method="post"
+          onsubmit="return confirm('Jeste li sigurni da želite ukloniti kliniku @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.Name ?? ""))?');">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn-danger">&#128465; Obriši</button>
+    </form>
+</div>
 
 <div class="details-grid">
     <div class="glass-card details-hero">
-        <div class="hero-avatar" style="width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(0,188,212,0.35),rgba(0,188,212,0.1));margin-bottom:1.25rem;">🏥</div>
+        <div class="hero-avatar" style="width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(0,188,212,0.35),rgba(0,188,212,0.1));margin-bottom:1.25rem;">&#127973;</div>
         <div class="hero-name">@Model.Name</div>
         <div class="hero-breed">@Model.Address</div>
 
         <div class="info-grid" style="width:100%;">
             <div class="info-item">
-                <div class="info-label">Phone</div>
+                <div class="info-label">Telefon</div>
                 <div class="info-value">@Model.Phone</div>
             </div>
             <div class="info-item">
@@ -29,15 +38,15 @@
                 <div class="info-value">@Model.Email</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Founded</div>
-                <div class="info-value">@Model.FoundationDate.ToString("MMMM dd, yyyy")</div>
+                <div class="info-label">Osnovana</div>
+                <div class="info-value">@Model.FoundationDate.ToString("d")</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Max Capacity</div>
+                <div class="info-label">Max. kapacitet</div>
                 <div class="info-value">@Model.MaxCapacity</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Registration No.</div>
+                <div class="info-label">Reg. broj</div>
                 <div class="info-value">@Model.RegistrationNumber</div>
             </div>
         </div>
@@ -45,48 +54,52 @@
 
     <div>
         <div class="glass-card" style="margin-bottom:1.5rem;">
-            <h3 class="section-title">🩺 Veterinarians</h3>
+            <h3 class="section-title">&#129657; Veterinari</h3>
             @if (Model.Vets.Any())
             {
                 @foreach (var vet in Model.Vets)
                 {
-                    <div class="timeline-item">
-                        <div class="timeline-date" style="background:rgba(108,99,255,0.15);">
-                            <span class="day" style="font-size:1.2rem;">🩺</span>
+                    <a href="/vets/@vet.Id" class="timeline-link">
+                        <div class="timeline-item">
+                            <div class="timeline-date" style="background:rgba(108,99,255,0.15);">
+                                <span class="day" style="font-size:1.2rem;">&#129657;</span>
+                            </div>
+                            <div class="timeline-body" style="flex:1;">
+                                <div class="tl-reason">Dr. @vet.FirstName @vet.LastName</div>
+                                <div class="tl-vet">@vet.Specialization.GetDisplayName() &#183; @vet.YearsOfExperience god. iskustva</div>
+                            </div>
                         </div>
-                        <div class="timeline-body" style="flex:1;">
-                            <div class="tl-reason">Dr. @vet.FirstName @vet.LastName</div>
-                            <div class="tl-vet">@System.Text.RegularExpressions.Regex.Replace(vet.Specialization.ToString(), "(?<=.)([A-Z])", " $1") · @vet.YearsOfExperience yrs experience</div>
-                        </div>
-                    </div>
+                    </a>
                 }
             }
             else
             {
-                <div class="empty-state">No veterinarians registered.</div>
+                <div class="empty-state">Nema registriranih veterinara.</div>
             }
         </div>
 
         <div class="glass-card">
-            <h3 class="section-title">👤 Owners</h3>
+            <h3 class="section-title">&#128100; Vlasnici</h3>
             @if (Model.Owners.Any())
             {
                 @foreach (var owner in Model.Owners)
                 {
-                    <div class="timeline-item">
-                        <div class="timeline-date" style="background:rgba(0,176,255,0.15);">
-                            <span class="day" style="font-size:1.2rem;">👤</span>
+                    <a href="/owners/@owner.Id" class="timeline-link">
+                        <div class="timeline-item">
+                            <div class="timeline-date" style="background:rgba(0,176,255,0.15);">
+                                <span class="day" style="font-size:1.2rem;">&#128100;</span>
+                            </div>
+                            <div class="timeline-body" style="flex:1;">
+                                <div class="tl-reason">@owner.FirstName @owner.LastName</div>
+                                <div class="tl-vet">@owner.Email &#183; @owner.Phone</div>
+                            </div>
                         </div>
-                        <div class="timeline-body" style="flex:1;">
-                            <div class="tl-reason">@owner.FirstName @owner.LastName</div>
-                            <div class="tl-vet">@owner.Email · @owner.Phone</div>
-                        </div>
-                    </div>
+                    </a>
                 }
             }
             else
             {
-                <div class="empty-state">No owners registered.</div>
+                <div class="empty-state">Nema registriranih vlasnika.</div>
             }
         </div>
     </div>
