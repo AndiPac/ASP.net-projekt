@@ -17930,3 +17930,21 @@
 }
 
 
+{
+    "timestamp":  "2026-05-21T15:35:34.393Z",
+    "hook_event_name":  "PreToolUse",
+    "session_id":  "984da9d9-cdfa-4a9a-96a3-60980ad969bf",
+    "transcript_path":  "c:\\Users\\Korisnik\\AppData\\Roaming\\Code\\User\\workspaceStorage\\3508f1440a591b978c3f8698b592d086\\GitHub.copilot-chat\\transcripts\\984da9d9-cdfa-4a9a-96a3-60980ad969bf.jsonl",
+    "tool_name":  "run_in_terminal",
+    "tool_input":  {
+                       "command":  "cd C:\\git; git push origin main",
+                       "explanation":  "Push the committed changes to origin/main on GitHub.",
+                       "goal":  "Push to GitHub",
+                       "mode":  "sync",
+                       "timeout":  60000
+                   },
+    "tool_use_id":  "toolu_bdrk_01AgWfUwsAwCUYWYC7TK1TnW__vscode-1779353631792",
+    "cwd":  "c:\\git"
+}
+
+
