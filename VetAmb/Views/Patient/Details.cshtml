@@ -21,6 +21,7 @@
     };
     var canManageAttachments = User.Identity?.IsAuthenticated == true
         && (User.IsInRole("Administrator") || User.IsInRole("Vet"));
+    var isAnonymous = User.Identity?.IsAuthenticated != true;
 }
 
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" />
@@ -253,8 +254,15 @@
             }
             else
             {
-                <div class="empty-state">Dokumentacija je dostupna samo za pregled.</div>
-                <div id="patient-attachments-readonly"></div>
+                @if (isAnonymous)
+                {
+                    <div class="empty-state">Dokumentacija nije dostupna za pregled.</div>
+                }
+                else
+                {
+                    <div class="empty-state">Dokumentacija je dostupna samo za pregled.</div>
+                    <div id="patient-attachments-readonly"></div>
+                }
             }
         </div>
 
