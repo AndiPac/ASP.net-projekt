@@ -13,6 +13,16 @@ namespace VetAmb.Repositories
 
         public List<MedicalRecord> GetAll() => _records;
 
+        public List<MedicalRecord> Search(string term)
+        {
+            return _records
+                .Where(r => (r.Diagnosis ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (r.Treatment ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (r.Notes ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (r.Patient?.Name ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
         public MedicalRecord? GetById(int id) => _records.FirstOrDefault(r => r.Id == id);
 
         public void Add(MedicalRecord record)

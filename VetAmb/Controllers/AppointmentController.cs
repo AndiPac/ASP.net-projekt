@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
 using System.Text.Json;
 using VetAmb.Data;
@@ -33,6 +34,7 @@ namespace VetAmb.Controllers
 
         // ── LIST ─────────────────────────────────────────────────────────
 
+        [AllowAnonymous]
         [Route("appointments")]
         public IActionResult Index()
         {
@@ -43,6 +45,7 @@ namespace VetAmb.Controllers
         // ── DETAILS ──────────────────────────────────────────────────────
 
         // {id:int} constraint ensures "appointments/create" never matches this route.
+        [AllowAnonymous]
         [Route("appointments/{id:int}")]
         public IActionResult Details(int id)
         {
@@ -54,6 +57,7 @@ namespace VetAmb.Controllers
 
         // ── CREATE ───────────────────────────────────────────────────────
 
+        [Authorize(Roles = "Administrator,Vet")]
         [HttpGet]
         [Route("appointments/create")]
         public IActionResult Create()
@@ -62,6 +66,7 @@ namespace VetAmb.Controllers
             return View(new AppointmentFormModel());
         }
 
+        [Authorize(Roles = "Administrator,Vet")]
         [HttpPost]
         [Route("appointments/create")]
         [ValidateAntiForgeryToken]
@@ -103,6 +108,7 @@ namespace VetAmb.Controllers
 
         // ── EDIT ─────────────────────────────────────────────────────────
 
+        [Authorize(Roles = "Administrator,Vet")]
         [HttpGet]
         [Route("appointments/{id:int}/edit")]
         public IActionResult Edit(int id)
@@ -144,6 +150,7 @@ namespace VetAmb.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator,Vet")]
         [HttpPost]
         [Route("appointments/{id:int}/edit")]
         [ValidateAntiForgeryToken]
@@ -188,6 +195,7 @@ namespace VetAmb.Controllers
 
         // ── SOFT DELETE ──────────────────────────────────────────────────
 
+        [Authorize(Roles = "Administrator,Vet")]
         [HttpPost]
         [Route("appointments/{id:int}/delete")]
         [ValidateAntiForgeryToken]

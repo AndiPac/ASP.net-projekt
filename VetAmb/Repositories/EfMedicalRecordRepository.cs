@@ -20,6 +20,17 @@ namespace VetAmb.Repositories
                 .ToList();
         }
 
+        public List<MedicalRecord> Search(string term)
+        {
+            return _context.MedicalRecords
+                .Include(r => r.Patient)
+                .Where(r => (r.Diagnosis ?? string.Empty).Contains(term)
+                         || (r.Treatment ?? string.Empty).Contains(term)
+                         || (r.Notes ?? string.Empty).Contains(term)
+                         || (r.Patient != null && (r.Patient.Name ?? string.Empty).Contains(term)))
+                .ToList();
+        }
+
         public MedicalRecord? GetById(int id)
         {
             return _context.MedicalRecords

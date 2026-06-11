@@ -14,6 +14,18 @@ namespace VetAmb.Repositories
 
         public List<Appointment> GetAll() => _appointments;
 
+        public List<Appointment> Search(string term)
+        {
+            return _appointments
+                .Where(a => (a.Reason ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (a.Notes ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (a.RescheduleReason ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (a.Patient?.Name ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (a.Vet?.FirstName ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (a.Vet?.LastName ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
         public Appointment? GetById(int id) => _appointments.FirstOrDefault(a => a.Id == id);
 
         public void Add(Appointment appointment)

@@ -20,6 +20,15 @@ namespace VetAmb.Repositories
                 .ToList();
         }
 
+        public List<Service> Search(string term)
+        {
+            return _context.Services
+                .Include(s => s.AppointmentServices)
+                .Where(s => (s.Name ?? string.Empty).Contains(term)
+                         || (s.Description ?? string.Empty).Contains(term))
+                .ToList();
+        }
+
         public Service? GetById(int id)
         {
             return _context.Services

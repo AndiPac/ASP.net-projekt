@@ -20,6 +20,17 @@ namespace VetAmb.Repositories
                 .ToList();
         }
 
+        public List<Vet> Search(string term)
+        {
+            return _context.Vets
+                .Include(v => v.Clinic)
+                .Where(v => (v.FirstName ?? string.Empty).Contains(term)
+                         || (v.LastName ?? string.Empty).Contains(term)
+                         || (v.LicenseNumber ?? string.Empty).Contains(term)
+                         || (v.Phone ?? string.Empty).Contains(term))
+                .ToList();
+        }
+
         public Vet? GetById(int id)
         {
             return _context.Vets

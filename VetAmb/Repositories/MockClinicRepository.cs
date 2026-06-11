@@ -13,6 +13,15 @@ namespace VetAmb.Repositories
 
         public List<Clinic> GetAll() => _clinics;
 
+        public List<Clinic> Search(string term)
+        {
+            return _clinics
+                .Where(c => c.Name.Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || c.Address.Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || c.RegistrationNumber.Contains(term, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
         public Clinic? GetById(int id) => _clinics.FirstOrDefault(c => c.Id == id);
 
         public void Add(Clinic clinic)

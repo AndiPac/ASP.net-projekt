@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using VetAmb.Data;
+using VetAmb.Models;
 using VetAmb.Repositories;
 using VetAmb.Middleware;
 
@@ -10,11 +12,43 @@ CultureInfo.DefaultThreadCurrentCulture = hrCulture;
 CultureInfo.DefaultThreadCurrentUICulture = hrCulture;
 
 var builder = WebApplication.CreateBuilder(args);
+// Ensure user-secrets are available even when ASPNETCORE_ENVIRONMENT is not Development.
+builder.Configuration.AddUserSecrets<Program>(optional: true, reloadOnChange: true);
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<VetAmbDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services
+    .AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<VetAmbDbContext>()
+    .AddDefaultTokenProviders()
+    .AddErrorDescriber<CroatianIdentityErrorDescriber>();
+
+var googleClientId =
+    builder.Configuration["Authentication:Google:ClientId"] ??
+    builder.Configuration["Google:ClientId"] ??
+    builder.Configuration["GOOGLE_CLIENT_ID"];
+
+var googleClientSecret =
+    builder.Configuration["Authentication:Google:ClientSecret"] ??
+    builder.Configuration["Google:ClientSecret"] ??
+    builder.Configuration["GOOGLE_CLIENT_SECRET"];
+
+if (!string.IsNullOrWhiteSpace(googleClientId) && !string.IsNullOrWhiteSpace(googleClientSecret))
+{
+    builder.Services
+        .AddAuthentication()
+        .AddGoogle(options =>
+        {
+            options.ClientId = googleClientId;
+            options.ClientSecret = googleClientSecret;
+        });
+}
+
+    var isGoogleAuthConfigured = !string.IsNullOrWhiteSpace(googleClientId) &&
+                     !string.IsNullOrWhiteSpace(googleClientSecret);
 
 // Repository DI — EF Core scoped repositories
 builder.Services.AddScoped<IClinicRepository, EfClinicRepository>();
@@ -26,6 +60,8 @@ builder.Services.AddScoped<IMedicalRecordRepository, EfMedicalRecordRepository>(
 builder.Services.AddScoped<IServiceRepository, EfServiceRepository>();
 
 var app = builder.Build();
+
+app.Logger.LogInformation("Google authentication enabled: {GoogleAuthEnabled}", isGoogleAuthConfigured);
 
 // Build localization options directly — bypasses any DI/configure ordering issues.
 // Supported cultures include both region-specific and neutral variants so that
@@ -54,9 +90,24 @@ app.UseStaticFiles();
 app.UseRequestLocalization(localizationOptions);
 app.UseMiddleware<CroatianMonthsMiddleware>();
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
+
+try
+{
+    using var scope = app.Services.CreateScope();
+    await IdentitySeedData.SeedRolesAndAdminAsync(scope.ServiceProvider);
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Identity seeding failed: {ex.Message}");
+}
+
 app.Run();
+
+public partial class Program { }
 
 // ============================================================
 // Original Lab 1 Console Code (preserved below)

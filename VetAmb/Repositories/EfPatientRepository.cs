@@ -22,6 +22,18 @@ namespace VetAmb.Repositories
                 .ToList();
         }
 
+        public List<Patient> Search(string term)
+        {
+            return _context.Patients
+                .Include(p => p.Owner)
+                .Include(p => p.Appointments)
+                .Include(p => p.MedicalRecords)
+                .Where(p => p.Name.Contains(term)
+                         || p.Breed.Contains(term)
+                         || p.MicrochipId.Contains(term))
+                .ToList();
+        }
+
         public Patient? GetById(int id)
         {
             return _context.Patients

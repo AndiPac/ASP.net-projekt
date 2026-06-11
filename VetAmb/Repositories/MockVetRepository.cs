@@ -13,6 +13,16 @@ namespace VetAmb.Repositories
 
         public List<Vet> GetAll() => _vets;
 
+        public List<Vet> Search(string term)
+        {
+            return _vets
+                .Where(v => (v.FirstName ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (v.LastName ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (v.LicenseNumber ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (v.Phone ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
         public Vet? GetById(int id) => _vets.FirstOrDefault(v => v.Id == id);
 
         public void Add(Vet vet)

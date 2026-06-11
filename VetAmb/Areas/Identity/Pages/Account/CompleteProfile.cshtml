@@ -1,0 +1,39 @@
+@page
+@model VetAmb.Areas.Identity.Pages.Account.CompleteProfileModel
+@{
+    ViewData["Title"] = "Dovrši profil";
+}
+
+<div class="auth-page">
+<div class="glass-card form-glass auth-form-card">
+    <h1 class="section-title auth-title">Dovrši profil</h1>
+    <p class="page-subtitle" style="margin-bottom: 0.95rem;">Unesi OIB i JMBG kako bi mogao/la nastaviti koristiti račun.</p>
+
+    <form id="completeProfileForm" method="post" asp-route-returnUrl="@Model.ReturnUrl">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="form-validation" role="alert" style="margin-bottom: 0.8rem;"></div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Input.OIB" class="form-label">OIB (11 znamenki)</label>
+                <input asp-for="Input.OIB" class="form-input" />
+                <span asp-validation-for="Input.OIB" class="form-validation"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.JMBG" class="form-label">JMBG (13 znamenki)</label>
+                <input asp-for="Input.JMBG" class="form-input" />
+                <span asp-validation-for="Input.JMBG" class="form-validation"></span>
+            </div>
+        </div>
+
+        <div class="card-actions" style="justify-content: flex-end; margin-top: 0.75rem;">
+            <button id="completeProfileSubmit" type="submit" class="btn-primary">Spremi profil</button>
+        </div>
+    </form>
+</div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

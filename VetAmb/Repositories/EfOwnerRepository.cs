@@ -21,6 +21,19 @@ namespace VetAmb.Repositories
                 .ToList();
         }
 
+        public List<Owner> Search(string term)
+        {
+            return _context.Owners
+                .Include(o => o.Clinic)
+                .Include(o => o.Patients)
+                .Where(o => (o.FirstName ?? string.Empty).Contains(term)
+                         || (o.LastName ?? string.Empty).Contains(term)
+                         || (o.Email ?? string.Empty).Contains(term)
+                         || (o.Phone ?? string.Empty).Contains(term)
+                         || (o.IdNumber ?? string.Empty).Contains(term))
+                .ToList();
+        }
+
         public Owner? GetById(int id)
         {
             return _context.Owners

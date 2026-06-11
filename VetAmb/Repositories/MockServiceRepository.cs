@@ -13,6 +13,14 @@ namespace VetAmb.Repositories
 
         public List<Service> GetAll() => _services;
 
+        public List<Service> Search(string term)
+        {
+            return _services
+                .Where(s => (s.Name ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (s.Description ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
         public Service? GetById(int id) => _services.FirstOrDefault(s => s.Id == id);
 
         public void Add(Service service)

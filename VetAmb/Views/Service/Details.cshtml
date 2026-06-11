@@ -1,6 +1,7 @@
 @model Service
 @{
     ViewData["Title"] = Model.Name;
+    var canManage = User.IsInRole("Administrator");
 }
 
 <nav class="breadcrumbs">
@@ -13,14 +14,17 @@
 
 <a href="/services" class="btn-back">&#8592; Natrag na Usluge</a>
 
+@if (canManage)
+{
 <div class="card-actions" style="margin-bottom:1.5rem;">
     <a href="/services/@Model.Id/edit" class="btn-edit">&#9999; Uredi</a>
     <form action="/services/@Model.Id/delete" method="post"
-          onsubmit="return confirm('Jeste li sigurni da želite ukloniti uslugu @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.Name ?? ""))?');">
+          onsubmit="return confirm('Jeste li sigurni da želite ukloniti uslugu @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.Name ?? ""))?')">
         @Html.AntiForgeryToken()
         <button type="submit" class="btn-danger">&#128465; Obriši</button>
     </form>
 </div>
+}
 
 <div class="details-grid">
     <div class="glass-card details-hero">

@@ -11,6 +11,7 @@
         AppointmentStatus.Rescheduled => "rescheduled",
         _ => ""
     };
+    var canManage = User.IsInRole("Administrator") || User.IsInRole("Vet");
 }
 
 <nav class="breadcrumbs">
@@ -23,14 +24,17 @@
 
 <a href="/appointments" class="btn-back">&#8592; Natrag na Termine</a>
 
+@if (canManage)
+{
 <div class="card-actions" style="margin-bottom:1.5rem;">
     <a href="/appointments/@Model.Id/edit" class="btn-edit">&#9999; Uredi</a>
     <form method="post" action="/appointments/@Model.Id/delete"
-          onsubmit="return confirm('Jeste li sigurni da želite ukloniti termin?');">
+          onsubmit="return confirm('Jeste li sigurni da želite ukloniti termin?')">
         @Html.AntiForgeryToken()
         <button type="submit" class="btn-danger">&#128465; Obriši</button>
     </form>
 </div>
+}
 
 <div class="details-grid">
     <div class="glass-card details-hero">

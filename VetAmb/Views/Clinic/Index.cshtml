@@ -1,6 +1,7 @@
 @model List<Clinic>
 @{
     ViewData["Title"] = "Klinike";
+    var canManage = User.IsInRole("Administrator");
 }
 
 <nav class="breadcrumbs">
@@ -14,9 +15,12 @@
     <p class="subtitle">Sve registrirane veterinarske klinike</p>
 </div>
 
+@if (canManage)
+{
 <div class="page-actions">
     <a href="/clinics/create" class="btn-primary">&#43; Nova Klinika</a>
 </div>
+}
 
 <div class="card-grid">
     @foreach (var clinic in Model)
@@ -60,14 +64,17 @@
 
             </a>
 
+            @if (canManage)
+            {
             <div class="card-actions">
                 <a href="/clinics/@clinic.Id/edit" class="btn-edit">&#9999; Uredi</a>
                 <form action="/clinics/@clinic.Id/delete" method="post"
-                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti kliniku @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(clinic.Name ?? ""))?');">
+                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti kliniku @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(clinic.Name ?? ""))?')">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn-danger">&#128465; Obriši</button>
                 </form>
             </div>
+            }
         </div>
     }
 </div>

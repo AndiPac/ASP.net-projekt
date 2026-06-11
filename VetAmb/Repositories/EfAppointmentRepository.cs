@@ -24,6 +24,22 @@ namespace VetAmb.Repositories
                 .ToList();
         }
 
+        public List<Appointment> Search(string term)
+        {
+            return _context.Appointments
+                .Include(a => a.Patient)
+                .Include(a => a.Vet)
+                    .ThenInclude(v => v!.Clinic)
+                .Include(a => a.AppointmentServices)
+                    .ThenInclude(a => a.Service)
+                .Where(a => (a.Reason ?? string.Empty).Contains(term)
+                         || (a.Notes ?? string.Empty).Contains(term)
+                         || (a.RescheduleReason ?? string.Empty).Contains(term)
+                         || (a.Patient != null && (a.Patient.Name ?? string.Empty).Contains(term))
+                         || (a.Vet != null && ((a.Vet.FirstName ?? string.Empty).Contains(term) || (a.Vet.LastName ?? string.Empty).Contains(term))))
+                .ToList();
+        }
+
         public Appointment? GetById(int id)
         {
             return _context.Appointments

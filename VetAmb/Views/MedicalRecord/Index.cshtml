@@ -1,6 +1,7 @@
 @model List<MedicalRecord>
 @{
     ViewData["Title"] = "Medicinski Zapisi";
+    var canManage = User.IsInRole("Administrator") || User.IsInRole("Vet");
 }
 
 <nav class="breadcrumbs">
@@ -14,9 +15,12 @@
     <p class="subtitle">Svi medicinski zapisi pacijenata</p>
 </div>
 
+@if (canManage)
+{
 <div class="page-actions">
     <a href="/medical-records/create" class="btn-primary">&#43; Novi Zapis</a>
 </div>
+}
 
 <div class="card-grid">
     @foreach (var record in Model.OrderByDescending(r => r.RecordDate))
@@ -52,14 +56,17 @@
 
             </a>
 
+            @if (canManage)
+            {
             <div class="card-actions">
                 <a href="/medical-records/@record.Id/edit" class="btn-edit">&#9999; Uredi</a>
                 <form action="/medical-records/@record.Id/delete" method="post"
-                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti zapis @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(record.Diagnosis ?? ""))?');">
+                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti zapis @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(record.Diagnosis ?? ""))?')">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn-danger">&#128465; Obriši</button>
                 </form>
             </div>
+            }
         </div>
     }
 </div>

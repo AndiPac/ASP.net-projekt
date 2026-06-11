@@ -13,6 +13,17 @@ namespace VetAmb.Repositories
 
         public List<Owner> GetAll() => _owners;
 
+        public List<Owner> Search(string term)
+        {
+            return _owners
+                .Where(o => (o.FirstName ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (o.LastName ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (o.Email ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (o.Phone ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (o.IdNumber ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
         public Owner? GetById(int id) => _owners.FirstOrDefault(o => o.Id == id);
 
         public void Add(Owner owner)

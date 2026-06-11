@@ -13,6 +13,15 @@ namespace VetAmb.Repositories
 
         public List<Patient> GetAll() => _patients;
 
+        public List<Patient> Search(string term)
+        {
+            return _patients
+                .Where(p => p.Name.Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || p.Breed.Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || p.MicrochipId.Contains(term, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
         public Patient? GetById(int id) => _patients.FirstOrDefault(p => p.Id == id);
 
         public void Add(Patient patient)

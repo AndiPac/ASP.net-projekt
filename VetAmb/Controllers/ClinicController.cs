@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using VetAmb.Models;
 using VetAmb.Repositories;
 using VetAmb.ViewModels;
@@ -16,6 +17,7 @@ namespace VetAmb.Controllers
 
         // ── LIST ──────────────────────────────────────────────────────
 
+        [AllowAnonymous]
         [Route("clinics")]
         public IActionResult Index()
         {
@@ -25,6 +27,7 @@ namespace VetAmb.Controllers
 
         // ── DETAILS ────────────────────────────────────────────────
 
+        [AllowAnonymous]
         [Route("clinics/{id:int}")]
         public IActionResult Details(int id)
         {
@@ -36,6 +39,7 @@ namespace VetAmb.Controllers
 
         // ── CREATE ───────────────────────────────────────────────
 
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("clinics/create")]
         public IActionResult Create()
@@ -43,6 +47,7 @@ namespace VetAmb.Controllers
             return View(new ClinicFormModel());
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [Route("clinics/create")]
         [ValidateAntiForgeryToken]
@@ -72,6 +77,7 @@ namespace VetAmb.Controllers
 
         // ── EDIT ─────────────────────────────────────────────────
 
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         [Route("clinics/{id:int}/edit")]
         public IActionResult Edit(int id)
@@ -94,6 +100,7 @@ namespace VetAmb.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [Route("clinics/{id:int}/edit")]
         [ValidateAntiForgeryToken]
@@ -123,6 +130,7 @@ namespace VetAmb.Controllers
 
         // ── SOFT DELETE ───────────────────────────────────────────
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [Route("clinics/{id:int}/delete")]
         [ValidateAntiForgeryToken]

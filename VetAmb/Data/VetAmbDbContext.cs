@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using VetAmb.Models;
 
 namespace VetAmb.Data
 {
-    public class VetAmbDbContext : DbContext
+    public class VetAmbDbContext : IdentityDbContext<AppUser>
     {
         public VetAmbDbContext(DbContextOptions<VetAmbDbContext> options)
             : base(options)
@@ -18,6 +19,7 @@ namespace VetAmb.Data
         public DbSet<Service> Services => Set<Service>();
         public DbSet<MedicalRecord> MedicalRecords => Set<MedicalRecord>();
         public DbSet<AppointmentService> AppointmentServices => Set<AppointmentService>();
+        public DbSet<PatientAttachment> PatientAttachments => Set<PatientAttachment>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -73,6 +75,14 @@ namespace VetAmb.Data
                 .WithMany(p => p.MedicalRecords)
                 .HasForeignKey(m => m.PatientId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AppUser>()
+                .HasIndex(u => u.OIB)
+                .IsUnique();
+
+            modelBuilder.Entity<AppUser>()
+                .HasIndex(u => u.JMBG)
+                .IsUnique();
 
             modelBuilder.Entity<AppointmentService>(entity =>
             {

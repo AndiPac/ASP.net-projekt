@@ -5,6 +5,7 @@ namespace VetAmb.Repositories
     public interface IServiceRepository
     {
         List<Service> GetAll();
+        List<Service> Search(string term);
         Service? GetById(int id);
         void Add(Service service);
         void Update(Service service);

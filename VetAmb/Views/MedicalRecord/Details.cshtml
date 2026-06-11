@@ -1,6 +1,7 @@
 @model MedicalRecord
 @{
     ViewData["Title"] = Model.Diagnosis;
+    var canManage = User.IsInRole("Administrator") || User.IsInRole("Vet");
 }
 
 <nav class="breadcrumbs">
@@ -13,14 +14,17 @@
 
 <a href="/medical-records" class="btn-back">&#8592; Natrag na Medicinske Zapise</a>
 
+@if (canManage)
+{
 <div class="card-actions" style="margin-bottom:1.5rem;">
     <a href="/medical-records/@Model.Id/edit" class="btn-edit">&#9999; Uredi</a>
     <form action="/medical-records/@Model.Id/delete" method="post"
-          onsubmit="return confirm('Jeste li sigurni da želite ukloniti zapis @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.Diagnosis ?? ""))?');">
+          onsubmit="return confirm('Jeste li sigurni da želite ukloniti zapis @Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.Diagnosis ?? ""))?')">
         @Html.AntiForgeryToken()
         <button type="submit" class="btn-danger">&#128465; Obriši</button>
     </form>
 </div>
+}
 
 <div class="details-grid">
     <div class="glass-card details-hero">

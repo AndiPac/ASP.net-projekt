@@ -19,7 +19,148 @@
         AnimalSpecies.Hamster => "hamster",
         _ => "default"
     };
+    var canManageAttachments = User.Identity?.IsAuthenticated == true
+        && (User.IsInRole("Administrator") || User.IsInRole("Vet"));
 }
+
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" />
+<style>
+    #patient-dropzone.dropzone {
+        background: rgba(100, 100, 100, 0.3);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(200, 200, 200, 0.25);
+        border-radius: 20px;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    #patient-dropzone.dropzone:hover {
+        background: rgba(120, 120, 120, 0.38);
+    }
+
+    #patient-dropzone.dropzone .dz-message {
+        color: #ffffff !important;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        font-size: 0.92rem;
+        font-weight: 500;
+        text-align: center;
+        margin: 0;
+    }
+
+    #patient-dropzone.dropzone .dz-message span,
+    #patient-dropzone.dropzone .dz-message .dz-button {
+        color: #ffffff !important;
+        font-family: 'Poppins', 'Inter', sans-serif;
+    }
+
+    #patient-dropzone .dz-remove {
+        display: inline-block;
+        margin-top: 0.45rem;
+        padding: 0.22rem 0.65rem;
+        background: rgba(255, 80, 80, 0.18);
+        border: 1px solid rgba(255, 100, 100, 0.35);
+        border-radius: 20px;
+        color: #ffcccc !important;
+        font-size: 0.72rem;
+        font-weight: 600;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        text-decoration: none !important;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        transition: background 0.2s ease, color 0.2s ease;
+        cursor: pointer;
+    }
+
+    #patient-dropzone .dz-remove:hover {
+        background: rgba(255, 80, 80, 0.38);
+        color: #ffffff !important;
+    }
+
+    #patient-dropzone .dz-preview .dz-details {
+        background: transparent !important;
+        background-image: none !important;
+        box-shadow: none !important;
+    }
+
+    #patient-dropzone .dz-preview .dz-progress {
+        opacity: 0 !important;
+        visibility: hidden;
+    }
+
+    #patient-dropzone.show-progress .dz-preview .dz-progress {
+        opacity: 1 !important;
+        visibility: visible;
+    }
+
+    #btn-spremi-datoteke {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.85rem;
+        padding: 0.48rem 1.4rem;
+        border-radius: 28px;
+        background: rgba(108, 99, 255, 0.22);
+        border: 1px solid rgba(108, 99, 255, 0.45);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        color: #e0ddff;
+        font-size: 0.87rem;
+        font-weight: 600;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        cursor: pointer;
+        box-shadow: 0 4px 16px rgba(108, 99, 255, 0.12);
+        transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    }
+
+    #btn-spremi-datoteke:hover {
+        background: rgba(108, 99, 255, 0.40);
+        box-shadow: 0 6px 20px rgba(108, 99, 255, 0.22);
+        transform: translateY(-1px);
+        color: #ffffff;
+    }
+
+    #btn-spremi-datoteke:active {
+        transform: translateY(0);
+    }
+
+    #dz-upload-feedback {
+        display: none;
+        margin-top: 0.6rem;
+        font-size: 0.83rem;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        color: rgba(100, 255, 180, 0.9);
+    }
+
+    #patient-attachments-readonly {
+        margin-top: 0.5rem;
+        display: grid;
+        gap: 0.45rem;
+    }
+
+    .attachment-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.55rem 0.8rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #f0f0f0;
+        text-decoration: none;
+        font-size: 0.85rem;
+    }
+
+    .attachment-link:hover {
+        background: rgba(255, 255, 255, 0.14);
+        color: #ffffff;
+    }
+
+</style>
 
 <nav class="breadcrumbs">
     <a href="/">Nadzorna plo&#269;a</a>
@@ -31,6 +172,8 @@
 
 <a href="/patients" class="btn-back">&#8592; Natrag na Pacijente</a>
 
+@if (canManageAttachments)
+{
 <div class="card-actions" style="margin-bottom:1rem;">
     <a href="/patients/@Model.Id/edit" class="btn-edit">&#9999; Uredi</a>
     <form asp-action="Delete" asp-controller="Patient" asp-route-id="@Model.Id"
@@ -40,6 +183,7 @@
         <button type="submit" class="btn-danger">&#128465; Ukloni</button>
     </form>
 </div>
+}
 
 <div class="details-grid">
     <div class="glass-card details-hero">
@@ -91,6 +235,29 @@
             }
         </div>
 
+        <div class="glass-card" style="margin-bottom:1.5rem;">
+            <h3 class="section-title">📎 Medicinska Dokumentacija</h3>
+            @if (canManageAttachments)
+            {
+                <form id="patient-antiforgery" style="display:none;">
+                    @Html.AntiForgeryToken()
+                </form>
+                <form id="patient-dropzone"
+                      class="dropzone"
+                      action="/api/patients/@Model.Id/attachments"
+                      method="post"
+                      enctype="multipart/form-data">
+                </form>
+                <button id="btn-spremi-datoteke" type="button">&#128190; Spremi datoteke</button>
+                <div id="dz-upload-feedback">&#10003; Datoteke su uspješno spremljene.</div>
+            }
+            else
+            {
+                <div class="empty-state">Dokumentacija je dostupna samo za pregled.</div>
+                <div id="patient-attachments-readonly"></div>
+            }
+        </div>
+
         <div class="glass-card">
             <h3 class="section-title">📅 Povijest Termina</h3>
             @if (Model.Appointments.Any())
@@ -127,5 +294,153 @@
                 <div class="empty-state">Nema evidentiranih termina.</div>
             }
         </div>
+
+        <div class="glass-card" style="margin-top:1.5rem;">
+            <h3 class="section-title">🩺 Medicinski zapisi</h3>
+            @if (Model.MedicalRecords.Any())
+            {
+                @foreach (var record in Model.MedicalRecords.OrderByDescending(r => r.RecordDate))
+                {
+                    <a href="/medical-records/@record.Id" class="timeline-link">
+                        <div class="timeline-item">
+                            <div class="timeline-date" style="background:rgba(108,99,255,0.16);">
+                                <span class="day">@record.RecordDate.Day</span>
+                                <span class="month">@record.RecordDate.ToString("MMM")</span>
+                            </div>
+                            <div class="timeline-body" style="flex:1;">
+                                <div class="tl-reason">🧾 Dijagnoza: @(string.IsNullOrWhiteSpace(record.Diagnosis) ? "Nije uneseno" : record.Diagnosis)</div>
+                                <div class="tl-vet">💊 Terapija: @(string.IsNullOrWhiteSpace(record.Treatment) ? "Nije uneseno" : record.Treatment)</div>
+                                <div class="tl-vet">🩺 Veterinar: Nije dostupno</div>
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+            else
+            {
+                <div class="empty-state">Nema zabilježenih medicinskih zapisa.</div>
+            }
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script>
+        Dropzone.autoDiscover = false;
+
+        const attachmentsApiUrl = "/api/patients/@Model.Id/attachments";
+        const canManageAttachments = @canManageAttachments.ToString().ToLowerInvariant();
+
+        if (canManageAttachments) {
+            const csrfTokenElement = document.querySelector('#patient-antiforgery input[name="__RequestVerificationToken"]');
+            const csrfToken = csrfTokenElement ? csrfTokenElement.value : "";
+
+            const myDropzone = new Dropzone("#patient-dropzone", {
+                dictDefaultMessage: "Dovucite datoteke ovdje ili kliknite za odabir",
+                dictRemoveFile: "Ukloni datoteku",
+                dictCancelUpload: "Odustani",
+                addRemoveLinks: true,
+                autoProcessQueue: false,
+                headers: { "RequestVerificationToken": csrfToken },
+                init: function () {
+                    const dz = this;
+
+                    fetch(attachmentsApiUrl)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Failed to load attachments.");
+                            }
+                            return response.json();
+                        })
+                        .then(attachments => {
+                            attachments.forEach(attachment => {
+                                const mockFile = {
+                                    name: attachment.fileName ?? attachment.FileName,
+                                    size: 12345,
+                                    id: attachment.id ?? attachment.Id,
+                                    status: Dropzone.SUCCESS,
+                                    accepted: true
+                                };
+
+                                dz.emit("addedfile", mockFile);
+                                dz.emit("complete", mockFile);
+                                dz.files.push(mockFile);
+                            });
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+
+                    dz.on("success", function (file, response) {
+                        if (response && response.id) {
+                            file.id = response.id;
+                        }
+                    });
+
+                    dz.on("sending", function (file, xhr, formData) {
+                        dz.element.classList.add("show-progress");
+                        if (csrfToken) {
+                            formData.append("__RequestVerificationToken", csrfToken);
+                        }
+                    });
+
+                    dz.on("removedfile", function (file) {
+                        if (!file.id) {
+                            return;
+                        }
+
+                        fetch(`${attachmentsApiUrl}/${file.id}`, {
+                            method: "DELETE"
+                        }).catch(error => {
+                            console.error(error);
+                        });
+                    });
+
+                    dz.on("queuecomplete", function () {
+                        dz.element.classList.remove("show-progress");
+                        const feedback = document.getElementById("dz-upload-feedback");
+                        if (feedback) {
+                            feedback.style.display = "block";
+                            setTimeout(() => { feedback.style.display = "none"; }, 4000);
+                        }
+                    });
+                }
+            });
+
+            document.getElementById("btn-spremi-datoteke").addEventListener("click", function () {
+                const queuedFiles = myDropzone.getQueuedFiles();
+                if (queuedFiles.length > 0) {
+                    document.getElementById("patient-dropzone")?.classList.add("show-progress");
+                }
+                myDropzone.processQueue();
+            });
+        } else {
+            fetch(attachmentsApiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to load attachments.");
+                    }
+                    return response.json();
+                })
+                .then(attachments => {
+                    const readonlyContainer = document.getElementById("patient-attachments-readonly");
+                    if (!readonlyContainer) {
+                        return;
+                    }
+
+                    if (!attachments || attachments.length === 0) {
+                        readonlyContainer.innerHTML = "";
+                        return;
+                    }
+
+                    readonlyContainer.innerHTML = attachments
+                        .map(file => `<div class="attachment-link">📄 ${file.fileName ?? file.FileName}</div>`)
+                        .join("");
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    </script>
+}

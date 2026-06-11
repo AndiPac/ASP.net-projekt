@@ -1,6 +1,7 @@
 @model List<Appointment>
 @{
     ViewData["Title"] = "Termini";
+    var canManage = User.IsInRole("Administrator") || User.IsInRole("Vet");
 }
 
 <nav class="breadcrumbs">
@@ -14,9 +15,12 @@
     <p class="subtitle">Svi zakazani i dovršeni veterinarski termini</p>
 </div>
 
+@if (canManage)
+{
 <div class="page-actions">
     <a href="/appointments/create" class="btn-primary">&#43; Novi Termin</a>
 </div>
+}
 
 <div class="card-grid">
     @foreach (var appt in Model.OrderByDescending(a => a.AppointmentDateTime))
@@ -64,14 +68,17 @@
 
             </a>
 
+            @if (canManage)
+            {
             <div class="card-actions">
                 <a href="/appointments/@appt.Id/edit" class="btn-edit">&#9999; Uredi</a>
                 <form method="post" action="/appointments/@appt.Id/delete"
-                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti termin?');">
+                      onsubmit="return confirm('Jeste li sigurni da želite ukloniti termin?')">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn-danger">&#128465; Obriši</button>
                 </form>
             </div>
+            }
         </div>
     }
 </div>
