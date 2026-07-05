@@ -50,6 +50,16 @@ namespace VetAmb.Data
                 }
             }
 
+            var shouldSeedDefaultUsers = string.Equals(
+                Environment.GetEnvironmentVariable("SEED_DEFAULT_USERS"),
+                "true",
+                StringComparison.OrdinalIgnoreCase);
+
+            if (!shouldSeedDefaultUsers)
+            {
+                return;
+            }
+
             const string adminEmail = "admin@vetamb.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
 

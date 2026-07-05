@@ -1,19 +1,70 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Logging.Console;
 using System.Globalization;
 using VetAmb.Data;
 using VetAmb.Models;
 using VetAmb.Repositories;
+using VetAmb.Services;
 using VetAmb.Middleware;
+using Serilog;
 
 var hrCulture = new CultureInfo("hr-HR");
 CultureInfo.DefaultThreadCurrentCulture = hrCulture;
 CultureInfo.DefaultThreadCurrentUICulture = hrCulture;
 
+var isMcpMode = args.Any(a => string.Equals(a, "--mcp", StringComparison.OrdinalIgnoreCase));
+
+if (isMcpMode)
+{
+    var mcpArgs = args
+        .Where(a => !string.Equals(a, "--mcp", StringComparison.OrdinalIgnoreCase))
+        .ToArray();
+
+    var mcpBuilder = Host.CreateApplicationBuilder(mcpArgs);
+    mcpBuilder.Configuration.AddUserSecrets<Program>(optional: true, reloadOnChange: true);
+
+    // In stdio mode, stdout is reserved for MCP JSON-RPC traffic.
+    mcpBuilder.Logging.ClearProviders();
+    mcpBuilder.Logging.AddSimpleConsole(options =>
+    {
+        options.SingleLine = true;
+        options.TimestampFormat = "yyyy-MM-dd HH:mm:ss.fff zzz ";
+    });
+    mcpBuilder.Services.Configure<ConsoleLoggerOptions>(options =>
+    {
+        options.LogToStandardErrorThreshold = LogLevel.Trace;
+    });
+
+    mcpBuilder.Services.AddDbContext<VetAmbDbContext>(options =>
+        options.UseSqlServer(mcpBuilder.Configuration.GetConnectionString("DefaultConnection")));
+
+    mcpBuilder.Services.AddScoped<IClinicRepository, EfClinicRepository>();
+    mcpBuilder.Services.AddScoped<IVetRepository, EfVetRepository>();
+    mcpBuilder.Services.AddScoped<IOwnerRepository, EfOwnerRepository>();
+    mcpBuilder.Services.AddScoped<IPatientRepository, EfPatientRepository>();
+    mcpBuilder.Services.AddScoped<IAppointmentRepository, EfAppointmentRepository>();
+    mcpBuilder.Services.AddScoped<IMedicalRecordRepository, EfMedicalRecordRepository>();
+    mcpBuilder.Services.AddScoped<IServiceRepository, EfServiceRepository>();
+
+    mcpBuilder.Services
+        .AddMcpServer()
+        .WithStdioServerTransport()
+        .WithToolsFromAssembly();
+
+    var mcpHost = mcpBuilder.Build();
+    await mcpHost.RunAsync();
+    return;
+}
+
 var builder = WebApplication.CreateBuilder(args);
 // Ensure user-secrets are available even when ASPNETCORE_ENVIRONMENT is not Development.
 builder.Configuration.AddUserSecrets<Program>(optional: true, reloadOnChange: true);
+builder.Host.UseSerilog((context, services, loggerConfiguration) => loggerConfiguration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext());
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
@@ -25,6 +76,12 @@ builder.Services
     .AddEntityFrameworkStores<VetAmbDbContext>()
     .AddDefaultTokenProviders()
     .AddErrorDescriber<CroatianIdentityErrorDescriber>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
 
 var googleClientId =
     builder.Configuration["Authentication:Google:ClientId"] ??
@@ -58,6 +115,7 @@ builder.Services.AddScoped<IPatientRepository, EfPatientRepository>();
 builder.Services.AddScoped<IAppointmentRepository, EfAppointmentRepository>();
 builder.Services.AddScoped<IMedicalRecordRepository, EfMedicalRecordRepository>();
 builder.Services.AddScoped<IServiceRepository, EfServiceRepository>();
+builder.Services.AddScoped<AiChatbotService>();
 
 var app = builder.Build();
 
@@ -102,10 +160,21 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"Identity seeding failed: {ex.Message}");
+    app.Logger.LogError(ex, "Identity seeding failed");
 }
 
-app.Run();
+try
+{
+    await app.RunAsync();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
 
 public partial class Program { }
 

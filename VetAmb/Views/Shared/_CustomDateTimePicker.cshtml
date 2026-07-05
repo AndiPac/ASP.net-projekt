@@ -208,7 +208,8 @@
         top: calc(100% + 6px);
         left: 0;
         z-index: 1000;
-        width: 280px;
+        width: min(280px, calc(100vw - 2rem));
+        max-width: calc(100vw - 2rem);
         background: rgba(15,12,41,0.92);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
@@ -404,6 +405,12 @@
         background: linear-gradient(135deg, rgba(108,99,255,0.8), rgba(0,210,255,0.55));
         transform: translateY(-1px);
     }
+
+    @@media (max-width: 480px) {
+        .cdp-panel {
+            padding: 0.85rem;
+        }
+    }
     </style>
 }
 
@@ -511,8 +518,29 @@
             isHrCulture() ? ampmWrap.hide() : ampmWrap.show();
 
             var panel = $('#cdp-panel-' + id);
+            positionPanel(id);
             panel.stop(true, true).fadeIn(160).attr('aria-hidden', 'false');
             s.open = true;
+        }
+
+        function positionPanel(id) {
+            var $wrapper = $('#cdp-wrapper-' + id);
+            var $panel = $('#cdp-panel-' + id);
+            if (!$wrapper.length || !$panel.length) {
+                return;
+            }
+
+            var wrapperRect = $wrapper[0].getBoundingClientRect();
+            var viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+            var panelWidth = Math.min(280, Math.max(220, viewportWidth - 32));
+            var overflowRight = wrapperRect.left + panelWidth > viewportWidth - 16;
+
+            $panel.css({
+                width: panelWidth + 'px',
+                maxWidth: 'calc(100vw - 2rem)',
+                left: overflowRight ? 'auto' : '0',
+                right: overflowRight ? '0' : 'auto'
+            });
         }
 
         function closePanel(id) {
@@ -713,6 +741,14 @@
                     if (s.open) closePanel(id);
                 });
             });
+
+        $(window).on('resize', function () {
+            $.each(cdpState, function (id, s) {
+                if (s.open) {
+                    positionPanel(id);
+                }
+            });
+        });
 
         // Prevent panel clicks from bubbling to document
         $(document).on('click', '.cdp-panel', function (e) { e.stopPropagation(); });

@@ -14,13 +14,13 @@
 
         <div class="form-group">
             <label asp-for="Input.Email" class="form-label">Email adresa</label>
-            <input asp-for="Input.Email" class="form-input" autocomplete="username" aria-required="true" />
+            <input asp-for="Input.Email" data-testid="login-email" class="form-input" autocomplete="username" aria-required="true" />
             <span asp-validation-for="Input.Email" class="form-validation"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="Input.Password" class="form-label">Lozinka</label>
-            <input asp-for="Input.Password" class="form-input" autocomplete="current-password" aria-required="true" />
+            <input asp-for="Input.Password" data-testid="login-password" class="form-input" autocomplete="current-password" aria-required="true" />
             <span asp-validation-for="Input.Password" class="form-validation"></span>
         </div>
 
@@ -31,7 +31,7 @@
 
         <div class="card-actions" style="justify-content: flex-end; margin-top: 0.75rem;">
             <a class="btn-secondary" asp-area="Identity" asp-page="/Account/Register">Nemaš račun?</a>
-            <button id="loginSubmit" type="submit" class="btn-primary">Prijava</button>
+            <button id="loginSubmit" data-testid="login-submit" type="submit" class="btn-primary">Prijava</button>
         </div>
     </form>
 

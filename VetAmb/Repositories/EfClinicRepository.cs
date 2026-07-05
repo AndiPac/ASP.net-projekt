@@ -23,12 +23,14 @@ namespace VetAmb.Repositories
 
         public List<Clinic> Search(string term)
         {
+            term ??= string.Empty;
+
             return _context.Clinics
                 .Include(c => c.Vets)
                 .Include(c => c.Owners)
-                .Where(c => c.Name.Contains(term)
-                         || c.Address.Contains(term)
-                         || c.RegistrationNumber.Contains(term))
+                .Where(c => (c.Name ?? string.Empty).Contains(term)
+                         || (c.Address ?? string.Empty).Contains(term)
+                         || (c.RegistrationNumber ?? string.Empty).Contains(term))
                 .ToList();
         }
 

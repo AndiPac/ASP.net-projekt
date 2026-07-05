@@ -22,10 +22,17 @@
 </div>
 }
 
+<section class="glass-card" style="padding:1rem; margin-bottom:1rem;">
+    <label for="ownerFilterInput" class="form-label">Filtriraj vlasnike</label>
+    <input id="ownerFilterInput" data-testid="owners-filter-input" type="text" class="form-input" placeholder="Upišite ime, prezime, email, telefon ili adresu..." />
+</section>
+
 <div class="card-grid">
     @foreach (var owner in Model)
     {
-        <div class="glass-card patient-card" style="position:relative;">
+        var searchable = $"{owner.FirstName} {owner.LastName} {owner.Email} {owner.Phone} {owner.Address}".ToLowerInvariant();
+
+        <div class="glass-card patient-card owner-card" data-owner-search="@searchable" style="position:relative;">
             <a href="/owners/@owner.Id" class="glass-card-link-inner">
                 <div class="card-top">
                     <div class="avatar dog" style="background:linear-gradient(135deg,rgba(0,230,118,0.35),rgba(0,230,118,0.1));">&#128100;</div>
@@ -70,3 +77,45 @@
         </div>
     }
 </div>
+
+<div class="glass-card" data-testid="owners-filter-empty" style="display:none; padding:1rem; margin-top:0.75rem; text-align:center; opacity:0.85;">
+    Nema rezultata za traženi pojam.
+</div>
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterInput = document.querySelector('[data-testid="owners-filter-input"]');
+        const cards = Array.from(document.querySelectorAll('.owner-card'));
+        const emptyState = document.querySelector('[data-testid="owners-filter-empty"]');
+
+        if (!filterInput || cards.length === 0) {
+            return;
+        }
+
+        function updateEmptyState() {
+            const visibleCount = cards.filter(function (card) {
+                return card.style.display !== 'none';
+            }).length;
+
+            if (emptyState) {
+                emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+
+        filterInput.addEventListener('input', function () {
+            const term = (filterInput.value || '').trim().toLowerCase();
+
+            cards.forEach(function (card) {
+                const searchable = (card.getAttribute('data-owner-search') || '').toLowerCase();
+                const isVisible = term.length === 0 || searchable.includes(term);
+                card.style.display = isVisible ? '' : 'none';
+            });
+
+            updateEmptyState();
+        });
+
+        updateEmptyState();
+    });
+    </script>
+}

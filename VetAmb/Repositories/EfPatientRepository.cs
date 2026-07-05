@@ -18,19 +18,23 @@ namespace VetAmb.Repositories
             return _context.Patients
                 .Include(p => p.Owner)
                 .Include(p => p.Appointments)
+                    .ThenInclude(a => a.Vet)
                 .Include(p => p.MedicalRecords)
                 .ToList();
         }
 
         public List<Patient> Search(string term)
         {
+            term ??= string.Empty;
+
             return _context.Patients
                 .Include(p => p.Owner)
                 .Include(p => p.Appointments)
+                    .ThenInclude(a => a.Vet)
                 .Include(p => p.MedicalRecords)
-                .Where(p => p.Name.Contains(term)
-                         || p.Breed.Contains(term)
-                         || p.MicrochipId.Contains(term))
+                .Where(p => (p.Name ?? string.Empty).Contains(term)
+                         || (p.Breed ?? string.Empty).Contains(term)
+                         || (p.MicrochipId ?? string.Empty).Contains(term))
                 .ToList();
         }
 
@@ -39,6 +43,7 @@ namespace VetAmb.Repositories
             return _context.Patients
                 .Include(p => p.Owner)
                 .Include(p => p.Appointments)
+                    .ThenInclude(a => a.Vet)
                 .Include(p => p.MedicalRecords)
                 .FirstOrDefault(p => p.Id == id);
         }

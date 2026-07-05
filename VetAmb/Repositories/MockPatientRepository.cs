@@ -15,10 +15,12 @@ namespace VetAmb.Repositories
 
         public List<Patient> Search(string term)
         {
+            term ??= string.Empty;
+
             return _patients
-                .Where(p => p.Name.Contains(term, StringComparison.OrdinalIgnoreCase)
-                         || p.Breed.Contains(term, StringComparison.OrdinalIgnoreCase)
-                         || p.MicrochipId.Contains(term, StringComparison.OrdinalIgnoreCase))
+                .Where(p => (p.Name ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (p.Breed ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (p.MicrochipId ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
 

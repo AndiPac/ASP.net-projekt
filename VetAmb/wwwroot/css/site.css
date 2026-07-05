@@ -179,10 +179,13 @@ html, body {
 .breadcrumbs {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.5rem;
     margin-bottom: 0.75rem;
     font-size: 0.8rem;
     color: var(--text-muted);
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .breadcrumbs a {
@@ -345,6 +348,20 @@ html, body {
     top: 0.5rem;
     right: 0.5rem;
     white-space: nowrap;
+}
+
+.patient-card .card-top .appointment-badges {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.35rem;
+}
+
+.patient-card .card-top .appointment-badges .status-badge {
+    position: static;
 }
 
 .patient-card .avatar {
@@ -546,6 +563,59 @@ html, body {
     grid-column: 1 / -1;
 }
 
+@media (max-width: 768px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .patient-card .card-top {
+        padding-right: 0;
+        min-height: 0;
+    }
+
+    .patient-card .card-top .species-badge,
+    .patient-card .card-top .status-badge {
+        position: static;
+        margin-top: 0.6rem;
+        align-self: flex-start;
+    }
+
+    .patient-card .card-top .appointment-badges {
+        position: static;
+        margin-top: 0.6rem;
+        align-items: flex-start;
+    }
+
+    .patient-card .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.18rem;
+    }
+
+    .patient-card .detail-label {
+        margin-right: 0;
+    }
+
+    .patient-card .detail-value {
+        text-align: left;
+        width: 100%;
+    }
+
+    .patient-card .card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+}
+
 /* ---------- Appointment Timeline Card ---------- */
 .timeline-item {
     display: flex;
@@ -629,6 +699,11 @@ a.timeline-link .timeline-item {
 .timeline-body .tl-vet {
     font-size: 0.8rem;
     color: var(--text-secondary);
+}
+
+.timeline-body {
+    min-width: 0;
+    flex: 1;
 }
 
 /* Status badges */
@@ -852,13 +927,22 @@ a.timeline-link .timeline-item {
     95%           { transform: scaleY(0.1); }
 }
 
-/* Hide mascot on small screens when sidebar is hidden */
-@media (max-width: 1024px) {
+/* Hide mascot on mobile when sidebar is hidden */
+@media (max-width: 640px) {
     .mascot-cat { display: none; }
 }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+    .card-grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
     .app-shell {
         grid-template-columns: 1fr;
     }
@@ -869,11 +953,43 @@ a.timeline-link .timeline-item {
         grid-column: 1;
         padding: 1.5rem;
     }
-    .details-grid {
-        grid-template-columns: 1fr;
+}
+
+@media (max-width: 640px) {
+    .main-content {
+        padding: 1rem;
     }
-    .card-grid-3 {
-        grid-template-columns: 1fr;
+
+    .glass-card,
+    .form-glass {
+        padding: 1.1rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.55rem;
+    }
+
+    .details-hero {
+        padding: 1.5rem 1rem;
+    }
+
+    .details-hero .hero-avatar {
+        width: 72px;
+        height: 72px;
+        font-size: 2.2rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .details-hero .hero-name {
+        font-size: 1.35rem;
+    }
+
+    .breadcrumbs {
+        font-size: 0.74rem;
+    }
+
+    .section-title {
+        font-size: 0.98rem;
     }
 }
 
@@ -1219,6 +1335,85 @@ a.timeline-link .timeline-item {
     margin-top: 1.5rem;
     padding-top: 1.25rem;
     border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+@media (max-width: 768px) {
+    .page-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .page-actions .page-header {
+        width: 100%;
+    }
+
+    .page-actions .btn-back,
+    .page-actions .btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .card-actions {
+        flex-wrap: wrap;
+    }
+
+    .card-actions .btn-edit,
+    .card-actions .btn-danger,
+    .card-actions form,
+    .card-actions form button {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+
+    .form-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .form-footer .btn-primary,
+    .form-footer .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .timeline-item {
+        gap: 0.75rem;
+        padding: 0.85rem;
+        align-items: flex-start;
+    }
+
+    .timeline-date {
+        min-width: 44px;
+        padding: 0.4rem;
+    }
+
+    .timeline-date .day {
+        font-size: 1.05rem;
+    }
+
+    .timeline-body .tl-reason,
+    .timeline-body .tl-vet {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+}
+
+@media (max-width: 480px) {
+    .timeline-item {
+        flex-direction: column;
+    }
+
+    .timeline-date {
+        flex-direction: row;
+        gap: 0.45rem;
+        min-width: 0;
+        align-self: flex-start;
+    }
+
+    .timeline-date .month {
+        font-size: 0.68rem;
+        letter-spacing: 0.6px;
+    }
 }
 
 

@@ -22,10 +22,17 @@
 </div>
 }
 
+<section class="glass-card" style="padding:1rem; margin-bottom:1rem;">
+    <label for="medicalRecordsFilterInput" class="form-label">Filtriraj medicinske zapise</label>
+    <input id="medicalRecordsFilterInput" data-testid="medical-records-filter-input" type="text" class="form-input" placeholder="Upišite dijagnozu, terapiju, pacijenta ili napomene..." />
+</section>
+
 <div class="card-grid">
     @foreach (var record in Model.OrderByDescending(r => r.RecordDate))
     {
-        <div class="glass-card patient-card" style="position:relative;">
+        var searchable = $"{record.Diagnosis} {record.Treatment} {record.Patient?.Name} {record.Notes}".ToLowerInvariant();
+
+        <div class="glass-card patient-card medical-record-card" data-medical-record-search="@searchable" style="position:relative;">
             <a href="/medical-records/@record.Id" class="glass-card-link-inner">
                 <div class="card-top">
                     <div class="avatar blue" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">&#128203;</div>
@@ -70,3 +77,45 @@
         </div>
     }
 </div>
+
+<div class="glass-card" data-testid="medical-records-filter-empty" style="display:none; padding:1rem; margin-top:0.75rem; text-align:center; opacity:0.85;">
+    Nema rezultata za traženi pojam.
+</div>
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterInput = document.querySelector('[data-testid="medical-records-filter-input"]');
+        const cards = Array.from(document.querySelectorAll('.medical-record-card'));
+        const emptyState = document.querySelector('[data-testid="medical-records-filter-empty"]');
+
+        if (!filterInput || cards.length === 0) {
+            return;
+        }
+
+        function updateEmptyState() {
+            const visibleCount = cards.filter(function (card) {
+                return card.style.display !== 'none';
+            }).length;
+
+            if (emptyState) {
+                emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+
+        filterInput.addEventListener('input', function () {
+            const term = (filterInput.value || '').trim().toLowerCase();
+
+            cards.forEach(function (card) {
+                const searchable = (card.getAttribute('data-medical-record-search') || '').toLowerCase();
+                const isVisible = term.length === 0 || searchable.includes(term);
+                card.style.display = isVisible ? '' : 'none';
+            });
+
+            updateEmptyState();
+        });
+
+        updateEmptyState();
+    });
+    </script>
+}

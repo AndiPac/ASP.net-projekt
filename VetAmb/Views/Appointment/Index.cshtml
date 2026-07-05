@@ -22,9 +22,20 @@
 </div>
 }
 
+<section class="glass-card" style="padding:1rem; margin-bottom:1rem;">
+    <label for="appointmentFilterInput" class="form-label">Filtriraj termine</label>
+    <input id="appointmentFilterInput" data-testid="appointments-filter-input" type="text" class="form-input" placeholder="Upišite razlog, pacijenta, veterinara, status ili uslugu..." />
+</section>
+
 <div class="card-grid">
     @foreach (var appt in Model.OrderByDescending(a => a.AppointmentDateTime))
     {
+        var services = appt.AppointmentServices.Any()
+            ? string.Join(", ", appt.AppointmentServices.Select(s => s.Service?.Name ?? ""))
+            : "";
+        var vetFullName = $"{appt.Vet?.FirstName} {appt.Vet?.LastName}".Trim();
+        var searchable = $"{appt.Reason} {appt.Patient?.Name} {vetFullName} {appt.Status.GetDisplayName()} {services}".ToLowerInvariant();
+
         var statusClass = appt.Status switch
         {
             AppointmentStatus.Completed => "completed",
@@ -36,7 +47,7 @@
             _ => ""
         };
 
-        <div class="glass-card patient-card" style="position:relative;">
+        <div class="glass-card patient-card appointment-card" data-testid="appointment-card-@appt.Id" data-appointment-search="@searchable" style="position:relative;">
             <a href="/appointments/@appt.Id" class="glass-card-link-inner">
                 <div class="card-top">
                     <div class="avatar dog" style="background:linear-gradient(135deg,rgba(108,99,255,0.35),rgba(108,99,255,0.1));">&#128197;</div>
@@ -58,7 +69,7 @@
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Usluge</span>
-                        <span class="detail-value">@(appt.AppointmentServices.Any() ? string.Join(", ", appt.AppointmentServices.Select(s => s.Service?.Name ?? "")) : "—")</span>
+                        <span class="detail-value">@(appt.AppointmentServices.Any() ? services : "—")</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Ukupno</span>
@@ -82,3 +93,45 @@
         </div>
     }
 </div>
+
+<div class="glass-card" data-testid="appointments-filter-empty" style="display:none; padding:1rem; margin-top:0.75rem; text-align:center; opacity:0.85;">
+    Nema rezultata za traženi pojam.
+</div>
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterInput = document.querySelector('[data-testid="appointments-filter-input"]');
+        const cards = Array.from(document.querySelectorAll('.appointment-card'));
+        const emptyState = document.querySelector('[data-testid="appointments-filter-empty"]');
+
+        if (!filterInput || cards.length === 0) {
+            return;
+        }
+
+        function updateEmptyState() {
+            const visibleCount = cards.filter(function (card) {
+                return card.style.display !== 'none';
+            }).length;
+
+            if (emptyState) {
+                emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+
+        filterInput.addEventListener('input', function () {
+            const term = (filterInput.value || '').trim().toLowerCase();
+
+            cards.forEach(function (card) {
+                const searchable = (card.getAttribute('data-appointment-search') || '').toLowerCase();
+                const isVisible = term.length === 0 || searchable.includes(term);
+                card.style.display = isVisible ? '' : 'none';
+            });
+
+            updateEmptyState();
+        });
+
+        updateEmptyState();
+    });
+    </script>
+}

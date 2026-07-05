@@ -15,10 +15,12 @@ namespace VetAmb.Repositories
 
         public List<Clinic> Search(string term)
         {
+            term ??= string.Empty;
+
             return _clinics
-                .Where(c => c.Name.Contains(term, StringComparison.OrdinalIgnoreCase)
-                         || c.Address.Contains(term, StringComparison.OrdinalIgnoreCase)
-                         || c.RegistrationNumber.Contains(term, StringComparison.OrdinalIgnoreCase))
+                .Where(c => (c.Name ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (c.Address ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase)
+                         || (c.RegistrationNumber ?? string.Empty).Contains(term, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
 

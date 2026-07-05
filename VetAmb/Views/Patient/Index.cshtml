@@ -22,6 +22,11 @@
 </div>
 }
 
+<section class="glass-card" style="padding:1rem; margin-bottom:1rem;">
+    <label for="patientFilterInput" class="form-label">Filtriraj pacijente</label>
+    <input id="patientFilterInput" data-testid="patients-filter-input" type="text" class="form-input" placeholder="Upišite ime, vrstu, pasminu, boju ili mikročip..." />
+</section>
+
 <div class="card-grid">
     @foreach (var patient in Model)
     {
@@ -44,7 +49,9 @@
             _ => "default"
         };
 
-        <div class="glass-card patient-card" style="position:relative;">
+        var searchable = $"{patient.Name} {patient.Species.GetDisplayName()} {patient.Breed} {patient.Color} {patient.MicrochipId}".ToLowerInvariant();
+
+        <div class="glass-card patient-card searchable-patient-card" data-patient-search="@searchable" style="position:relative;">
             <a href="/patients/@patient.Id" class="glass-card-link-inner">
                 <div class="card-top">
                     <div class="avatar @avatarClass">@speciesEmoji</div>
@@ -88,3 +95,45 @@
         </div>
     }
 </div>
+
+<div class="glass-card" data-testid="patients-filter-empty" style="display:none; padding:1rem; margin-top:0.75rem; text-align:center; opacity:0.85;">
+    Nema rezultata za traženi pojam.
+</div>
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterInput = document.querySelector('[data-testid="patients-filter-input"]');
+        const cards = Array.from(document.querySelectorAll('.searchable-patient-card'));
+        const emptyState = document.querySelector('[data-testid="patients-filter-empty"]');
+
+        if (!filterInput || cards.length === 0) {
+            return;
+        }
+
+        function updateEmptyState() {
+            const visibleCount = cards.filter(function (card) {
+                return card.style.display !== 'none';
+            }).length;
+
+            if (emptyState) {
+                emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+
+        filterInput.addEventListener('input', function () {
+            const term = (filterInput.value || '').trim().toLowerCase();
+
+            cards.forEach(function (card) {
+                const searchable = (card.getAttribute('data-patient-search') || '').toLowerCase();
+                const isVisible = term.length === 0 || searchable.includes(term);
+                card.style.display = isVisible ? '' : 'none';
+            });
+
+            updateEmptyState();
+        });
+
+        updateEmptyState();
+    });
+    </script>
+}

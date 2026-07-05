@@ -3,19 +3,19 @@
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 
-<div class="d-flex align-items-center gap-3 flex-nowrap m-0 p-0" style="display: flex !important; flex-direction: row !important;">
 @if (SignInManager.IsSignedIn(User))
 {
-    <span class="text-dark fw-medium text-nowrap">@User.Identity?.Name</span>
-    <form class="form-inline m-0 p-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/">
-        <button type="submit" class="auth-glass-btn text-nowrap">Odjava</button>
-    </form>
+    <div class="auth-login-partial auth-login-partial-signed-in">
+        <span class="auth-username">@User.Identity?.Name</span>
+        <form class="auth-logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/">
+            <button type="submit" class="auth-glass-btn">Odjava</button>
+        </form>
+    </div>
 }
 else
 {
-    <div class="d-flex align-items-center flex-nowrap gap-2">
-        <a class="auth-glass-btn text-nowrap" asp-area="Identity" asp-page="/Account/Register">Registracija</a>
-        <a class="auth-glass-btn text-nowrap" asp-area="Identity" asp-page="/Account/Login">Prijava</a>
+    <div class="auth-login-partial auth-login-partial-guest">
+        <a class="auth-glass-btn" asp-area="Identity" asp-page="/Account/Register">Registracija</a>
+        <a class="auth-glass-btn" asp-area="Identity" asp-page="/Account/Login">Prijava</a>
     </div>
 }
-</div>
