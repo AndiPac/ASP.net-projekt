@@ -1,0 +1,8 @@
+# Repository-wide generated content
+**/bin/
+**/obj/
+artifacts/
+
+# Keep VS Code workspace settings if present
+!.vscode/
+!.vscode/settings.json
