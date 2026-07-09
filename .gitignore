@@ -2,6 +2,10 @@
 **/bin/
 **/obj/
 artifacts/
+.vs/
+*.vsidx
+*.db
+*.sqlite
 
 # Keep VS Code workspace settings if present
 !.vscode/

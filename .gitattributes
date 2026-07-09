@@ -1,0 +1,5 @@
+# Keep generated/editor metadata from affecting language stats
+.vs/** linguist-vendored
+.github/hooks/agent_log.txt linguist-vendored
+VetAmb/lab-*/agent_log.txt linguist-vendored
+artifacts/** linguist-vendored
