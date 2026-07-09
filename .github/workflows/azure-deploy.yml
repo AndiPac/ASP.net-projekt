@@ -1,0 +1,91 @@
+name: VetAmb Azure Deploy
+
+on:
+	push:
+		branches:
+			- main
+	workflow_dispatch:
+		inputs:
+			run_migrations:
+				description: "Run EF Core migrations before deployment"
+				required: true
+				default: true
+				type: boolean
+
+permissions:
+	contents: read
+	id-token: write
+
+env:
+	DOTNET_VERSION: "8.0.x"
+	PROJECT_PATH: VetAmb/VetAmb.csproj
+	TEST_PROJECT_PATH: VetAmb.Tests/VetAmb.Tests.csproj
+	PUBLISH_DIR: ${{ github.workspace }}/publish
+
+jobs:
+	build-test-deploy:
+		runs-on: ubuntu-latest
+
+		steps:
+			- name: Checkout
+				uses: actions/checkout@v4
+
+			- name: Setup .NET
+				uses: actions/setup-dotnet@v4
+				with:
+					dotnet-version: ${{ env.DOTNET_VERSION }}
+
+			- name: Restore
+				run: dotnet restore VetAmb/VetAmb.sln
+
+			- name: Build
+				run: dotnet build VetAmb/VetAmb.sln --configuration Release --no-restore
+
+			- name: Test
+				run: dotnet test ${{ env.TEST_PROJECT_PATH }} --configuration Release --no-build --verbosity normal
+
+			- name: Publish
+				run: dotnet publish ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PUBLISH_DIR }}
+
+			- name: Azure Login (OIDC)
+				uses: azure/login@v2
+				with:
+					client-id: ${{ secrets.AZURE_CLIENT_ID }}
+					tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+					subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+			- name: Apply app settings
+				shell: bash
+				run: |
+					az webapp config appsettings set \
+						--resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+						--name "${{ secrets.AZURE_WEBAPP_NAME }}" \
+						--settings \
+							ASPNETCORE_ENVIRONMENT=Production \
+							ConnectionStrings__DefaultConnection="${{ secrets.AZURE_SQL_CONNECTION_STRING }}" \
+							OpenAI__ApiKey="${{ secrets.OPENAI_API_KEY }}" \
+							OpenAI__Model="${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}" \
+							Authentication__Google__ClientId="${{ secrets.GOOGLE_CLIENT_ID }}" \
+							Authentication__Google__ClientSecret="${{ secrets.GOOGLE_CLIENT_SECRET }}"
+
+			- name: Install dotnet-ef
+				if: ${{ github.event_name == 'push' || inputs.run_migrations }}
+				run: |
+					dotnet tool install --global dotnet-ef --version 8.*
+					echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+
+			- name: Run EF Core migrations
+				if: ${{ github.event_name == 'push' || inputs.run_migrations }}
+				env:
+					ConnectionStrings__DefaultConnection: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+				run: |
+					dotnet ef database update \
+						--project VetAmb/VetAmb.csproj \
+						--startup-project VetAmb/VetAmb.csproj \
+						--context VetAmbDbContext
+
+			- name: Deploy to Azure Web App
+				uses: azure/webapps-deploy@v3
+				with:
+					app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+					package: ${{ env.PUBLISH_DIR }}
