@@ -659,6 +659,33 @@ a.timeline-link .timeline-item {
     margin-bottom: 0;
 }
 
+.medical-record-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+a.medical-record-link {
+    margin-bottom: 0;
+}
+
+a.medical-record-link:hover,
+a.medical-record-link:focus,
+a.medical-record-link:visited {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+a.medical-record-link .medical-record-item {
+    margin-bottom: 0;
+}
+
+a.medical-record-link .timeline-body .tl-reason,
+a.medical-record-link .timeline-body .tl-vet {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
 /* Inline entity links inside info-value cells */
 .info-value a,
 .info-value a:visited,
@@ -1393,6 +1420,12 @@ a.timeline-link .timeline-item {
 
     .timeline-body .tl-reason,
     .timeline-body .tl-vet {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    a.medical-record-link .timeline-body .tl-reason,
+    a.medical-record-link .timeline-body .tl-vet {
         overflow-wrap: anywhere;
         word-break: break-word;
     }

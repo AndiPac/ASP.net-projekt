@@ -326,30 +326,27 @@
             <h3 class="section-title">🩺 Medicinski zapisi</h3>
             @if (Model.MedicalRecords.Any())
             {
-                <div style="overflow-x:auto;">
-                    <table data-testid="patient-medical-records-table" class="table" style="width:100%; border-collapse:collapse;">
-                        <thead>
-                            <tr>
-                                <th style="text-align:left; padding:0.6rem;">Datum</th>
-                                <th style="text-align:left; padding:0.6rem;">Dijagnoza</th>
-                                <th style="text-align:left; padding:0.6rem;">Terapija</th>
-                                <th style="text-align:left; padding:0.6rem;">Akcija</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var record in Model.MedicalRecords.OrderByDescending(r => r.RecordDate))
-                            {
-                                <tr data-testid="patient-medical-record-row-@record.Id">
-                                    <td style="padding:0.6rem;">@record.RecordDate.ToString("dd.MM.yyyy")</td>
-                                    <td style="padding:0.6rem;">@(string.IsNullOrWhiteSpace(record.Diagnosis) ? "Nije uneseno" : record.Diagnosis)</td>
-                                    <td style="padding:0.6rem;">@(string.IsNullOrWhiteSpace(record.Treatment) ? "Nije uneseno" : record.Treatment)</td>
-                                    <td style="padding:0.6rem;">
-                                        <a data-testid="patient-medical-record-link-@record.Id" href="/medical-records/@record.Id">Otvori</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                <div class="medical-record-list" data-testid="patient-medical-records-table">
+                    @foreach (var record in Model.MedicalRecords.OrderByDescending(r => r.RecordDate))
+                    {
+                        <a
+                            class="timeline-link medical-record-link"
+                            data-testid="patient-medical-record-link-@record.Id"
+                            href="/medical-records/@record.Id"
+                            aria-label="Otvori medicinski zapis @record.RecordDate.ToString("dd.MM.yyyy")">
+                            <div class="timeline-item medical-record-item" data-testid="patient-medical-record-row-@record.Id">
+                                <div class="timeline-date">
+                                    <span class="day">@record.RecordDate.Day</span>
+                                    <span class="month">@record.RecordDate.ToString("MMM")</span>
+                                </div>
+                                <div class="timeline-body" style="flex:1;">
+                                    <div class="tl-reason">@(string.IsNullOrWhiteSpace(record.Diagnosis) ? "Nije unesena dijagnoza" : record.Diagnosis)</div>
+                                    <div class="tl-vet"><strong>Terapija:</strong> @(string.IsNullOrWhiteSpace(record.Treatment) ? "Nije unesena" : record.Treatment)</div>
+                                    <span class="status-badge scheduled" style="margin-top:0.3rem;">Medicinski zapis</span>
+                                </div>
+                            </div>
+                        </a>
+                    }
                 </div>
             }
             else
