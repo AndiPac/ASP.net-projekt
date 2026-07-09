@@ -887,34 +887,41 @@
             }
 
             let activeRequest = 0;
+            let searchDebounceTimer = null;
 
             searchInput.addEventListener("input", async function () {
-                const term = searchInput.value.trim();
-
-                if (term.length < 2) {
-                    hideDropdown();
-                    return;
+                if (searchDebounceTimer) {
+                    clearTimeout(searchDebounceTimer);
                 }
 
-                const requestId = ++activeRequest;
+                searchDebounceTimer = setTimeout(async function () {
+                    const term = searchInput.value.trim();
 
-                try {
-                    const response = await fetch(`/api/search?term=${encodeURIComponent(term)}`);
-                    if (!response.ok) {
+                    if (term.length < 2) {
                         hideDropdown();
                         return;
                     }
 
-                    const results = await response.json();
+                    const requestId = ++activeRequest;
 
-                    if (requestId !== activeRequest) {
-                        return;
+                    try {
+                        const response = await fetch(`/api/search?term=${encodeURIComponent(term)}`);
+                        if (!response.ok) {
+                            hideDropdown();
+                            return;
+                        }
+
+                        const results = await response.json();
+
+                        if (requestId !== activeRequest) {
+                            return;
+                        }
+
+                        renderResults(results);
+                    } catch {
+                        hideDropdown();
                     }
-
-                    renderResults(results);
-                } catch {
-                    hideDropdown();
-                }
+                }, 250);
             });
 
             document.addEventListener("click", function (event) {

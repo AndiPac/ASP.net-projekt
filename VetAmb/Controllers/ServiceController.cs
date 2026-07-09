@@ -33,7 +33,7 @@ namespace VetAmb.Controllers
         {
             var service = _serviceRepository.GetById(id);
             if (service == null)
-                return NotFound();
+                return RedirectToAction("StatusCodePage", "Error", new { statusCode = StatusCodes.Status404NotFound });
             return View(service);
         }
 

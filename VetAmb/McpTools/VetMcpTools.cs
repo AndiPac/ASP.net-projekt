@@ -9,14 +9,16 @@ using VetAmb.Repositories;
 namespace VetAmb.McpTools;
 
 [McpServerToolType]
-[Description("MCP tools for creating, retrieving, searching, updating, and soft-deleting veterinarian records.")]
+[Description("MCP tools for vets. Read tools: GetVet, SearchVets. Write tools: CreateVet, UpdateVet, DeleteVet.")]
 public sealed class VetMcpTools
 {
     private readonly IVetRepository _vetRepository;
+    private readonly McpToolExecution _execution;
 
-    public VetMcpTools(IVetRepository vetRepository)
+    public VetMcpTools(IVetRepository vetRepository, McpToolExecution execution)
     {
         _vetRepository = vetRepository;
+        _execution = execution;
     }
 
     [McpServerTool]
@@ -31,23 +33,26 @@ public sealed class VetMcpTools
         [Description("Hourly billing rate.")] decimal hourlyRate,
         [Description("Foreign key ID of the clinic where the veterinarian works.")] int clinicId)
     {
-        var parsedSpecialization = ParseSpecialization(specialization);
-
-        var vet = new Vet
+        return _execution.ExecuteWrite("Vet.CreateVet", () =>
         {
-            FirstName = firstName,
-            LastName = lastName,
-            Specialization = parsedSpecialization,
-            LicenseNumber = licenseNumber,
-            YearsOfExperience = yearsOfExperience,
-            Phone = phone,
-            HourlyRate = hourlyRate,
-            ClinicId = clinicId
-        };
+            var parsedSpecialization = ParseSpecialization(specialization);
 
-        _vetRepository.Add(vet);
-        var created = _vetRepository.GetById(vet.Id) ?? vet;
-        return ToDto(created);
+            var vet = new Vet
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Specialization = parsedSpecialization,
+                LicenseNumber = licenseNumber,
+                YearsOfExperience = yearsOfExperience,
+                Phone = phone,
+                HourlyRate = hourlyRate,
+                ClinicId = clinicId
+            };
+
+            _vetRepository.Add(vet);
+            var created = _vetRepository.GetById(vet.Id) ?? vet;
+            return ToDto(created);
+        });
     }
 
     [McpServerTool]
@@ -55,10 +60,13 @@ public sealed class VetMcpTools
     public VetToolDto GetVet(
         [Description("Primary key ID of the veterinarian to fetch.")] int id)
     {
-        var vet = _vetRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Vet with ID {id} was not found.");
+        return _execution.ExecuteRead("Vet.GetVet", () =>
+        {
+            var vet = _vetRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Vet with ID {id} was not found.");
 
-        return ToDto(vet);
+            return ToDto(vet);
+        });
     }
 
     [McpServerTool]
@@ -66,11 +74,14 @@ public sealed class VetMcpTools
     public IReadOnlyList<VetToolDto> SearchVets(
         [Description("Free-text filter term.")] string? searchTerm)
     {
-        var results = string.IsNullOrWhiteSpace(searchTerm)
-            ? _vetRepository.GetAll()
-            : _vetRepository.Search(searchTerm);
+        return _execution.ExecuteRead("Vet.SearchVets", () =>
+        {
+            var results = string.IsNullOrWhiteSpace(searchTerm)
+                ? _vetRepository.GetAll()
+                : _vetRepository.Search(searchTerm);
 
-        return results.Select(ToDto).ToList();
+            return results.Select(ToDto).ToList();
+        });
     }
 
     [McpServerTool]
@@ -86,20 +97,23 @@ public sealed class VetMcpTools
         [Description("Updated hourly rate. Omit to keep existing value.")] decimal? hourlyRate = null,
         [Description("Updated clinic ID. Omit to keep existing value.")] int? clinicId = null)
     {
-        var vet = _vetRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Vet with ID {id} was not found.");
+        return _execution.ExecuteWrite("Vet.UpdateVet", () =>
+        {
+            var vet = _vetRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Vet with ID {id} was not found.");
 
-        if (firstName is not null) vet.FirstName = firstName;
-        if (lastName is not null) vet.LastName = lastName;
-        if (specialization is not null) vet.Specialization = ParseSpecialization(specialization);
-        if (licenseNumber is not null) vet.LicenseNumber = licenseNumber;
-        if (yearsOfExperience.HasValue) vet.YearsOfExperience = yearsOfExperience.Value;
-        if (phone is not null) vet.Phone = phone;
-        if (hourlyRate.HasValue) vet.HourlyRate = hourlyRate.Value;
-        if (clinicId.HasValue) vet.ClinicId = clinicId.Value;
+            if (firstName is not null) vet.FirstName = firstName;
+            if (lastName is not null) vet.LastName = lastName;
+            if (specialization is not null) vet.Specialization = ParseSpecialization(specialization);
+            if (licenseNumber is not null) vet.LicenseNumber = licenseNumber;
+            if (yearsOfExperience.HasValue) vet.YearsOfExperience = yearsOfExperience.Value;
+            if (phone is not null) vet.Phone = phone;
+            if (hourlyRate.HasValue) vet.HourlyRate = hourlyRate.Value;
+            if (clinicId.HasValue) vet.ClinicId = clinicId.Value;
 
-        _vetRepository.Update(vet);
-        return ToDto(vet);
+            _vetRepository.Update(vet);
+            return ToDto(vet);
+        });
     }
 
     [McpServerTool]
@@ -107,11 +121,14 @@ public sealed class VetMcpTools
     public string DeleteVet(
         [Description("Primary key ID of the veterinarian to soft-delete.")] int id)
     {
-        var vet = _vetRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Vet with ID {id} was not found.");
+        return _execution.ExecuteWrite("Vet.DeleteVet", () =>
+        {
+            var vet = _vetRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Vet with ID {id} was not found.");
 
-        _vetRepository.SoftDelete(id);
-        return $"Vet {vet.Id} soft-deleted successfully.";
+            _vetRepository.SoftDelete(id);
+            return $"Vet {vet.Id} soft-deleted successfully.";
+        });
     }
 
     private static VeterinarySpecialization ParseSpecialization(string specialization)

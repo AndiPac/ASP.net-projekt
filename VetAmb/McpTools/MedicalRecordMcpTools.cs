@@ -9,14 +9,16 @@ using VetAmb.Repositories;
 namespace VetAmb.McpTools;
 
 [McpServerToolType]
-[Description("MCP tools for creating, retrieving, searching, updating, and soft-deleting medical records.")]
+[Description("MCP tools for medical records. Read tools: GetMedicalRecord, SearchMedicalRecords. Write tools: CreateMedicalRecord, UpdateMedicalRecord, DeleteMedicalRecord.")]
 public sealed class MedicalRecordMcpTools
 {
     private readonly IMedicalRecordRepository _medicalRecordRepository;
+    private readonly McpToolExecution _execution;
 
-    public MedicalRecordMcpTools(IMedicalRecordRepository medicalRecordRepository)
+    public MedicalRecordMcpTools(IMedicalRecordRepository medicalRecordRepository, McpToolExecution execution)
     {
         _medicalRecordRepository = medicalRecordRepository;
+        _execution = execution;
     }
 
     [McpServerTool]
@@ -28,18 +30,21 @@ public sealed class MedicalRecordMcpTools
         [Description("Additional clinician notes.")] string? notes,
         [Description("Foreign key ID of the patient this record belongs to.")] int patientId)
     {
-        var record = new MedicalRecord
+        return _execution.ExecuteWrite("MedicalRecord.CreateMedicalRecord", () =>
         {
-            Diagnosis = diagnosis,
-            Treatment = treatment,
-            RecordDate = recordDate,
-            Notes = notes,
-            PatientId = patientId
-        };
+            var record = new MedicalRecord
+            {
+                Diagnosis = diagnosis,
+                Treatment = treatment,
+                RecordDate = recordDate,
+                Notes = notes,
+                PatientId = patientId
+            };
 
-        _medicalRecordRepository.Add(record);
-        var created = _medicalRecordRepository.GetById(record.Id) ?? record;
-        return ToDto(created);
+            _medicalRecordRepository.Add(record);
+            var created = _medicalRecordRepository.GetById(record.Id) ?? record;
+            return ToDto(created);
+        });
     }
 
     [McpServerTool]
@@ -47,10 +52,13 @@ public sealed class MedicalRecordMcpTools
     public MedicalRecordToolDto GetMedicalRecord(
         [Description("Primary key ID of the medical record to retrieve.")] int id)
     {
-        var record = _medicalRecordRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Medical record with ID {id} was not found.");
+        return _execution.ExecuteRead("MedicalRecord.GetMedicalRecord", () =>
+        {
+            var record = _medicalRecordRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Medical record with ID {id} was not found.");
 
-        return ToDto(record);
+            return ToDto(record);
+        });
     }
 
     [McpServerTool]
@@ -58,11 +66,14 @@ public sealed class MedicalRecordMcpTools
     public IReadOnlyList<MedicalRecordToolDto> SearchMedicalRecords(
         [Description("Free-text term for filtering medical records.")] string? searchTerm)
     {
-        var results = string.IsNullOrWhiteSpace(searchTerm)
-            ? _medicalRecordRepository.GetAll()
-            : _medicalRecordRepository.Search(searchTerm);
+        return _execution.ExecuteRead("MedicalRecord.SearchMedicalRecords", () =>
+        {
+            var results = string.IsNullOrWhiteSpace(searchTerm)
+                ? _medicalRecordRepository.GetAll()
+                : _medicalRecordRepository.Search(searchTerm);
 
-        return results.Select(ToDto).ToList();
+            return results.Select(ToDto).ToList();
+        });
     }
 
     [McpServerTool]
@@ -75,17 +86,20 @@ public sealed class MedicalRecordMcpTools
         [Description("Updated notes text. Omit to keep current value.")] string? notes = null,
         [Description("Updated patient ID. Omit to keep current value.")] int? patientId = null)
     {
-        var record = _medicalRecordRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Medical record with ID {id} was not found.");
+        return _execution.ExecuteWrite("MedicalRecord.UpdateMedicalRecord", () =>
+        {
+            var record = _medicalRecordRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Medical record with ID {id} was not found.");
 
-        if (diagnosis is not null) record.Diagnosis = diagnosis;
-        if (treatment is not null) record.Treatment = treatment;
-        if (recordDate.HasValue) record.RecordDate = recordDate.Value;
-        if (notes is not null) record.Notes = notes;
-        if (patientId.HasValue) record.PatientId = patientId.Value;
+            if (diagnosis is not null) record.Diagnosis = diagnosis;
+            if (treatment is not null) record.Treatment = treatment;
+            if (recordDate.HasValue) record.RecordDate = recordDate.Value;
+            if (notes is not null) record.Notes = notes;
+            if (patientId.HasValue) record.PatientId = patientId.Value;
 
-        _medicalRecordRepository.Update(record);
-        return ToDto(record);
+            _medicalRecordRepository.Update(record);
+            return ToDto(record);
+        });
     }
 
     [McpServerTool]
@@ -93,11 +107,14 @@ public sealed class MedicalRecordMcpTools
     public string DeleteMedicalRecord(
         [Description("Primary key ID of the medical record to soft-delete.")] int id)
     {
-        var record = _medicalRecordRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Medical record with ID {id} was not found.");
+        return _execution.ExecuteWrite("MedicalRecord.DeleteMedicalRecord", () =>
+        {
+            var record = _medicalRecordRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Medical record with ID {id} was not found.");
 
-        _medicalRecordRepository.SoftDelete(id);
-        return $"Medical record {record.Id} soft-deleted successfully.";
+            _medicalRecordRepository.SoftDelete(id);
+            return $"Medical record {record.Id} soft-deleted successfully.";
+        });
     }
 
     private static MedicalRecordToolDto ToDto(MedicalRecord record)

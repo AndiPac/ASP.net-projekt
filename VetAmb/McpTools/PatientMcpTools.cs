@@ -9,14 +9,16 @@ using VetAmb.Repositories;
 namespace VetAmb.McpTools;
 
 [McpServerToolType]
-[Description("MCP tools for creating, retrieving, searching, updating, and soft-deleting patient records.")]
+[Description("MCP tools for patients. Read tools: GetPatient, SearchPatients. Write tools: CreatePatient, UpdatePatient, DeletePatient.")]
 public sealed class PatientMcpTools
 {
     private readonly IPatientRepository _patientRepository;
+    private readonly McpToolExecution _execution;
 
-    public PatientMcpTools(IPatientRepository patientRepository)
+    public PatientMcpTools(IPatientRepository patientRepository, McpToolExecution execution)
     {
         _patientRepository = patientRepository;
+        _execution = execution;
     }
 
     [McpServerTool]
@@ -31,23 +33,26 @@ public sealed class PatientMcpTools
         [Description("Primary coat/skin color descriptor.")] string? color,
         [Description("Foreign key ID of the owner.")] int ownerId)
     {
-        var parsedSpecies = ParseSpecies(species);
-
-        var patient = new Patient
+        return _execution.ExecuteWrite("Patient.CreatePatient", () =>
         {
-            Name = name,
-            Species = parsedSpecies,
-            Breed = breed,
-            DateOfBirth = dateOfBirth,
-            Weight = weight,
-            MicrochipId = microchipId,
-            Color = color,
-            OwnerId = ownerId
-        };
+            var parsedSpecies = ParseSpecies(species);
 
-        _patientRepository.Add(patient);
-        var created = _patientRepository.GetById(patient.Id) ?? patient;
-        return ToDto(created);
+            var patient = new Patient
+            {
+                Name = name,
+                Species = parsedSpecies,
+                Breed = breed,
+                DateOfBirth = dateOfBirth,
+                Weight = weight,
+                MicrochipId = microchipId,
+                Color = color,
+                OwnerId = ownerId
+            };
+
+            _patientRepository.Add(patient);
+            var created = _patientRepository.GetById(patient.Id) ?? patient;
+            return ToDto(created);
+        });
     }
 
     [McpServerTool]
@@ -55,10 +60,13 @@ public sealed class PatientMcpTools
     public PatientToolDto GetPatient(
         [Description("Primary key ID of the patient to fetch.")] int id)
     {
-        var patient = _patientRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Patient with ID {id} was not found.");
+        return _execution.ExecuteRead("Patient.GetPatient", () =>
+        {
+            var patient = _patientRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Patient with ID {id} was not found.");
 
-        return ToDto(patient);
+            return ToDto(patient);
+        });
     }
 
     [McpServerTool]
@@ -66,11 +74,14 @@ public sealed class PatientMcpTools
     public IReadOnlyList<PatientToolDto> SearchPatients(
         [Description("Free-text search term.")] string? searchTerm)
     {
-        var results = string.IsNullOrWhiteSpace(searchTerm)
-            ? _patientRepository.GetAll()
-            : _patientRepository.Search(searchTerm);
+        return _execution.ExecuteRead("Patient.SearchPatients", () =>
+        {
+            var results = string.IsNullOrWhiteSpace(searchTerm)
+                ? _patientRepository.GetAll()
+                : _patientRepository.Search(searchTerm);
 
-        return results.Select(ToDto).ToList();
+            return results.Select(ToDto).ToList();
+        });
     }
 
     [McpServerTool]
@@ -86,20 +97,23 @@ public sealed class PatientMcpTools
         [Description("Updated color. Omit to keep current value.")] string? color = null,
         [Description("Updated owner ID. Omit to keep current value.")] int? ownerId = null)
     {
-        var patient = _patientRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Patient with ID {id} was not found.");
+        return _execution.ExecuteWrite("Patient.UpdatePatient", () =>
+        {
+            var patient = _patientRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Patient with ID {id} was not found.");
 
-        if (name is not null) patient.Name = name;
-        if (species is not null) patient.Species = ParseSpecies(species);
-        if (breed is not null) patient.Breed = breed;
-        if (dateOfBirth.HasValue) patient.DateOfBirth = dateOfBirth.Value;
-        if (weight.HasValue) patient.Weight = weight.Value;
-        if (microchipId is not null) patient.MicrochipId = microchipId;
-        if (color is not null) patient.Color = color;
-        if (ownerId.HasValue) patient.OwnerId = ownerId.Value;
+            if (name is not null) patient.Name = name;
+            if (species is not null) patient.Species = ParseSpecies(species);
+            if (breed is not null) patient.Breed = breed;
+            if (dateOfBirth.HasValue) patient.DateOfBirth = dateOfBirth.Value;
+            if (weight.HasValue) patient.Weight = weight.Value;
+            if (microchipId is not null) patient.MicrochipId = microchipId;
+            if (color is not null) patient.Color = color;
+            if (ownerId.HasValue) patient.OwnerId = ownerId.Value;
 
-        _patientRepository.Update(patient);
-        return ToDto(patient);
+            _patientRepository.Update(patient);
+            return ToDto(patient);
+        });
     }
 
     [McpServerTool]
@@ -107,11 +121,14 @@ public sealed class PatientMcpTools
     public string DeletePatient(
         [Description("Primary key ID of the patient to soft-delete.")] int id)
     {
-        var patient = _patientRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Patient with ID {id} was not found.");
+        return _execution.ExecuteWrite("Patient.DeletePatient", () =>
+        {
+            var patient = _patientRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Patient with ID {id} was not found.");
 
-        _patientRepository.SoftDelete(id);
-        return $"Patient {patient.Id} soft-deleted successfully.";
+            _patientRepository.SoftDelete(id);
+            return $"Patient {patient.Id} soft-deleted successfully.";
+        });
     }
 
     private static AnimalSpecies ParseSpecies(string species)

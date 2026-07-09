@@ -1,14 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Logging.Console;
 using System.Globalization;
+using System.Security.Claims;
+using System.Threading.RateLimiting;
 using VetAmb.Data;
 using VetAmb.Models;
 using VetAmb.Repositories;
 using VetAmb.Services;
 using VetAmb.Middleware;
+using VetAmb.McpTools;
 using Serilog;
+using Serilog.Events;
 
 var hrCulture = new CultureInfo("hr-HR");
 CultureInfo.DefaultThreadCurrentCulture = hrCulture;
@@ -25,6 +30,12 @@ if (isMcpMode)
     var mcpBuilder = Host.CreateApplicationBuilder(mcpArgs);
     mcpBuilder.Configuration.AddUserSecrets<Program>(optional: true, reloadOnChange: true);
 
+    var mcpAllowInProduction = mcpBuilder.Configuration.GetValue<bool?>("Mcp:AllowInProduction") ?? false;
+    if (mcpBuilder.Environment.IsProduction() && !mcpAllowInProduction)
+    {
+        throw new InvalidOperationException("MCP mode is disabled in Production. Set Mcp:AllowInProduction=true to explicitly allow it.");
+    }
+
     // In stdio mode, stdout is reserved for MCP JSON-RPC traffic.
     mcpBuilder.Logging.ClearProviders();
     mcpBuilder.Logging.AddSimpleConsole(options =>
@@ -39,6 +50,9 @@ if (isMcpMode)
 
     mcpBuilder.Services.AddDbContext<VetAmbDbContext>(options =>
         options.UseSqlServer(mcpBuilder.Configuration.GetConnectionString("DefaultConnection")));
+    mcpBuilder.Services.AddHttpContextAccessor();
+    mcpBuilder.Services.Configure<McpAccessOptions>(mcpBuilder.Configuration.GetSection("Mcp"));
+    mcpBuilder.Services.AddSingleton<McpToolExecution>();
 
     mcpBuilder.Services.AddScoped<IClinicRepository, EfClinicRepository>();
     mcpBuilder.Services.AddScoped<IVetRepository, EfVetRepository>();
@@ -64,9 +78,14 @@ builder.Configuration.AddUserSecrets<Program>(optional: true, reloadOnChange: tr
 builder.Host.UseSerilog((context, services, loggerConfiguration) => loggerConfiguration
     .ReadFrom.Configuration(context.Configuration)
     .ReadFrom.Services(services)
-    .Enrich.FromLogContext());
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", "VetAmb")
+    .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName));
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+builder.Services.Configure<McpAccessOptions>(builder.Configuration.GetSection("Mcp"));
+builder.Services.AddSingleton<McpToolExecution>();
 
 builder.Services.AddDbContext<VetAmbDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -81,6 +100,30 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("AiChatPolicy", httpContext =>
+    {
+        var partitionKey = httpContext.User.Identity?.IsAuthenticated == true
+            ? httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)
+              ?? httpContext.Connection.RemoteIpAddress?.ToString()
+              ?? "authenticated"
+            : httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous";
+
+        return RateLimitPartition.GetSlidingWindowLimiter(
+            partitionKey,
+            _ => new SlidingWindowRateLimiterOptions
+            {
+                PermitLimit = builder.Configuration.GetValue<int?>("OpenAI:ChatRateLimit:PermitLimit") ?? 5,
+                Window = TimeSpan.FromMinutes(builder.Configuration.GetValue<int?>("OpenAI:ChatRateLimit:WindowMinutes") ?? 1),
+                SegmentsPerWindow = 3,
+                QueueLimit = 0,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            });
+    });
 });
 
 var googleClientId =
@@ -121,6 +164,39 @@ var app = builder.Build();
 
 app.Logger.LogInformation("Google authentication enabled: {GoogleAuthEnabled}", isGoogleAuthConfigured);
 
+app.UseSerilogRequestLogging(options =>
+{
+    options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+    options.GetLevel = (httpContext, elapsed, exception) =>
+    {
+        _ = elapsed;
+
+        if (exception is not null || httpContext.Response.StatusCode >= StatusCodes.Status500InternalServerError)
+        {
+            return LogEventLevel.Error;
+        }
+
+        if (httpContext.Response.StatusCode >= StatusCodes.Status400BadRequest)
+        {
+            return LogEventLevel.Warning;
+        }
+
+        return LogEventLevel.Information;
+    };
+
+    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+    {
+        var endpoint = httpContext.GetEndpoint();
+        var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous";
+
+        diagnosticContext.Set("RequestId", httpContext.TraceIdentifier);
+        diagnosticContext.Set("UserId", userId);
+        diagnosticContext.Set("Route", endpoint?.DisplayName ?? httpContext.Request.Path.Value ?? string.Empty);
+        diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+        diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+    };
+});
+
 // Build localization options directly — bypasses any DI/configure ordering issues.
 // Supported cultures include both region-specific and neutral variants so that
 // Accept-Language values like "hr" (without region) are matched correctly.
@@ -148,6 +224,13 @@ app.UseStaticFiles();
 app.UseRequestLocalization(localizationOptions);
 app.UseMiddleware<CroatianMonthsMiddleware>();
 app.UseRouting();
+app.UseWhen(
+    context => !context.Request.Path.StartsWithSegments("/api", StringComparison.OrdinalIgnoreCase),
+    branch =>
+    {
+        branch.UseStatusCodePagesWithReExecute("/error/{0}");
+    });
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();

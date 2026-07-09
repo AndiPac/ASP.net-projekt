@@ -51,7 +51,7 @@ namespace VetAmb.Controllers
         {
             var appointment = _appointmentRepository.GetById(id);
             if (appointment == null)
-                return NotFound();
+                return RedirectToAction("StatusCodePage", "Error", new { statusCode = StatusCodes.Status404NotFound });
             return View(appointment);
         }
 

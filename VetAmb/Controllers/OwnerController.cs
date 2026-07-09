@@ -37,7 +37,7 @@ namespace VetAmb.Controllers
         {
             var owner = _ownerRepository.GetById(id);
             if (owner == null)
-                return NotFound();
+                return RedirectToAction("StatusCodePage", "Error", new { statusCode = StatusCodes.Status404NotFound });
             return View(owner);
         }
 

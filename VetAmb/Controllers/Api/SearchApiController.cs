@@ -25,6 +25,7 @@ namespace VetAmb.Controllers.Api
             }
 
             var normalizedTerm = term.Trim();
+            var normalizedLower = normalizedTerm.ToLowerInvariant();
             var searchPages = GetSearchPages()
                 .Where(page => page.Matches(normalizedTerm) && page.IsVisibleTo(User))
                 .Take(8)
@@ -33,7 +34,8 @@ namespace VetAmb.Controllers.Api
                     Id = 0,
                     Text = page.Text,
                     Type = page.Type,
-                    Url = page.Url
+                    Url = page.Url,
+                    Score = page.GetScore(normalizedLower)
                 })
                 .ToList();
 
@@ -51,7 +53,8 @@ namespace VetAmb.Controllers.Api
                     Id = c.Id,
                     Text = c.Name!,
                     Type = "Klinika",
-                    Url = $"/clinics/{c.Id}"
+                    Url = $"/clinics/{c.Id}",
+                    Score = GetEntityScore(normalizedLower, c.Name, c.Address, c.Email, c.Phone)
                 })
                 .ToListAsync();
 
@@ -70,7 +73,8 @@ namespace VetAmb.Controllers.Api
                     Id = v.Id,
                     Text = $"Dr. {v.FirstName} {v.LastName}",
                     Type = "Veterinar",
-                    Url = $"/vets/{v.Id}"
+                    Url = $"/vets/{v.Id}",
+                    Score = GetEntityScore(normalizedLower, v.FirstName, v.LastName, v.LicenseNumber, v.Phone)
                 })
                 .ToListAsync();
 
@@ -90,7 +94,8 @@ namespace VetAmb.Controllers.Api
                     Id = o.Id,
                     Text = $"{o.FirstName} {o.LastName}",
                     Type = "Vlasnik",
-                    Url = $"/owners/{o.Id}"
+                    Url = $"/owners/{o.Id}",
+                    Score = GetEntityScore(normalizedLower, o.FirstName, o.LastName, o.Email, o.Phone, o.IdNumber)
                 })
                 .ToListAsync();
 
@@ -108,7 +113,8 @@ namespace VetAmb.Controllers.Api
                     Id = p.Id,
                     Text = p.Name!,
                     Type = "Pacijent",
-                    Url = $"/patients/{p.Id}"
+                    Url = $"/patients/{p.Id}",
+                    Score = GetEntityScore(normalizedLower, p.Name, p.Breed, p.MicrochipId, p.Color)
                 })
                 .ToListAsync();
 
@@ -129,7 +135,8 @@ namespace VetAmb.Controllers.Api
                     Id = a.Id,
                     Text = $"{(string.IsNullOrWhiteSpace(a.Reason) ? "Termin" : a.Reason)} • {a.AppointmentDateTime:dd.MM.yyyy HH:mm}",
                     Type = "Termin",
-                    Url = $"/appointments/{a.Id}"
+                    Url = $"/appointments/{a.Id}",
+                    Score = GetEntityScore(normalizedLower, a.Reason, a.Patient != null ? a.Patient.Name : null, a.Vet != null ? a.Vet.FirstName : null, a.Vet != null ? a.Vet.LastName : null)
                 })
                 .ToListAsync();
 
@@ -145,7 +152,8 @@ namespace VetAmb.Controllers.Api
                     Id = s.Id,
                     Text = s.Name!,
                     Type = "Usluga",
-                    Url = $"/services/{s.Id}"
+                    Url = $"/services/{s.Id}",
+                    Score = GetEntityScore(normalizedLower, s.Name, s.Description)
                 })
                 .ToListAsync();
 
@@ -164,7 +172,8 @@ namespace VetAmb.Controllers.Api
                     Id = r.Id,
                     Text = $"{(string.IsNullOrWhiteSpace(r.Diagnosis) ? "Medicinski zapis" : r.Diagnosis)} • {r.RecordDate:dd.MM.yyyy}",
                     Type = "Karton",
-                    Url = $"/medical-records/{r.Id}"
+                    Url = $"/medical-records/{r.Id}",
+                    Score = GetEntityScore(normalizedLower, r.Diagnosis, r.Treatment, r.Patient != null ? r.Patient.Name : null)
                 })
                 .ToListAsync();
 
@@ -176,6 +185,9 @@ namespace VetAmb.Controllers.Api
                 .Concat(appointments)
                 .Concat(services)
                 .Concat(medicalRecords)
+                .OrderByDescending(item => item.Score)
+                .ThenBy(item => item.Type)
+                .ThenBy(item => item.Text)
                 .ToList();
 
             return Ok(results);
@@ -209,6 +221,7 @@ namespace VetAmb.Controllers.Api
             public string Text { get; set; } = string.Empty;
             public string Type { get; set; } = string.Empty;
             public string Url { get; set; } = string.Empty;
+            public int Score { get; set; }
         }
 
         private sealed class SearchPageItem
@@ -235,6 +248,41 @@ namespace VetAmb.Controllers.Api
                     || Url.Contains(term, StringComparison.OrdinalIgnoreCase);
             }
 
+            public int GetScore(string normalizedTerm)
+            {
+                var score = 0;
+
+                if (Text.Equals(normalizedTerm, StringComparison.OrdinalIgnoreCase))
+                {
+                    score += 100;
+                }
+
+                if (Text.StartsWith(normalizedTerm, StringComparison.OrdinalIgnoreCase))
+                {
+                    score += 50;
+                }
+
+                if (Keywords.Contains(normalizedTerm, StringComparison.OrdinalIgnoreCase))
+                {
+                    score += 20;
+                }
+
+                if (Url.Contains(normalizedTerm, StringComparison.OrdinalIgnoreCase))
+                {
+                    score += 10;
+                }
+
+                score += Type switch
+                {
+                    "Izbornik" => 30,
+                    "Stranica" => 20,
+                    "Klinike" => 0,
+                    _ => 0
+                };
+
+                return score;
+            }
+
             public bool IsVisibleTo(ClaimsPrincipal user)
             {
                 if (RequiredRoles.Count == 0)
@@ -249,6 +297,36 @@ namespace VetAmb.Controllers.Api
 
                 return RequiredRoles.Any(user.IsInRole);
             }
+        }
+
+        private static int GetEntityScore(string normalizedTerm, params string?[] values)
+        {
+            var score = 0;
+
+            foreach (var value in values)
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    continue;
+                }
+
+                if (value.Equals(normalizedTerm, StringComparison.OrdinalIgnoreCase))
+                {
+                    score += 100;
+                }
+
+                if (value.StartsWith(normalizedTerm, StringComparison.OrdinalIgnoreCase))
+                {
+                    score += 40;
+                }
+
+                if (value.Contains(normalizedTerm, StringComparison.OrdinalIgnoreCase))
+                {
+                    score += 15;
+                }
+            }
+
+            return score;
         }
     }
 }

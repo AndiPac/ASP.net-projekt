@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VetAmb.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cc83e609ea83e3547535993f0f030e8f0651fac1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c707cf0179922fb7e3d13019b702224632080c64")]
 [assembly: System.Reflection.AssemblyProductAttribute("VetAmb.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VetAmb.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

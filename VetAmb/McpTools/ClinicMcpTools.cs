@@ -9,14 +9,16 @@ using VetAmb.Repositories;
 namespace VetAmb.McpTools;
 
 [McpServerToolType]
-[Description("MCP tools for creating, retrieving, searching, updating, and soft-deleting veterinary clinics.")]
+[Description("MCP tools for clinics. Read tools: GetClinic, SearchClinics. Write tools: CreateClinic, UpdateClinic, DeleteClinic.")]
 public sealed class ClinicMcpTools
 {
     private readonly IClinicRepository _clinicRepository;
+    private readonly McpToolExecution _execution;
 
-    public ClinicMcpTools(IClinicRepository clinicRepository)
+    public ClinicMcpTools(IClinicRepository clinicRepository, McpToolExecution execution)
     {
         _clinicRepository = clinicRepository;
+        _execution = execution;
     }
 
     [McpServerTool]
@@ -30,20 +32,23 @@ public sealed class ClinicMcpTools
         [Description("Maximum number of patients the clinic can handle in active capacity.")] int maxCapacity,
         [Description("Internal or legal registration identifier for the clinic.")] string? registrationNumber)
     {
-        var clinic = new Clinic
+        return _execution.ExecuteWrite("Clinic.CreateClinic", () =>
         {
-            Name = name,
-            Address = address,
-            Phone = phone,
-            Email = email,
-            FoundationDate = foundationDate,
-            MaxCapacity = maxCapacity,
-            RegistrationNumber = registrationNumber
-        };
+            var clinic = new Clinic
+            {
+                Name = name,
+                Address = address,
+                Phone = phone,
+                Email = email,
+                FoundationDate = foundationDate,
+                MaxCapacity = maxCapacity,
+                RegistrationNumber = registrationNumber
+            };
 
-        _clinicRepository.Add(clinic);
-        var created = _clinicRepository.GetById(clinic.Id) ?? clinic;
-        return ToDto(created);
+            _clinicRepository.Add(clinic);
+            var created = _clinicRepository.GetById(clinic.Id) ?? clinic;
+            return ToDto(created);
+        });
     }
 
     [McpServerTool]
@@ -51,10 +56,13 @@ public sealed class ClinicMcpTools
     public ClinicToolDto GetClinic(
         [Description("Primary key ID of the clinic to retrieve.")] int id)
     {
-        var clinic = _clinicRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Clinic with ID {id} was not found.");
+        return _execution.ExecuteRead("Clinic.GetClinic", () =>
+        {
+            var clinic = _clinicRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Clinic with ID {id} was not found.");
 
-        return ToDto(clinic);
+            return ToDto(clinic);
+        });
     }
 
     [McpServerTool]
@@ -62,11 +70,14 @@ public sealed class ClinicMcpTools
     public IReadOnlyList<ClinicToolDto> SearchClinics(
         [Description("Free-text filter term used against clinic name, address, and registration number.")] string? searchTerm)
     {
-        var results = string.IsNullOrWhiteSpace(searchTerm)
-            ? _clinicRepository.GetAll()
-            : _clinicRepository.Search(searchTerm);
+        return _execution.ExecuteRead("Clinic.SearchClinics", () =>
+        {
+            var results = string.IsNullOrWhiteSpace(searchTerm)
+                ? _clinicRepository.GetAll()
+                : _clinicRepository.Search(searchTerm);
 
-        return results.Select(ToDto).ToList();
+            return results.Select(ToDto).ToList();
+        });
     }
 
     [McpServerTool]
@@ -81,19 +92,22 @@ public sealed class ClinicMcpTools
         [Description("New max capacity. Omit to keep current value.")] int? maxCapacity = null,
         [Description("New registration number. Omit to keep current value.")] string? registrationNumber = null)
     {
-        var clinic = _clinicRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Clinic with ID {id} was not found.");
+        return _execution.ExecuteWrite("Clinic.UpdateClinic", () =>
+        {
+            var clinic = _clinicRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Clinic with ID {id} was not found.");
 
-        if (name is not null) clinic.Name = name;
-        if (address is not null) clinic.Address = address;
-        if (phone is not null) clinic.Phone = phone;
-        if (email is not null) clinic.Email = email;
-        if (foundationDate.HasValue) clinic.FoundationDate = foundationDate.Value;
-        if (maxCapacity.HasValue) clinic.MaxCapacity = maxCapacity.Value;
-        if (registrationNumber is not null) clinic.RegistrationNumber = registrationNumber;
+            if (name is not null) clinic.Name = name;
+            if (address is not null) clinic.Address = address;
+            if (phone is not null) clinic.Phone = phone;
+            if (email is not null) clinic.Email = email;
+            if (foundationDate.HasValue) clinic.FoundationDate = foundationDate.Value;
+            if (maxCapacity.HasValue) clinic.MaxCapacity = maxCapacity.Value;
+            if (registrationNumber is not null) clinic.RegistrationNumber = registrationNumber;
 
-        _clinicRepository.Update(clinic);
-        return ToDto(clinic);
+            _clinicRepository.Update(clinic);
+            return ToDto(clinic);
+        });
     }
 
     [McpServerTool]
@@ -101,11 +115,14 @@ public sealed class ClinicMcpTools
     public string DeleteClinic(
         [Description("Primary key ID of the clinic to soft-delete.")] int id)
     {
-        var clinic = _clinicRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Clinic with ID {id} was not found.");
+        return _execution.ExecuteWrite("Clinic.DeleteClinic", () =>
+        {
+            var clinic = _clinicRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Clinic with ID {id} was not found.");
 
-        _clinicRepository.SoftDelete(id);
-        return $"Clinic {clinic.Id} soft-deleted successfully.";
+            _clinicRepository.SoftDelete(id);
+            return $"Clinic {clinic.Id} soft-deleted successfully.";
+        });
     }
 
     private static ClinicToolDto ToDto(Clinic clinic)

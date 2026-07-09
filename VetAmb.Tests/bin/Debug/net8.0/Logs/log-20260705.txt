@@ -1,0 +1,195 @@
+2026-07-05 21:21:21.201 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:21.201 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:21.201 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:21.201 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:21.201 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:21.201 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:21.201 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:21.201 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:21.201 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:21.710 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Appointment' has a global query filter defined and is the required end of a relationship with the entity 'AppointmentService'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:21:21.711 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Patient' has a global query filter defined and is the required end of a relationship with the entity 'PatientAttachment'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:21:21.960 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Appointment' has a global query filter defined and is the required end of a relationship with the entity 'AppointmentService'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:21:21.960 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Patient' has a global query filter defined and is the required end of a relationship with the entity 'PatientAttachment'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:21:22.123 +02:00 [INF] VetAmb.Tests.PatientAttachmentApiControllerTests+RoleBasedTestAuthHandler AuthenticationScheme: RoleBasedTestAuth was forbidden.
+2026-07-05 21:21:22.126 +02:00 [INF] VetAmb.Tests.PatientAttachmentApiControllerTests+RoleBasedTestAuthHandler AuthenticationScheme: RoleBasedTestAuth was forbidden.
+2026-07-05 21:21:22.133 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.143 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.145 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.146 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.154 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.159 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.165 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.204 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.251 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.251 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.307 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.308 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.308 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.323 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.325 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.346 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.399 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.415 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.414 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.415 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.417 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.442 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.484 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.491 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.535 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.535 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.543 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.595 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.597 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.610 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.627 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:22.656 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:38.715 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:38.715 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:38.715 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:38.715 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:38.715 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:38.715 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:38.715 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:38.715 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:38.715 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:38.993 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Appointment' has a global query filter defined and is the required end of a relationship with the entity 'AppointmentService'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:21:38.993 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Patient' has a global query filter defined and is the required end of a relationship with the entity 'PatientAttachment'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:21:39.195 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Appointment' has a global query filter defined and is the required end of a relationship with the entity 'AppointmentService'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:21:39.195 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Patient' has a global query filter defined and is the required end of a relationship with the entity 'PatientAttachment'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:21:39.339 +02:00 [INF] VetAmb.Tests.PatientAttachmentApiControllerTests+RoleBasedTestAuthHandler AuthenticationScheme: RoleBasedTestAuth was forbidden.
+2026-07-05 21:21:39.342 +02:00 [INF] VetAmb.Tests.PatientAttachmentApiControllerTests+RoleBasedTestAuthHandler AuthenticationScheme: RoleBasedTestAuth was forbidden.
+2026-07-05 21:21:39.350 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.351 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.353 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.354 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.358 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.362 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.372 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.411 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.436 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.439 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.457 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.457 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.457 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.499 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.501 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.514 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.518 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.522 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.523 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.566 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.570 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.577 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.582 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.587 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.589 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.643 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.652 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.672 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.674 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.725 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.741 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.755 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:21:39.780 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.043 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.043 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.043 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.043 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.043 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.043 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.043 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.043 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.043 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.357 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Appointment' has a global query filter defined and is the required end of a relationship with the entity 'AppointmentService'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:23:31.357 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Patient' has a global query filter defined and is the required end of a relationship with the entity 'PatientAttachment'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:23:31.570 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Appointment' has a global query filter defined and is the required end of a relationship with the entity 'AppointmentService'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:23:31.570 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Patient' has a global query filter defined and is the required end of a relationship with the entity 'PatientAttachment'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 21:23:31.725 +02:00 [INF] VetAmb.Tests.PatientAttachmentApiControllerTests+RoleBasedTestAuthHandler AuthenticationScheme: RoleBasedTestAuth was forbidden.
+2026-07-05 21:23:31.727 +02:00 [INF] VetAmb.Tests.PatientAttachmentApiControllerTests+RoleBasedTestAuthHandler AuthenticationScheme: RoleBasedTestAuth was forbidden.
+2026-07-05 21:23:31.737 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.737 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.737 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.740 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.742 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.749 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.795 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.815 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.817 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.839 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.843 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.850 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.890 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.907 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.912 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.913 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.913 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.918 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.925 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.925 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.984 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.987 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.988 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.993 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:31.993 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:32.041 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:32.064 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:32.096 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:32.097 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:32.099 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:32.161 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:32.161 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 21:23:32.187 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.396 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.396 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.396 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.396 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.396 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.396 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.396 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.396 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.396 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.396 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.396 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:04.746 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Appointment' has a global query filter defined and is the required end of a relationship with the entity 'AppointmentService'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 22:00:04.746 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Patient' has a global query filter defined and is the required end of a relationship with the entity 'PatientAttachment'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 22:00:04.786 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Appointment' has a global query filter defined and is the required end of a relationship with the entity 'AppointmentService'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 22:00:04.786 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Patient' has a global query filter defined and is the required end of a relationship with the entity 'PatientAttachment'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 22:00:04.986 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Appointment' has a global query filter defined and is the required end of a relationship with the entity 'AppointmentService'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 22:00:04.987 +02:00 [WRN] Microsoft.EntityFrameworkCore.Model.Validation Entity 'Patient' has a global query filter defined and is the required end of a relationship with the entity 'PatientAttachment'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-05 22:00:05.105 +02:00 [INF] VetAmb.Tests.PatientAttachmentApiControllerTests+RoleBasedTestAuthHandler AuthenticationScheme: RoleBasedTestAuth was forbidden.
+2026-07-05 22:00:05.108 +02:00 [INF] VetAmb.Tests.PatientAttachmentApiControllerTests+RoleBasedTestAuthHandler AuthenticationScheme: RoleBasedTestAuth was forbidden.
+2026-07-05 22:00:05.120 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.120 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.122 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.122 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.164 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.167 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.180 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.199 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.249 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.262 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.265 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.275 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.276 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.290 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.292 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.334 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.342 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.342 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.344 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.347 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.426 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.429 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.430 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.444 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.465 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.465 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.516 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.528 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.530 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.558 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.568 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.590 +02:00 [INF] VetAmb Google authentication enabled: true
+2026-07-05 22:00:05.655 +02:00 [INF] VetAmb Google authentication enabled: true

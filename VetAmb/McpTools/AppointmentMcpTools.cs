@@ -11,16 +11,18 @@ using VetAmb.Repositories;
 namespace VetAmb.McpTools;
 
 [McpServerToolType]
-[Description("MCP tools for creating, retrieving, searching, updating, and soft-deleting appointments, including linked service IDs.")]
+[Description("MCP tools for appointments. Read tools: GetAppointment, SearchAppointments. Write tools: CreateAppointment, UpdateAppointment, DeleteAppointment.")]
 public sealed class AppointmentMcpTools
 {
     private readonly IAppointmentRepository _appointmentRepository;
     private readonly VetAmbDbContext _dbContext;
+    private readonly McpToolExecution _execution;
 
-    public AppointmentMcpTools(IAppointmentRepository appointmentRepository, VetAmbDbContext dbContext)
+    public AppointmentMcpTools(IAppointmentRepository appointmentRepository, VetAmbDbContext dbContext, McpToolExecution execution)
     {
         _appointmentRepository = appointmentRepository;
         _dbContext = dbContext;
+        _execution = execution;
     }
 
     [McpServerTool]
@@ -35,38 +37,41 @@ public sealed class AppointmentMcpTools
         [Description("Foreign key ID of the veterinarian.")] int vetId,
         [Description("Optional list of service IDs to attach to this appointment.")] int[]? serviceIds = null)
     {
-        var parsedStatus = ParseStatus(status);
-
-        var appointment = new Appointment
+        return _execution.ExecuteWrite("Appointment.CreateAppointment", () =>
         {
-            AppointmentDateTime = appointmentDateTime,
-            Reason = reason,
-            Status = parsedStatus,
-            Notes = notes,
-            RescheduleReason = rescheduleReason,
-            PatientId = patientId,
-            VetId = vetId
-        };
+            var parsedStatus = ParseStatus(status);
 
-        _appointmentRepository.Add(appointment);
-
-        if (serviceIds is { Length: > 0 })
-        {
-            var distinctServiceIds = serviceIds.Distinct().ToArray();
-            foreach (var serviceId in distinctServiceIds)
+            var appointment = new Appointment
             {
-                _dbContext.AppointmentServices.Add(new AppointmentService
+                AppointmentDateTime = appointmentDateTime,
+                Reason = reason,
+                Status = parsedStatus,
+                Notes = notes,
+                RescheduleReason = rescheduleReason,
+                PatientId = patientId,
+                VetId = vetId
+            };
+
+            _appointmentRepository.Add(appointment);
+
+            if (serviceIds is { Length: > 0 })
+            {
+                var distinctServiceIds = serviceIds.Distinct().ToArray();
+                foreach (var serviceId in distinctServiceIds)
                 {
-                    AppointmentId = appointment.Id,
-                    ServiceId = serviceId
-                });
+                    _dbContext.AppointmentServices.Add(new AppointmentService
+                    {
+                        AppointmentId = appointment.Id,
+                        ServiceId = serviceId
+                    });
+                }
+
+                _dbContext.SaveChanges();
             }
 
-            _dbContext.SaveChanges();
-        }
-
-        var created = _appointmentRepository.GetById(appointment.Id) ?? appointment;
-        return ToDto(created);
+            var created = _appointmentRepository.GetById(appointment.Id) ?? appointment;
+            return ToDto(created);
+        });
     }
 
     [McpServerTool]
@@ -74,10 +79,13 @@ public sealed class AppointmentMcpTools
     public AppointmentToolDto GetAppointment(
         [Description("Primary key ID of the appointment to fetch.")] int id)
     {
-        var appointment = _appointmentRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Appointment with ID {id} was not found.");
+        return _execution.ExecuteRead("Appointment.GetAppointment", () =>
+        {
+            var appointment = _appointmentRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Appointment with ID {id} was not found.");
 
-        return ToDto(appointment);
+            return ToDto(appointment);
+        });
     }
 
     [McpServerTool]
@@ -85,11 +93,14 @@ public sealed class AppointmentMcpTools
     public IReadOnlyList<AppointmentToolDto> SearchAppointments(
         [Description("Free-text filter term for appointment search.")] string? searchTerm)
     {
-        var results = string.IsNullOrWhiteSpace(searchTerm)
-            ? _appointmentRepository.GetAll()
-            : _appointmentRepository.Search(searchTerm);
+        return _execution.ExecuteRead("Appointment.SearchAppointments", () =>
+        {
+            var results = string.IsNullOrWhiteSpace(searchTerm)
+                ? _appointmentRepository.GetAll()
+                : _appointmentRepository.Search(searchTerm);
 
-        return results.Select(ToDto).ToList();
+            return results.Select(ToDto).ToList();
+        });
     }
 
     [McpServerTool]
@@ -105,45 +116,48 @@ public sealed class AppointmentMcpTools
         [Description("Updated vet ID. Omit to keep current value.")] int? vetId = null,
         [Description("Optional full replacement list of linked service IDs.")] int[]? serviceIds = null)
     {
-        var appointment = _appointmentRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Appointment with ID {id} was not found.");
-
-        if (appointmentDateTime.HasValue) appointment.AppointmentDateTime = appointmentDateTime.Value;
-        if (reason is not null) appointment.Reason = reason;
-        if (status is not null) appointment.Status = ParseStatus(status);
-        if (notes is not null) appointment.Notes = notes;
-        if (rescheduleReason is not null) appointment.RescheduleReason = rescheduleReason;
-        if (patientId.HasValue) appointment.PatientId = patientId.Value;
-        if (vetId.HasValue) appointment.VetId = vetId.Value;
-
-        _appointmentRepository.Update(appointment);
-
-        if (serviceIds is not null)
+        return _execution.ExecuteWrite("Appointment.UpdateAppointment", () =>
         {
-            var existing = _dbContext.AppointmentServices
-                .Where(x => x.AppointmentId == appointment.Id)
-                .ToList();
+            var appointment = _appointmentRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Appointment with ID {id} was not found.");
 
-            if (existing.Count > 0)
-            {
-                _dbContext.AppointmentServices.RemoveRange(existing);
-            }
+            if (appointmentDateTime.HasValue) appointment.AppointmentDateTime = appointmentDateTime.Value;
+            if (reason is not null) appointment.Reason = reason;
+            if (status is not null) appointment.Status = ParseStatus(status);
+            if (notes is not null) appointment.Notes = notes;
+            if (rescheduleReason is not null) appointment.RescheduleReason = rescheduleReason;
+            if (patientId.HasValue) appointment.PatientId = patientId.Value;
+            if (vetId.HasValue) appointment.VetId = vetId.Value;
 
-            var distinctServiceIds = serviceIds.Distinct().ToArray();
-            foreach (var serviceId in distinctServiceIds)
+            _appointmentRepository.Update(appointment);
+
+            if (serviceIds is not null)
             {
-                _dbContext.AppointmentServices.Add(new AppointmentService
+                var existing = _dbContext.AppointmentServices
+                    .Where(x => x.AppointmentId == appointment.Id)
+                    .ToList();
+
+                if (existing.Count > 0)
                 {
-                    AppointmentId = appointment.Id,
-                    ServiceId = serviceId
-                });
+                    _dbContext.AppointmentServices.RemoveRange(existing);
+                }
+
+                var distinctServiceIds = serviceIds.Distinct().ToArray();
+                foreach (var serviceId in distinctServiceIds)
+                {
+                    _dbContext.AppointmentServices.Add(new AppointmentService
+                    {
+                        AppointmentId = appointment.Id,
+                        ServiceId = serviceId
+                    });
+                }
+
+                _dbContext.SaveChanges();
+                appointment = _appointmentRepository.GetById(id) ?? appointment;
             }
 
-            _dbContext.SaveChanges();
-            appointment = _appointmentRepository.GetById(id) ?? appointment;
-        }
-
-        return ToDto(appointment);
+            return ToDto(appointment);
+        });
     }
 
     [McpServerTool]
@@ -151,11 +165,14 @@ public sealed class AppointmentMcpTools
     public string DeleteAppointment(
         [Description("Primary key ID of the appointment to soft-delete.")] int id)
     {
-        var appointment = _appointmentRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Appointment with ID {id} was not found.");
+        return _execution.ExecuteWrite("Appointment.DeleteAppointment", () =>
+        {
+            var appointment = _appointmentRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Appointment with ID {id} was not found.");
 
-        _appointmentRepository.SoftDelete(id);
-        return $"Appointment {appointment.Id} soft-deleted successfully.";
+            _appointmentRepository.SoftDelete(id);
+            return $"Appointment {appointment.Id} soft-deleted successfully.";
+        });
     }
 
     private static AppointmentStatus ParseStatus(string status)

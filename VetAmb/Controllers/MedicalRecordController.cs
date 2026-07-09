@@ -37,7 +37,7 @@ namespace VetAmb.Controllers
         {
             var record = _medicalRecordRepository.GetById(id);
             if (record == null)
-                return NotFound();
+                return RedirectToAction("StatusCodePage", "Error", new { statusCode = StatusCodes.Status404NotFound });
             return View(record);
         }
 

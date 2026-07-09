@@ -39,4 +39,34 @@ public class AiChatControllerTests : IClassFixture<WebApplicationFactory<Program
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
     }
+
+    [Fact]
+    public async Task Post_ShouldBeRateLimited_WhenRequestsExceedConfiguredLimit()
+    {
+        var factory = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureAppConfiguration((_, configurationBuilder) =>
+            {
+                configurationBuilder.AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    ["OpenAI:ApiKey"] = "PLACEHOLDER_TEST_KEY",
+                    ["OpenAI:Model"] = "gpt-4o-mini",
+                    ["OpenAI:ChatRateLimit:PermitLimit"] = "2",
+                    ["OpenAI:ChatRateLimit:WindowMinutes"] = "1"
+                });
+            });
+        });
+
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+
+        var payload = new[] { new { role = "user", content = "Hello" } };
+
+        var first = await client.PostAsJsonAsync("/api/chat", payload);
+        var second = await client.PostAsJsonAsync("/api/chat", payload);
+        var third = await client.PostAsJsonAsync("/api/chat", payload);
+
+        Assert.Equal(HttpStatusCode.InternalServerError, first.StatusCode);
+        Assert.Equal(HttpStatusCode.InternalServerError, second.StatusCode);
+        Assert.Equal(HttpStatusCode.TooManyRequests, third.StatusCode);
+    }
 }

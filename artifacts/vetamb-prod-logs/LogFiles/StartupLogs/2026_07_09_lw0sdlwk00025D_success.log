@@ -1,0 +1,507 @@
+2026-07-09T14:56:51.0133035+00:00 ContainerStatus: State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-07-09T14:56:54.8347942+00:00 ContainerStatus: State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-07-09T14:56:54.8558710+00:00 ContainerStatus: Container start method called.
+2026-07-09T14:56:54.8960449+00:00 ContainerStatus: State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image 10.1.0.6:13209/appsvc/dotnetcore:8.0_20260504.4.tuxprod for vetamb-prod-app., DetailsLevel: INFO
+2026-07-09T14:56:54.8970594+00:00 ContainerStatus: Establishing network.
+2026-07-09T14:56:54.9070353+00:00 ContainerStatus: Pulling image: appsvc/dotnetcore:8.0_20260504.4.tuxprod.
+2026-07-09T14:56:55.1956831+00:00 ContainerStatus: Container is starting.
+2026-07-09T14:56:55.1960903+00:00 ContainerStatus: State: Starting, Action: MountingVolumes, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Mounting volumes for vetamb-prod-app., DetailsLevel: INFO
+2026-07-09T14:56:55.1962411+00:00 ContainerStatus: Establishing user namespace if not established already.
+2026-07-09T14:56:55.2045196+00:00 ContainerStatus: Establishing network if not established already.
+2026-07-09T14:56:55.2050680+00:00 ContainerStatus: Mounting volumes.
+2026-07-09T14:56:55.2160868+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T14:56:55.2833788+00:00 ContainerStatus: Nested mountpoint volatile/logs
+2026-07-09T14:56:55.3222243+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T14:56:55.3730243+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T14:56:55.3937785+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T14:56:55.5104939+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T14:56:56.5530708+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Finished pulling container image and mounting volumes for vetamb-prod-app. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-07-09T14:56:56.5605625+00:00 ContainerStatus: Creating container.
+2026-07-09T14:56:56.5619475+00:00 ContainerStatus: Creating pipes for streaming container io.
+2026-07-09T14:56:56.5631409+00:00 ContainerStatus: Creating stdout named pipe at /podr/container/pipe/a143b18429af_vetamb-prod-app/stdout_e2bd0b6e65404cf1874de42f69dcb731.
+2026-07-09T14:56:56.5710072+00:00 ContainerStatus: Successfully created stdout named pipe at: /podr/container/pipe/a143b18429af_vetamb-prod-app/stdout_e2bd0b6e65404cf1874de42f69dcb731.
+2026-07-09T14:56:56.5722880+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/a143b18429af_vetamb-prod-app/stdout_e2bd0b6e65404cf1874de42f69dcb731 for reading in non-blocking mode.
+2026-07-09T14:56:56.5727821+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/a143b18429af_vetamb-prod-app/stdout_e2bd0b6e65404cf1874de42f69dcb731.
+2026-07-09T14:56:56.5733892+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/a143b18429af_vetamb-prod-app/stdout_e2bd0b6e65404cf1874de42f69dcb731.
+2026-07-09T14:56:56.6010109+00:00 ContainerStatus: Creating stderr named pipe at /podr/container/pipe/a143b18429af_vetamb-prod-app/stderr_9f087c9584c8462b8653722e9fa11f41.
+2026-07-09T14:56:56.6013980+00:00 ContainerStatus: Successfully created stderr named pipe at: /podr/container/pipe/a143b18429af_vetamb-prod-app/stderr_9f087c9584c8462b8653722e9fa11f41.
+2026-07-09T14:56:56.6017044+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/a143b18429af_vetamb-prod-app/stderr_9f087c9584c8462b8653722e9fa11f41 for reading in non-blocking mode.
+2026-07-09T14:56:56.6018374+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/a143b18429af_vetamb-prod-app/stderr_9f087c9584c8462b8653722e9fa11f41.
+2026-07-09T14:56:56.6019331+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/a143b18429af_vetamb-prod-app/stderr_9f087c9584c8462b8653722e9fa11f41.
+2026-07-09T14:56:56.6238164+00:00 ContainerStatus: Creating container with image: appsvc/dotnetcore:8.0_20260504.4.tuxprod from registry: 10.1.0.6:13209 and fully qualified image name: 10.1.0.6:13209/appsvc/dotnetcore:8.0_20260504.4.tuxprod
+2026-07-09T14:56:58.2606168+00:00 ContainerStatus: Container get mounts received unexpected exception.
+2026-07-09T14:56:58.4713235+00:00 ContainerStatus: Container get processes received unexpected exception.
+2026-07-09T14:56:58.8420329+00:00 ContainerStatus: Starting container: a143b18429af_vetamb-prod-app.
+2026-07-09T14:56:59.6420519+00:00 ContainerStatus: Starting watchers and probes.
+2026-07-09T14:56:59.7958171+00:00 ContainerStream:    _____                               
+2026-07-09T14:56:59.8143900+00:00 ContainerStatus: Starting metrics collection.
+2026-07-09T14:56:59.8560224+00:00 ContainerStream:   /  _  \ __________ _________   ____  
+2026-07-09T14:56:59.8560998+00:00 ContainerStream:  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2026-07-09T14:56:59.8561053+00:00 ContainerStream: /    |    \/    /|  |  /|  | \/\  ___/ 
+2026-07-09T14:56:59.8561091+00:00 ContainerStream: \____|__  /_____ \____/ |__|    \___  >
+2026-07-09T14:56:59.8561405+00:00 ContainerStream:         \/      \/                  \/ 
+2026-07-09T14:56:59.8561474+00:00 ContainerStream: A P P   S E R V I C E   O N   L I N U X
+2026-07-09T14:56:59.8561505+00:00 ContainerStream: 
+2026-07-09T14:56:59.8561568+00:00 ContainerStream: Documentation       : http://aka.ms/webapp-linux
+2026-07-09T14:56:59.8561608+00:00 ContainerStream: Dotnet quickstart   : https://aka.ms/dotnet-qs
+2026-07-09T14:56:59.8561649+00:00 ContainerStream: ASP .NETCore Version: 8.0.26
+2026-07-09T14:56:59.8561712+00:00 ContainerStream: Instance Name       : lw0sdlwk00025D
+2026-07-09T14:56:59.8561775+00:00 ContainerStream: Instance Id         : 01f9325e5f615ea1a96dd42fc64d219215d3050e03c8a56691bb3aecda591e72
+2026-07-09T14:56:59.8561805+00:00 ContainerStream: 
+2026-07-09T14:56:59.8561846+00:00 ContainerStream: Note: Any data outside '/home' is not persisted
+2026-07-09T14:56:59.9139982+00:00 ContainerStatus: Container is running.
+2026-07-09T14:56:59.9141866+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container vetamb-prod-app successfully created and is running., DetailsLevel: INFO
+2026-07-09T14:57:00.8595339+00:00 ContainerStatus: Container start method finished after 6002 ms.
+2026-07-09T14:57:00.9084131+00:00 ContainerStatus: State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container vetamb-prod-app successfully created and is running., DetailsLevel: INFO
+2026-07-09T14:57:00.9504836+00:00 ContainerStatus: State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-07-09T14:57:05.5536143+00:00 ContainerStream: Starting OpenBSD Secure Shell server: sshd.
+2026-07-09T14:57:05.5757965+00:00 ContainerStream: WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2026-07-09T14:57:05.6848930+00:00 ContainerStream: Updating certificates in /etc/ssl/certs...
+2026-07-09T14:57:44.4875297+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2026-07-09T14:57:44.5066367+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2026-07-09T14:57:44.7900052+00:00 ContainerStream: rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2026-07-09T14:57:44.8609416+00:00 ContainerStream: 4 added, 0 removed; done.
+2026-07-09T14:57:44.8782209+00:00 ContainerStream: Running hooks in /etc/ca-certificates/update.d...
+2026-07-09T14:57:44.8808587+00:00 ContainerStream: done.
+2026-07-09T14:57:44.9311320+00:00 ContainerStream: CA certificates copied and updated successfully.
+2026-07-09T14:57:45.4280427+00:00 ContainerStream: Starting periodic command scheduler: cron.
+2026-07-09T14:57:45.4479872+00:00 ContainerStream: Running oryx create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -defaultAppFilePath /defaulthome/hostingstart/hostingstart.dll     -bindPort 8080 -bindPort2 '' -userStartupCommand '' 
+2026-07-09T14:57:46.0512935+00:00 ContainerStream: Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2026-07-09T14:57:46.0711490+00:00 ContainerStream: Could not find operation ID in manifest. Generating an operation id...
+2026-07-09T14:57:46.0712671+00:00 ContainerStream: Build Operation ID: 3d242b2a-8a6f-4df2-844c-a79dc8170a50
+2026-07-09T14:57:46.6453317+00:00 ContainerStream: 
+2026-07-09T14:57:46.6554025+00:00 ContainerStream: Agent extension 
+2026-07-09T14:57:46.6554734+00:00 ContainerStream: Before if loop >> DotNet Runtime 
+2026-07-09T14:57:46.6637412+00:00 ContainerStream: DotNet Runtime 8.0WARNING: Unable to find the startup DLL name. Could not find any files with extension '.runtimeconfig.json'
+2026-07-09T14:57:46.7125940+00:00 ContainerStream: Writing output script to '/opt/startup/startup.sh'
+2026-07-09T14:57:46.7715441+00:00 ContainerStream: Trying to find the startup DLL name...
+2026-07-09T14:57:46.7727606+00:00 ContainerStream: Running the default app using command: dotnet "/defaulthome/hostingstart/hostingstart.dll"
+2026-07-09T14:57:49.2937264+00:00 ContainerStream: Hosting environment: Production
+2026-07-09T14:57:49.3140050+00:00 ContainerStream: Content root path: /defaulthome/hostingstart/
+2026-07-09T14:57:49.3234175+00:00 ContainerStream: Now listening on: http://[::]:8080
+2026-07-09T14:57:49.3234732+00:00 ContainerStream: Application started. Press Ctrl+C to shut down.
+2026-07-09T14:57:50.0961479+00:00 ContainerStatus: Site startup probe succeeded after 48.8940464 seconds.
+2026-07-09T14:57:50.8763113+00:00 ContainerStatus: State: Starting, Action: WarmUpProbeSucceeded, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site startup probe succeeded after 48.8940464 seconds., DetailsLevel: INFO
+2026-07-09T14:57:52.9280069+00:00 ContainerStatus: Site started.
+2026-07-09T14:57:52.9283180+00:00 ContainerStatus: State: Started, Action: None, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 07/09/2026 14:57:52 (UTC), DetailsLevel: INFO
+2026-07-09T14:57:53.8216992+00:00 ContainerStatus: Site is running with patch version DOTNETCORE-8.0.26
+========== New Cold Start Attempt (2026-07-09T15:00:39.0097338+00:00) ==========
+2026-07-09T15:00:39.0097338+00:00 ContainerStatus: State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-07-09T15:00:45.2636257+00:00 ContainerStatus: State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-07-09T15:00:45.2639600+00:00 ContainerStatus: Container start method called.
+2026-07-09T15:00:45.2743812+00:00 ContainerStatus: State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image 10.1.0.6:13209/appsvc/dotnetcore:8.0_20260504.4.tuxprod for vetamb-prod-app., DetailsLevel: INFO
+2026-07-09T15:00:45.2747656+00:00 ContainerStatus: Establishing network.
+2026-07-09T15:00:45.3339608+00:00 ContainerStatus: Pulling image: appsvc/dotnetcore:8.0_20260504.4.tuxprod.
+2026-07-09T15:00:46.9877771+00:00 ContainerStatus: Container is starting.
+2026-07-09T15:00:46.9884327+00:00 ContainerStatus: State: Starting, Action: MountingVolumes, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Mounting volumes for vetamb-prod-app., DetailsLevel: INFO
+2026-07-09T15:00:46.9898987+00:00 ContainerStatus: Establishing user namespace if not established already.
+2026-07-09T15:00:47.0186471+00:00 ContainerStatus: Establishing network if not established already.
+2026-07-09T15:00:47.0372775+00:00 ContainerStatus: Mounting volumes.
+2026-07-09T15:00:47.0470388+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T15:00:47.1664620+00:00 ContainerStatus: Nested mountpoint volatile/logs
+2026-07-09T15:00:47.2168678+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T15:00:47.2772386+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T15:00:47.3588424+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T15:00:47.6189258+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T15:00:49.3248250+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Finished pulling container image and mounting volumes for vetamb-prod-app. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-07-09T15:00:49.3251163+00:00 ContainerStatus: Creating container.
+2026-07-09T15:00:49.3252140+00:00 ContainerStatus: Creating pipes for streaming container io.
+2026-07-09T15:00:49.3256192+00:00 ContainerStatus: Creating stdout named pipe at /podr/container/pipe/cad547aa8af2_vetamb-prod-app/stdout_6bb89c2f49864650ae7019587b30c0cd.
+2026-07-09T15:00:49.3767921+00:00 ContainerStatus: Successfully created stdout named pipe at: /podr/container/pipe/cad547aa8af2_vetamb-prod-app/stdout_6bb89c2f49864650ae7019587b30c0cd.
+2026-07-09T15:00:49.3863000+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/cad547aa8af2_vetamb-prod-app/stdout_6bb89c2f49864650ae7019587b30c0cd for reading in non-blocking mode.
+2026-07-09T15:00:49.3958291+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/cad547aa8af2_vetamb-prod-app/stdout_6bb89c2f49864650ae7019587b30c0cd.
+2026-07-09T15:00:49.3967473+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/cad547aa8af2_vetamb-prod-app/stdout_6bb89c2f49864650ae7019587b30c0cd.
+2026-07-09T15:00:49.4062353+00:00 ContainerStatus: Creating stderr named pipe at /podr/container/pipe/cad547aa8af2_vetamb-prod-app/stderr_b3e75cc8067c468f824149c68232b2fd.
+2026-07-09T15:00:49.4157149+00:00 ContainerStatus: Successfully created stderr named pipe at: /podr/container/pipe/cad547aa8af2_vetamb-prod-app/stderr_b3e75cc8067c468f824149c68232b2fd.
+2026-07-09T15:00:49.4236040+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/cad547aa8af2_vetamb-prod-app/stderr_b3e75cc8067c468f824149c68232b2fd for reading in non-blocking mode.
+2026-07-09T15:00:49.4250682+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/cad547aa8af2_vetamb-prod-app/stderr_b3e75cc8067c468f824149c68232b2fd.
+2026-07-09T15:00:49.4334693+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/cad547aa8af2_vetamb-prod-app/stderr_b3e75cc8067c468f824149c68232b2fd.
+2026-07-09T15:00:49.4346381+00:00 ContainerStatus: Creating container with image: appsvc/dotnetcore:8.0_20260504.4.tuxprod from registry: 10.1.0.6:13209 and fully qualified image name: 10.1.0.6:13209/appsvc/dotnetcore:8.0_20260504.4.tuxprod
+2026-07-09T15:00:51.3958650+00:00 ContainerStatus: Starting container: cad547aa8af2_vetamb-prod-app.
+2026-07-09T15:00:51.5664640+00:00 ContainerStatus: Starting watchers and probes.
+2026-07-09T15:00:51.5668569+00:00 ContainerStatus: Starting metrics collection.
+2026-07-09T15:00:51.5763264+00:00 ContainerStatus: Container is running.
+2026-07-09T15:00:51.6044235+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container vetamb-prod-app successfully created and is running., DetailsLevel: INFO
+2026-07-09T15:00:52.5957274+00:00 ContainerStream:    _____                               
+2026-07-09T15:00:52.6136051+00:00 ContainerStream:   /  _  \ __________ _________   ____  
+2026-07-09T15:00:52.6136385+00:00 ContainerStream:  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2026-07-09T15:00:52.6136412+00:00 ContainerStream: /    |    \/    /|  |  /|  | \/\  ___/ 
+2026-07-09T15:00:52.6136490+00:00 ContainerStream: \____|__  /_____ \____/ |__|    \___  >
+2026-07-09T15:00:52.6136565+00:00 ContainerStream:         \/      \/                  \/ 
+2026-07-09T15:00:52.6136660+00:00 ContainerStream: A P P   S E R V I C E   O N   L I N U X
+2026-07-09T15:00:52.6136683+00:00 ContainerStream: 
+2026-07-09T15:00:52.6136714+00:00 ContainerStream: Documentation       : http://aka.ms/webapp-linux
+2026-07-09T15:00:52.6136743+00:00 ContainerStream: Dotnet quickstart   : https://aka.ms/dotnet-qs
+2026-07-09T15:00:52.6136767+00:00 ContainerStream: ASP .NETCore Version: 8.0.26
+2026-07-09T15:00:52.6136791+00:00 ContainerStream: Instance Name       : lw0sdlwk00025D
+2026-07-09T15:00:52.6136873+00:00 ContainerStream: Instance Id         : 01f9325e5f615ea1a96dd42fc64d219215d3050e03c8a56691bb3aecda591e72
+2026-07-09T15:00:52.6136897+00:00 ContainerStream: 
+2026-07-09T15:00:52.6136920+00:00 ContainerStream: Note: Any data outside '/home' is not persisted
+2026-07-09T15:00:52.6963229+00:00 ContainerStatus: Container start method finished after 7432 ms.
+2026-07-09T15:00:52.6965748+00:00 ContainerStatus: State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container vetamb-prod-app successfully created and is running., DetailsLevel: INFO
+2026-07-09T15:00:52.6966071+00:00 ContainerStatus: State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-07-09T15:01:00.6015816+00:00 ContainerStream: Starting OpenBSD Secure Shell server: sshd.
+2026-07-09T15:01:00.6408207+00:00 ContainerStream: WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2026-07-09T15:01:00.7913592+00:00 ContainerStream: Updating certificates in /etc/ssl/certs...
+2026-07-09T15:01:49.1618007+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2026-07-09T15:01:49.1618621+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2026-07-09T15:01:50.0453546+00:00 ContainerStream: rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2026-07-09T15:01:50.5223725+00:00 ContainerStream: 4 added, 0 removed; done.
+2026-07-09T15:01:50.6136059+00:00 ContainerStream: Running hooks in /etc/ca-certificates/update.d...
+2026-07-09T15:01:50.6136592+00:00 ContainerStream: done.
+2026-07-09T15:01:50.6424649+00:00 ContainerStream: CA certificates copied and updated successfully.
+2026-07-09T15:01:52.3571208+00:00 ContainerStream: Starting periodic command scheduler: cron.
+2026-07-09T15:01:52.4158929+00:00 ContainerStream: Running oryx create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -defaultAppFilePath /defaulthome/hostingstart/hostingstart.dll     -bindPort 8080 -bindPort2 '' -userStartupCommand '' 
+2026-07-09T15:01:53.2999416+00:00 ContainerStream: Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2026-07-09T15:01:53.3399014+00:00 ContainerStream: Could not find operation ID in manifest. Generating an operation id...
+2026-07-09T15:01:53.3399669+00:00 ContainerStream: Build Operation ID: cf29469d-45c0-4162-a16a-504ee72a7359
+2026-07-09T15:01:54.5127241+00:00 ContainerStream: 
+2026-07-09T15:01:54.5134407+00:00 ContainerStream: Agent extension 
+2026-07-09T15:01:54.5137356+00:00 ContainerStream: Before if loop >> DotNet Runtime 
+2026-07-09T15:01:54.6505183+00:00 ContainerStream: DotNet Runtime 8.0Writing output script to '/opt/startup/startup.sh'
+2026-07-09T15:01:54.7389378+00:00 ContainerStream: Trying to find the startup DLL name...
+2026-07-09T15:01:54.7496347+00:00 ContainerStream: Found the startup D name: VetAmb.dll
+2026-07-09T15:01:54.7496778+00:00 ContainerStream: Running the command: dotnet "VetAmb.dll"
+2026-07-09T15:02:06.9111043+00:00 ContainerStream: [15:02:06 INF] Google authentication enabled: True
+2026-07-09T15:02:19.9847773+00:00 ContainerStream: [15:02:19 WRN] Entity 'Appointment' has a global query filter defined and is the required end of a relationship with the entity 'AppointmentService'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-09T15:02:20.1851748+00:00 ContainerStream: [15:02:20 WRN] Entity 'Patient' has a global query filter defined and is the required end of a relationship with the entity 'PatientAttachment'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-09T15:02:42.3898296+00:00 ContainerStream: [15:02:42 ERR] An error occurred using the connection to database 'VetAmbDb' on server 'tcp:vetamb-prod-sql-7264.database.windows.net,1433'.
+2026-07-09T15:02:42.7101916+00:00 ContainerStream: [15:02:42 ERR] An exception occurred while iterating over the results of a query for context type 'VetAmb.Data.VetAmbDbContext'.
+2026-07-09T15:02:42.7285704+00:00 ContainerStream: Microsoft.Data.SqlClient.SqlException (0x80131904): A connection was successfully established with the server, but then an error occurred during the login process. (provider: TCP Provider, error: 35 - An internal exception was caught)
+2026-07-09T15:02:42.7286642+00:00 ContainerStream:  ---> System.IO.IOException: Unable to write data to the transport connection: Connection reset by peer.
+2026-07-09T15:02:42.7286681+00:00 ContainerStream:  ---> System.Net.Sockets.SocketException (104): Connection reset by peer
+2026-07-09T15:02:42.7286707+00:00 ContainerStream:    at System.Net.Sockets.NetworkStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+2026-07-09T15:02:42.7286730+00:00 ContainerStream:    --- End of inner exception stack trace ---
+2026-07-09T15:02:42.7286754+00:00 ContainerStream:    at System.Net.Sockets.NetworkStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+2026-07-09T15:02:42.7397095+00:00 ContainerStream:    at System.IO.Stream.Write(ReadOnlySpan`1 buffer)
+2026-07-09T15:02:42.7397228+00:00 ContainerStream:    at System.Net.Sockets.NetworkStream.Write(ReadOnlySpan`1 buffer)
+2026-07-09T15:02:42.7397255+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SNI.SslOverTdsStream.Write(ReadOnlySpan`1 buffer)
+2026-07-09T15:02:42.7397282+00:00 ContainerStream:    at System.Net.Security.SyncReadWriteAdapter.WriteAsync(Stream stream, ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7397308+00:00 ContainerStream:    at System.Net.Security.SslStream.WriteSingleChunk[TIOAdapter](ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7397334+00:00 ContainerStream:    at System.Net.Security.SslStream.WriteAsyncInternal[TIOAdapter](ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7397377+00:00 ContainerStream:    at System.Net.Security.SslStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+2026-07-09T15:02:42.7397401+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SNI.SNIPacket.WriteToStream(Stream stream)
+2026-07-09T15:02:42.7397425+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SNI.SNITCPHandle.Send(SNIPacket packet)
+2026-07-09T15:02:42.7397451+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+2026-07-09T15:02:42.7397478+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+2026-07-09T15:02:42.7397686+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.ThrowExceptionAndWarning(Boolean callerHasConnectionLock, Boolean asyncClose)
+2026-07-09T15:02:42.7397719+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.SNIWritePacket(PacketHandle packet, UInt32& sniError, Boolean canAccumulate, Boolean callerHasConnectionLock, Boolean asyncClose)
+2026-07-09T15:02:42.7397744+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.WriteSni(Boolean canAccumulate)
+2026-07-09T15:02:42.7397769+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.WritePacket(Byte flushMode, Boolean canAccumulate)
+2026-07-09T15:02:42.7397800+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParser.TdsLogin(SqlLogin rec, FeatureExtension requestedFeatures, SessionData recoverySessionData, FederatedAuthenticationFeatureExtensionData fedAuthFeatureExtensionData, SqlConnectionEncryptOption encrypt)
+2026-07-09T15:02:42.7397851+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.Login(ServerInfo server, TimeoutTimer timeout, String newPassword, SecureString newSecurePassword, SqlConnectionEncryptOption encrypt)
+2026-07-09T15:02:42.7397883+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean ignoreSniOpenTimeout, TimeoutTimer timeout, Boolean withFailover)
+2026-07-09T15:02:42.7397917+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+2026-07-09T15:02:42.7397965+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+2026-07-09T15:02:42.7398006+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool)
+2026-07-09T15:02:42.7398038+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+2026-07-09T15:02:42.7398419+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+2026-07-09T15:02:42.7398475+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+2026-07-09T15:02:42.7398504+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+2026-07-09T15:02:42.7398537+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+2026-07-09T15:02:42.7398561+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+2026-07-09T15:02:42.7398605+00:00 ContainerStream: --- End of stack trace from previous location ---
+2026-07-09T15:02:42.7398634+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7398661+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7398686+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+2026-07-09T15:02:42.7409019+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7409208+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7409242+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7409268+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2026-07-09T15:02:42.7409312+00:00 ContainerStream: ClientConnectionId:61d7356b-34bd-410c-894a-566a3337d503
+2026-07-09T15:02:42.7409345+00:00 ContainerStream: Microsoft.Data.SqlClient.SqlException (0x80131904): A connection was successfully established with the server, but then an error occurred during the login process. (provider: TCP Provider, error: 35 - An internal exception was caught)
+2026-07-09T15:02:42.7409371+00:00 ContainerStream:  ---> System.IO.IOException: Unable to write data to the transport connection: Connection reset by peer.
+2026-07-09T15:02:42.7409394+00:00 ContainerStream:  ---> System.Net.Sockets.SocketException (104): Connection reset by peer
+2026-07-09T15:02:42.7409418+00:00 ContainerStream:    at System.Net.Sockets.NetworkStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+2026-07-09T15:02:42.7409440+00:00 ContainerStream:    --- End of inner exception stack trace ---
+2026-07-09T15:02:42.7409489+00:00 ContainerStream:    at System.Net.Sockets.NetworkStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+2026-07-09T15:02:42.7409512+00:00 ContainerStream:    at System.IO.Stream.Write(ReadOnlySpan`1 buffer)
+2026-07-09T15:02:42.7409534+00:00 ContainerStream:    at System.Net.Sockets.NetworkStream.Write(ReadOnlySpan`1 buffer)
+2026-07-09T15:02:42.7409558+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SNI.SslOverTdsStream.Write(ReadOnlySpan`1 buffer)
+2026-07-09T15:02:42.7409583+00:00 ContainerStream:    at System.Net.Security.SyncReadWriteAdapter.WriteAsync(Stream stream, ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7409658+00:00 ContainerStream:    at System.Net.Security.SslStream.WriteSingleChunk[TIOAdapter](ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7409686+00:00 ContainerStream:    at System.Net.Security.SslStream.WriteAsyncInternal[TIOAdapter](ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7409710+00:00 ContainerStream:    at System.Net.Security.SslStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+2026-07-09T15:02:42.7409747+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SNI.SNIPacket.WriteToStream(Stream stream)
+2026-07-09T15:02:42.7409770+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SNI.SNITCPHandle.Send(SNIPacket packet)
+2026-07-09T15:02:42.7409797+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+2026-07-09T15:02:42.7409839+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+2026-07-09T15:02:42.7409866+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.ThrowExceptionAndWarning(Boolean callerHasConnectionLock, Boolean asyncClose)
+2026-07-09T15:02:42.7409895+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.SNIWritePacket(PacketHandle packet, UInt32& sniError, Boolean canAccumulate, Boolean callerHasConnectionLock, Boolean asyncClose)
+2026-07-09T15:02:42.7409919+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.WriteSni(Boolean canAccumulate)
+2026-07-09T15:02:42.7410140+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.WritePacket(Byte flushMode, Boolean canAccumulate)
+2026-07-09T15:02:42.7410177+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParser.TdsLogin(SqlLogin rec, FeatureExtension requestedFeatures, SessionData recoverySessionData, FederatedAuthenticationFeatureExtensionData fedAuthFeatureExtensionData, SqlConnectionEncryptOption encrypt)
+2026-07-09T15:02:42.7410207+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.Login(ServerInfo server, TimeoutTimer timeout, String newPassword, SecureString newSecurePassword, SqlConnectionEncryptOption encrypt)
+2026-07-09T15:02:42.7410237+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean ignoreSniOpenTimeout, TimeoutTimer timeout, Boolean withFailover)
+2026-07-09T15:02:42.7410294+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+2026-07-09T15:02:42.7410327+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+2026-07-09T15:02:42.7410367+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool)
+2026-07-09T15:02:42.7410422+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+2026-07-09T15:02:42.7410453+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+2026-07-09T15:02:42.7410481+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+2026-07-09T15:02:42.7410509+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+2026-07-09T15:02:42.7410555+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+2026-07-09T15:02:42.7410579+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+2026-07-09T15:02:42.7410602+00:00 ContainerStream: --- End of stack trace from previous location ---
+2026-07-09T15:02:42.7410629+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7410655+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7410699+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+2026-07-09T15:02:42.7410727+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7410755+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7410785+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2026-07-09T15:02:42.7410827+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2026-07-09T15:02:42.7410851+00:00 ContainerStream: ClientConnectionId:61d7356b-34bd-410c-894a-566a3337d503
+2026-07-09T15:02:42.8991523+00:00 ContainerStream: [15:02:42 ERR] Identity seeding failed
+2026-07-09T15:02:42.8992843+00:00 ContainerStream: Microsoft.Data.SqlClient.SqlException (0x80131904): A connection was successfully established with the server, but then an error occurred during the login process. (provider: TCP Provider, error: 35 - An internal exception was caught)
+2026-07-09T15:02:42.8992904+00:00 ContainerStream:  ---> System.IO.IOException: Unable to write data to the transport connection: Connection reset by peer.
+2026-07-09T15:02:42.8992998+00:00 ContainerStream:  ---> System.Net.Sockets.SocketException (104): Connection reset by peer
+2026-07-09T15:02:42.8993250+00:00 ContainerStream:    at System.Net.Sockets.NetworkStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+2026-07-09T15:02:42.8993282+00:00 ContainerStream:    --- End of inner exception stack trace ---
+2026-07-09T15:02:42.8993307+00:00 ContainerStream:    at System.Net.Sockets.NetworkStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+2026-07-09T15:02:42.8993333+00:00 ContainerStream:    at System.IO.Stream.Write(ReadOnlySpan`1 buffer)
+2026-07-09T15:02:42.9012381+00:00 ContainerStream:    at System.Net.Sockets.NetworkStream.Write(ReadOnlySpan`1 buffer)
+2026-07-09T15:02:42.9012520+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SNI.SslOverTdsStream.Write(ReadOnlySpan`1 buffer)
+2026-07-09T15:02:42.9012551+00:00 ContainerStream:    at System.Net.Security.SyncReadWriteAdapter.WriteAsync(Stream stream, ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+2026-07-09T15:02:42.9012578+00:00 ContainerStream:    at System.Net.Security.SslStream.WriteSingleChunk[TIOAdapter](ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+2026-07-09T15:02:42.9012604+00:00 ContainerStream:    at System.Net.Security.SslStream.WriteAsyncInternal[TIOAdapter](ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+2026-07-09T15:02:42.9012628+00:00 ContainerStream:    at System.Net.Security.SslStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+2026-07-09T15:02:42.9012671+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SNI.SNIPacket.WriteToStream(Stream stream)
+2026-07-09T15:02:42.9012696+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SNI.SNITCPHandle.Send(SNIPacket packet)
+2026-07-09T15:02:42.9012723+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+2026-07-09T15:02:42.9012751+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+2026-07-09T15:02:42.9012778+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.ThrowExceptionAndWarning(Boolean callerHasConnectionLock, Boolean asyncClose)
+2026-07-09T15:02:42.9012820+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.SNIWritePacket(PacketHandle packet, UInt32& sniError, Boolean canAccumulate, Boolean callerHasConnectionLock, Boolean asyncClose)
+2026-07-09T15:02:42.9012845+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.WriteSni(Boolean canAccumulate)
+2026-07-09T15:02:42.9012869+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParserStateObject.WritePacket(Byte flushMode, Boolean canAccumulate)
+2026-07-09T15:02:42.9012901+00:00 ContainerStream:    at Microsoft.Data.SqlClient.TdsParser.TdsLogin(SqlLogin rec, FeatureExtension requestedFeatures, SessionData recoverySessionData, FederatedAuthenticationFeatureExtensionData fedAuthFeatureExtensionData, SqlConnectionEncryptOption encrypt)
+2026-07-09T15:02:42.9012933+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.Login(ServerInfo server, TimeoutTimer timeout, String newPassword, SecureString newSecurePassword, SqlConnectionEncryptOption encrypt)
+2026-07-09T15:02:42.9012980+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean ignoreSniOpenTimeout, TimeoutTimer timeout, Boolean withFailover)
+2026-07-09T15:02:42.9013014+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+2026-07-09T15:02:42.9013044+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+2026-07-09T15:02:42.9013100+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool)
+2026-07-09T15:02:42.9013134+00:00 ContainerStream:    at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+2026-07-09T15:02:42.9013164+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+2026-07-09T15:02:42.9013192+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+2026-07-09T15:02:42.9013238+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+2026-07-09T15:02:42.9013385+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+2026-07-09T15:02:42.9013414+00:00 ContainerStream:    at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
+2026-07-09T15:02:42.9013437+00:00 ContainerStream: --- End of stack trace from previous location ---
+2026-07-09T15:02:42.9013479+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+2026-07-09T15:02:42.9013506+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+2026-07-09T15:02:42.9013533+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+2026-07-09T15:02:42.9013561+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+2026-07-09T15:02:42.9013605+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+2026-07-09T15:02:42.9013636+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2026-07-09T15:02:42.9013661+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2026-07-09T15:02:42.9013690+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+2026-07-09T15:02:42.9013718+00:00 ContainerStream:    at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+2026-07-09T15:02:42.9013757+00:00 ContainerStream:    at Microsoft.AspNetCore.Identity.RoleManager`1.RoleExistsAsync(String roleName)
+2026-07-09T15:02:42.9013785+00:00 ContainerStream:    at VetAmb.Data.IdentitySeedData.SeedRolesAndAdminAsync(IServiceProvider serviceProvider) in C:\git\VetAmb\Data\IdentitySeedData.cs:line 17
+2026-07-09T15:02:42.9013809+00:00 ContainerStream:    at Program.<Main>$(String[] args) in C:\git\VetAmb\Program.cs:line 242
+2026-07-09T15:02:42.9013831+00:00 ContainerStream: ClientConnectionId:61d7356b-34bd-410c-894a-566a3337d503
+2026-07-09T15:02:44.2737353+00:00 ContainerStream: [15:02:44 WRN] HTTP GET /robots933456.txt responded 404 in 319.5392 ms
+2026-07-09T15:02:44.4503393+00:00 ContainerStatus: Site startup probe succeeded after 111.6973461 seconds.
+2026-07-09T15:02:44.9315342+00:00 ContainerStatus: State: Starting, Action: WarmUpProbeSucceeded, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site startup probe succeeded after 111.6973461 seconds., DetailsLevel: INFO
+2026-07-09T15:02:45.7517970+00:00 ContainerStatus: Site is running with deployment version: afec683e-6e81-48cd-bbcf-c587b28cb981
+2026-07-09T15:02:45.7596961+00:00 ContainerStatus: Site started.
+2026-07-09T15:02:45.7613349+00:00 ContainerStatus: State: Started, Action: None, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 07/09/2026 15:02:45 (UTC), DetailsLevel: INFO
+2026-07-09T15:02:45.7892863+00:00 ContainerStatus: Site is running with patch version DOTNETCORE-8.0.26
+========== New Cold Start Attempt (2026-07-09T15:03:06.4508110+00:00) ==========
+2026-07-09T15:03:06.4508110+00:00 ContainerStatus: State: Stopping, Action: StoppingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 07/09/2026 14:57:52 (UTC), DetailsLevel: INFO
+2026-07-09T15:03:06.5594434+00:00 ContainerStatus: Container is terminating. Grace period: 5 seconds.
+2026-07-09T15:03:06.8264250+00:00 ContainerStream: [15:03:06 WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2026-07-09T15:03:07.0562079+00:00 ContainerStatus: Stop and delete container. Retry count = 0
+2026-07-09T15:03:07.0679149+00:00 ContainerStatus: Stopping container: a143b18429af_vetamb-prod-app.
+2026-07-09T15:03:08.7245505+00:00 ContainerStream: [15:03:08 WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2026-07-09T15:03:10.0863646+00:00 ContainerStream: [15:03:10 INF] HTTP HEAD / responded 200 in 4912.9054 ms
+2026-07-09T15:03:10.5305133+00:00 ContainerStream: [15:03:10 INF] HTTP GET / responded 200 in 246.6621 ms
+2026-07-09T15:03:12.2021935+00:00 ContainerStatus: Deleting container: a143b18429af_vetamb-prod-app. Retry count = 0
+2026-07-09T15:03:13.3066267+00:00 ContainerStatus: Container spec TerminationMessagePolicy  path 
+2026-07-09T15:03:13.3285538+00:00 ContainerStatus: Container is terminated. Total time elapsed: 6758 ms.
+2026-07-09T15:03:13.4168297+00:00 ContainerStatus: Site: vetamb-prod-app stopped.
+2026-07-09T15:03:16.9177990+00:00 ContainerStream: [15:03:16 INF] HTTP GET / responded 200 in 634.0957 ms
+2026-07-09T15:03:17.1651878+00:00 ContainerStream: [15:03:17 INF] HTTP GET /css/site.css responded 200 in 169.8670 ms
+2026-07-09T15:03:19.5118143+00:00 ContainerStream: [15:03:19 INF] HTTP GET /appointments responded 200 in 235.6576 ms
+2026-07-09T15:03:20.1966191+00:00 ContainerStream: [15:03:20 INF] HTTP GET /clinics responded 200 in 120.1207 ms
+2026-07-09T15:03:21.1119993+00:00 ContainerStream: [15:03:21 INF] HTTP GET / responded 200 in 129.3455 ms
+2026-07-09T15:04:02.8561363+00:00 ContainerStream: [15:04:02 INF] HTTP GET / responded 200 in 499.6186 ms
+2026-07-09T15:04:03.0272562+00:00 ContainerStream: [15:04:03 INF] HTTP GET /css/site.css responded 200 in 59.2238 ms
+2026-07-09T15:04:04.5791435+00:00 ContainerStream: [15:04:04 INF] HTTP GET / responded 200 in 140.9050 ms
+2026-07-09T15:04:04.7276072+00:00 ContainerStream: [15:04:04 INF] HTTP GET /css/site.css responded 200 in 19.3482 ms
+2026-07-09T15:04:06.0265293+00:00 ContainerStream: [15:04:06 INF] HTTP GET / responded 200 in 332.1657 ms
+2026-07-09T15:04:06.2892450+00:00 ContainerStream: [15:04:06 INF] HTTP GET /css/site.css responded 200 in 61.4787 ms
+2026-07-09T15:04:13.4389037+00:00 ContainerStream: [15:04:13 INF] HTTP GET /clinics responded 200 in 67.2269 ms
+2026-07-09T15:04:14.5254267+00:00 ContainerStream: [15:04:14 WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2026-07-09T15:04:14.7736607+00:00 ContainerStream: [15:04:14 INF] HTTP GET /clinics/1 responded 200 in 616.7321 ms
+2026-07-09T15:04:15.9384044+00:00 ContainerStream: [15:04:15 INF] HTTP GET /clinics responded 200 in 7.6045 ms
+2026-07-09T15:05:03.8528021+00:00 ContainerStream: [15:05:03 INF] HTTP GET / responded 200 in 80.2014 ms
+2026-07-09T15:05:04.0059902+00:00 ContainerStream: [15:05:03 INF] HTTP GET /clinics responded 200 in 23.3085 ms
+2026-07-09T15:05:04.2708700+00:00 ContainerStream: [15:05:04 INF] HTTP GET /patients responded 200 in 139.2346 ms
+2026-07-09T15:05:04.4377896+00:00 ContainerStream: [15:05:04 INF] HTTP GET /vets responded 200 in 70.3597 ms
+2026-07-09T15:05:04.5747496+00:00 ContainerStream: [15:05:04 INF] HTTP GET /owners responded 200 in 44.7076 ms
+2026-07-09T15:05:04.9026428+00:00 ContainerStream: [15:05:04 INF] HTTP GET /services responded 200 in 223.5253 ms
+2026-07-09T15:05:05.0728243+00:00 ContainerStream: [15:05:05 INF] HTTP GET /appointments responded 200 in 35.8036 ms
+2026-07-09T15:05:05.3418922+00:00 ContainerStream: [15:05:05 INF] HTTP GET /medical-records responded 200 in 141.5679 ms
+2026-07-09T15:05:06.7426278+00:00 ContainerStream: [15:05:06 INF] HTTP GET /api/clinics responded 200 in 1297.9295 ms
+2026-07-09T15:05:07.0246626+00:00 ContainerStream: [15:05:07 INF] HTTP GET /api/patients responded 200 in 198.6602 ms
+2026-07-09T15:05:07.1631097+00:00 ContainerStream: [15:05:07 INF] HTTP GET /api/vets responded 200 in 49.9235 ms
+2026-07-09T15:05:07.3043423+00:00 ContainerStream: [15:05:07 INF] HTTP GET /api/owners responded 200 in 57.9619 ms
+2026-07-09T15:05:07.4637940+00:00 ContainerStream: [15:05:07 INF] HTTP GET /api/services responded 200 in 59.6891 ms
+2026-07-09T15:05:07.6668193+00:00 ContainerStream: [15:05:07 INF] HTTP GET /api/appointments responded 200 in 91.8496 ms
+2026-07-09T15:05:07.8262350+00:00 ContainerStream: [15:05:07 WRN] HTTP GET /api/medicalrecords responded 404 in 8.4959 ms
+2026-07-09T15:05:07.9253957+00:00 ContainerStream: [15:05:07 WRN] HTTP GET /api/chat responded 405 in 0.3877 ms
+2026-07-09T15:05:08.1089452+00:00 ContainerStream: [15:05:08 INF] HTTP GET / responded 200 in 50.2902 ms
+2026-07-09T15:05:20.2293268+00:00 ContainerStream: [15:05:20 INF] HTTP GET / responded 200 in 71.2923 ms
+2026-07-09T15:05:23.5743810+00:00 ContainerStream: [15:05:23 INF] HTTP GET / responded 200 in 14.8297 ms
+2026-07-09T15:05:23.6636168+00:00 ContainerStream: [15:05:23 INF] HTTP GET /clinics responded 200 in 7.1405 ms
+2026-07-09T15:05:23.7570155+00:00 ContainerStream: [15:05:23 INF] HTTP GET /patients responded 200 in 7.5624 ms
+2026-07-09T15:05:23.8492839+00:00 ContainerStream: [15:05:23 INF] HTTP GET /vets responded 200 in 4.9828 ms
+2026-07-09T15:05:23.9495816+00:00 ContainerStream: [15:05:23 INF] HTTP GET /owners responded 200 in 4.4451 ms
+2026-07-09T15:05:24.0545677+00:00 ContainerStream: [15:05:24 INF] HTTP GET /services responded 200 in 11.1347 ms
+2026-07-09T15:05:24.1728333+00:00 ContainerStream: [15:05:24 INF] HTTP GET /appointments responded 200 in 10.7570 ms
+2026-07-09T15:05:24.2647571+00:00 ContainerStream: [15:05:24 INF] HTTP GET /medical-records responded 200 in 11.0121 ms
+2026-07-09T15:05:24.3663542+00:00 ContainerStream: [15:05:24 INF] HTTP GET /api/clinics responded 200 in 13.0315 ms
+2026-07-09T15:05:24.4798726+00:00 ContainerStream: [15:05:24 INF] HTTP GET /api/patients responded 200 in 38.3112 ms
+2026-07-09T15:05:24.6099250+00:00 ContainerStream: [15:05:24 INF] HTTP GET /api/vets responded 200 in 18.9169 ms
+2026-07-09T15:05:24.6910165+00:00 ContainerStream: [15:05:24 INF] HTTP GET /api/owners responded 200 in 9.4680 ms
+2026-07-09T15:05:24.7931337+00:00 ContainerStream: [15:05:24 INF] HTTP GET /api/services responded 200 in 20.4747 ms
+2026-07-09T15:05:24.9231604+00:00 ContainerStream: [15:05:24 INF] HTTP GET /api/appointments responded 200 in 38.2266 ms
+2026-07-09T15:05:25.0333452+00:00 ContainerStream: [15:05:25 WRN] HTTP GET /api/medicalrecords responded 404 in 0.1705 ms
+2026-07-09T15:05:25.1339072+00:00 ContainerStream: [15:05:25 INF] HTTP GET / responded 200 in 19.3809 ms
+2026-07-09T15:05:29.2433057+00:00 ContainerStream: [15:05:29 INF] HTTP GET / responded 200 in 17.9795 ms
+2026-07-09T15:05:29.2826400+00:00 ContainerStream: [15:05:29 INF] HTTP GET /css/site.css responded 200 in 7.5999 ms
+2026-07-09T15:05:33.9553084+00:00 ContainerStream: [15:05:33 INF] HTTP GET / responded 200 in 39.7164 ms
+2026-07-09T15:05:34.0568407+00:00 ContainerStream: [15:05:34 WRN] HTTP GET /api/chat responded 405 in 0.2634 ms
+2026-07-09T15:05:41.7656611+00:00 ContainerStream: [15:05:41 INF] HTTP GET / responded 200 in 50.4929 ms
+2026-07-09T15:05:42.9778436+00:00 ContainerStream: [15:05:42 INF] HTTP GET / responded 200 in 29.0278 ms
+2026-07-09T15:05:43.1483321+00:00 ContainerStream: [15:05:43 INF] HTTP GET /css/site.css responded 200 in 0.9252 ms
+2026-07-09T15:05:44.1151473+00:00 ContainerStream: [15:05:44 WRN] HTTP GET /favicon.ico responded 404 in 5.9929 ms
+2026-07-09T15:05:45.7784856+00:00 ContainerStream: [15:05:45 INF] HTTP GET /appointments responded 200 in 7.5585 ms
+2026-07-09T15:05:47.4292654+00:00 ContainerStream: [15:05:47 INF] HTTP GET /appointments responded 200 in 7.2448 ms
+2026-07-09T15:05:50.6560382+00:00 ContainerStream: [15:05:50 INF] HTTP GET / responded 200 in 70.8848 ms
+2026-07-09T15:05:53.8311449+00:00 ContainerStream: [15:05:53 INF] AI chat request started. MessageCount: 2, IsAuthenticated: False
+2026-07-09T15:05:53.8713184+00:00 ContainerStream: [15:05:53 INF] AI chatbot response generation started. UserId: anonymous, IncomingMessageCount: 2
+2026-07-09T15:05:54.0223646+00:00 ContainerStream: [15:05:54 WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2026-07-09T15:05:54.3204649+00:00 ContainerStream: [15:05:54 WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2026-07-09T15:05:54.3723816+00:00 ContainerStream: [15:05:54 WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2026-07-09T15:05:54.4021407+00:00 ContainerStream: [15:05:54 WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2026-07-09T15:05:54.4325072+00:00 ContainerStream: [15:05:54 WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2026-07-09T15:05:54.9666674+00:00 ContainerStream: [15:05:54 INF] HTTP GET /appointments/2 responded 200 in 251.0710 ms
+2026-07-09T15:05:55.5713392+00:00 ContainerStream: [15:05:55 INF] Public AI chat context built. Clinics: 3, Vets: 6, Services: 5, Owners: 6, Patients: 9, Appointments: 6, Records: 5, ContextLength: 570
+2026-07-09T15:05:58.7654182+00:00 ContainerStream: [15:05:58 INF] AI chatbot response generation completed. UserId: anonymous, PromptMessageCount: 4, AnswerLength: 101
+2026-07-09T15:05:58.7777814+00:00 ContainerStream: [15:05:58 INF] AI chat request completed successfully. Outcome: Success
+2026-07-09T15:05:58.8256587+00:00 ContainerStream: [15:05:58 INF] HTTP POST /api/chat responded 200 in 5335.2775 ms
+2026-07-09T15:06:04.5644895+00:00 ContainerStream: [15:06:04 WRN] HTTP GET /api/medicalrecords responded 404 in 0.1967 ms
+2026-07-09T15:06:04.7572733+00:00 ContainerStream: [15:06:04 INF] HTTP GET /api/medical-records responded 200 in 109.6457 ms
+2026-07-09T15:06:08.2119572+00:00 ContainerStream: [15:06:08 INF] HTTP GET /medical-records responded 200 in 31.7067 ms
+2026-07-09T15:06:13.4609696+00:00 ContainerStream: [15:06:13 INF] HTTP GET /medical-records/2 responded 200 in 64.0209 ms
+2026-07-09T15:06:18.4748376+00:00 ContainerStream: [15:06:18 WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2026-07-09T15:06:18.6258642+00:00 ContainerStream: [15:06:18 INF] HTTP GET /patients/3 responded 200 in 225.5817 ms
+2026-07-09T15:06:19.1928396+00:00 ContainerStream: [15:06:19 INF] HTTP GET /api/patients/3/attachments responded 302 in 20.1589 ms
+2026-07-09T15:06:19.5443207+00:00 ContainerStream: [15:06:19 INF] HTTP GET /Identity/Account/Login responded 200 in 278.4104 ms
+2026-07-09T15:06:31.0702104+00:00 ContainerStream: [15:06:31 INF] HTTP GET /patients responded 200 in 13.7564 ms
+2026-07-09T15:06:45.2821977+00:00 ContainerStream: [15:06:45 INF] HTTP GET /services responded 200 in 8.3097 ms
+2026-07-09T15:07:09.4619664+00:00 ContainerStream: [15:07:09 INF] HTTP GET /appointments responded 200 in 13.3595 ms
+2026-07-09T15:07:16.0516012+00:00 ContainerStream: [15:07:16 INF] HTTP GET /appointments/5 responded 200 in 109.8746 ms
+2026-07-09T15:07:28.2310874+00:00 ContainerStream: [15:07:28 INF] HTTP GET /appointments/4 responded 200 in 36.8628 ms
+2026-07-09T15:07:41.0480370+00:00 ContainerStream: [15:07:41 INF] HTTP GET /owners responded 200 in 16.4128 ms
+2026-07-09T15:07:46.3066740+00:00 ContainerStream: [15:07:46 INF] HTTP GET /owners/1 responded 200 in 129.3501 ms
+2026-07-09T15:08:00.3150638+00:00 ContainerStream: [15:08:00 INF] HTTP GET / responded 200 in 22.7520 ms
+2026-07-09T15:08:00.5294097+00:00 ContainerStream: [15:08:00 INF] HTTP GET /css/site.css responded 200 in 4.2046 ms
+2026-07-09T15:08:02.8209001+00:00 ContainerStream: [15:08:02 INF] HTTP GET /clinics responded 200 in 29.7780 ms
+2026-07-09T15:08:09.5994977+00:00 ContainerStream: [15:08:09 INF] HTTP GET /appointments responded 200 in 25.4738 ms
+2026-07-09T15:08:11.4271588+00:00 ContainerStream: [15:08:11 INF] HTTP GET /appointments responded 200 in 29.0901 ms
+2026-07-09T15:08:11.7524399+00:00 ContainerStream: [15:08:11 INF] HTTP GET /appointments responded 200 in 24.4074 ms
+2026-07-09T15:08:11.9159006+00:00 ContainerStream: [15:08:11 INF] HTTP GET /appointments responded 200 in 20.5288 ms
+2026-07-09T15:08:11.9667302+00:00 ContainerStream: [15:08:11 INF] HTTP GET /css/site.css responded 200 in 1.2052 ms
+2026-07-09T15:08:12.1190699+00:00 ContainerStream: [15:08:12 INF] HTTP GET /css/site.css responded 200 in 1.4812 ms
+2026-07-09T15:08:13.0153243+00:00 ContainerStream: [15:08:13 INF] HTTP GET /clinics/1 responded 200 in 15.2405 ms
+2026-07-09T15:08:23.7109301+00:00 ContainerStream: [15:08:23 INF] HTTP GET / responded 200 in 59.9870 ms
+2026-07-09T15:08:32.5764547+00:00 ContainerStream: [15:08:32 INF] HTTP GET /appointments responded 200 in 26.1559 ms
+2026-07-09T15:09:17.1565142+00:00 ContainerStream: [15:09:17 INF] HTTP GET / responded 200 in 49.2547 ms
+2026-07-09T15:11:26.1037776+00:00 ContainerStatus: State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-07-09T15:11:30.8915828+00:00 ContainerStatus: State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-07-09T15:11:30.9108713+00:00 ContainerStatus: Container start method called.
+2026-07-09T15:11:30.9201187+00:00 ContainerStatus: State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image 10.1.0.6:13209/appsvc/dotnetcore:8.0_20260504.4.tuxprod for vetamb-prod-app., DetailsLevel: INFO
+2026-07-09T15:11:30.9209906+00:00 ContainerStatus: Establishing network.
+2026-07-09T15:11:30.9215245+00:00 ContainerStatus: Pulling image: appsvc/dotnetcore:8.0_20260504.4.tuxprod.
+2026-07-09T15:11:32.6517839+00:00 ContainerStatus: Container is starting.
+2026-07-09T15:11:32.6519575+00:00 ContainerStatus: State: Starting, Action: MountingVolumes, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Mounting volumes for vetamb-prod-app., DetailsLevel: INFO
+2026-07-09T15:11:32.6520568+00:00 ContainerStatus: Establishing user namespace if not established already.
+2026-07-09T15:11:32.6521417+00:00 ContainerStatus: Establishing network if not established already.
+2026-07-09T15:11:32.6522372+00:00 ContainerStatus: Mounting volumes.
+2026-07-09T15:11:32.6523939+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T15:11:32.7219128+00:00 ContainerStatus: Nested mountpoint volatile/logs
+2026-07-09T15:11:32.7403141+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T15:11:32.7428706+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T15:11:32.7514118+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T15:11:32.7634163+00:00 ContainerStatus: Nested mountpoint 
+2026-07-09T15:11:33.9968997+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Finished pulling container image and mounting volumes for vetamb-prod-app. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-07-09T15:11:34.0249756+00:00 ContainerStatus: Creating container.
+2026-07-09T15:11:34.0257121+00:00 ContainerStatus: Creating pipes for streaming container io.
+2026-07-09T15:11:34.0343785+00:00 ContainerStatus: Creating stdout named pipe at /podr/container/pipe/34a2b7b6a555_vetamb-prod-app/stdout_d566b70ab26e48ccbf7e19a4817ae048.
+2026-07-09T15:11:34.0353750+00:00 ContainerStatus: Successfully created stdout named pipe at: /podr/container/pipe/34a2b7b6a555_vetamb-prod-app/stdout_d566b70ab26e48ccbf7e19a4817ae048.
+2026-07-09T15:11:34.0365174+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/34a2b7b6a555_vetamb-prod-app/stdout_d566b70ab26e48ccbf7e19a4817ae048 for reading in non-blocking mode.
+2026-07-09T15:11:34.1052905+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/34a2b7b6a555_vetamb-prod-app/stdout_d566b70ab26e48ccbf7e19a4817ae048.
+2026-07-09T15:11:34.1245561+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/34a2b7b6a555_vetamb-prod-app/stdout_d566b70ab26e48ccbf7e19a4817ae048.
+2026-07-09T15:11:34.1249099+00:00 ContainerStatus: Creating stderr named pipe at /podr/container/pipe/34a2b7b6a555_vetamb-prod-app/stderr_dc0107369a20406a96df922a3c997c80.
+2026-07-09T15:11:34.1251015+00:00 ContainerStatus: Successfully created stderr named pipe at: /podr/container/pipe/34a2b7b6a555_vetamb-prod-app/stderr_dc0107369a20406a96df922a3c997c80.
+2026-07-09T15:11:34.1251788+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/34a2b7b6a555_vetamb-prod-app/stderr_dc0107369a20406a96df922a3c997c80 for reading in non-blocking mode.
+2026-07-09T15:11:34.1252673+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/34a2b7b6a555_vetamb-prod-app/stderr_dc0107369a20406a96df922a3c997c80.
+2026-07-09T15:11:34.1253448+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/34a2b7b6a555_vetamb-prod-app/stderr_dc0107369a20406a96df922a3c997c80.
+2026-07-09T15:11:34.1254681+00:00 ContainerStatus: Creating container with image: appsvc/dotnetcore:8.0_20260504.4.tuxprod from registry: 10.1.0.6:13209 and fully qualified image name: 10.1.0.6:13209/appsvc/dotnetcore:8.0_20260504.4.tuxprod
+2026-07-09T15:11:36.2844161+00:00 ContainerStatus: Starting container: 34a2b7b6a555_vetamb-prod-app.
+2026-07-09T15:11:36.6832566+00:00 ContainerStatus: Starting watchers and probes.
+2026-07-09T15:11:36.6838224+00:00 ContainerStatus: Starting metrics collection.
+2026-07-09T15:11:36.6860259+00:00 ContainerStatus: Container is running.
+2026-07-09T15:11:36.7435014+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container vetamb-prod-app successfully created and is running., DetailsLevel: INFO
+2026-07-09T15:11:36.9968480+00:00 ContainerStream:    _____                               
+2026-07-09T15:11:37.1072530+00:00 ContainerStream:   /  _  \ __________ _________   ____  
+2026-07-09T15:11:37.1072840+00:00 ContainerStream:  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2026-07-09T15:11:37.1072874+00:00 ContainerStream: /    |    \/    /|  |  /|  | \/\  ___/ 
+2026-07-09T15:11:37.1072948+00:00 ContainerStream: \____|__  /_____ \____/ |__|    \___  >
+2026-07-09T15:11:37.1072971+00:00 ContainerStream:         \/      \/                  \/ 
+2026-07-09T15:11:37.1073011+00:00 ContainerStream: A P P   S E R V I C E   O N   L I N U X
+2026-07-09T15:11:37.1073031+00:00 ContainerStream: 
+2026-07-09T15:11:37.1073059+00:00 ContainerStream: Documentation       : http://aka.ms/webapp-linux
+2026-07-09T15:11:37.1073081+00:00 ContainerStream: Dotnet quickstart   : https://aka.ms/dotnet-qs
+2026-07-09T15:11:37.1073174+00:00 ContainerStream: ASP .NETCore Version: 8.0.26
+2026-07-09T15:11:37.1073199+00:00 ContainerStream: Instance Name       : lw0sdlwk00025D
+2026-07-09T15:11:37.1073236+00:00 ContainerStream: Instance Id         : 01f9325e5f615ea1a96dd42fc64d219215d3050e03c8a56691bb3aecda591e72
+2026-07-09T15:11:37.1073257+00:00 ContainerStream: 
+2026-07-09T15:11:37.1073278+00:00 ContainerStream: Note: Any data outside '/home' is not persisted
+2026-07-09T15:11:38.5633181+00:00 ContainerStatus: Container start method finished after 7644 ms.
+2026-07-09T15:11:38.8415016+00:00 ContainerStatus: State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container vetamb-prod-app successfully created and is running., DetailsLevel: INFO
+2026-07-09T15:11:38.8418652+00:00 ContainerStatus: State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-07-09T15:11:49.4470548+00:00 ContainerStream: Starting OpenBSD Secure Shell server: sshd.
+2026-07-09T15:11:49.5501856+00:00 ContainerStream: WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2026-07-09T15:11:49.6998318+00:00 ContainerStream: Updating certificates in /etc/ssl/certs...
+2026-07-09T15:12:58.8731711+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2026-07-09T15:12:58.8744677+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2026-07-09T15:12:59.1515711+00:00 ContainerStream: rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2026-07-09T15:12:59.2114367+00:00 ContainerStream: 4 added, 0 removed; done.
+2026-07-09T15:12:59.2187305+00:00 ContainerStream: Running hooks in /etc/ca-certificates/update.d...
+2026-07-09T15:12:59.2305650+00:00 ContainerStream: done.
+2026-07-09T15:12:59.2830088+00:00 ContainerStream: CA certificates copied and updated successfully.
+2026-07-09T15:12:59.7790501+00:00 ContainerStream: Starting periodic command scheduler: cron.
+2026-07-09T15:12:59.7889402+00:00 ContainerStream: Running oryx create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -defaultAppFilePath /defaulthome/hostingstart/hostingstart.dll     -bindPort 8080 -bindPort2 '' -userStartupCommand '' 
+2026-07-09T15:13:00.1872893+00:00 ContainerStream: Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2026-07-09T15:13:00.2041592+00:00 ContainerStream: Could not find operation ID in manifest. Generating an operation id...
+2026-07-09T15:13:00.2042079+00:00 ContainerStream: Build Operation ID: fe4be1b6-0a22-4f30-b9d6-e895ddc9976d
+2026-07-09T15:13:00.8671454+00:00 ContainerStream: 
+2026-07-09T15:13:00.8847283+00:00 ContainerStream: Agent extension 
+2026-07-09T15:13:00.8847571+00:00 ContainerStream: Before if loop >> DotNet Runtime 
+2026-07-09T15:13:00.9462273+00:00 ContainerStream: DotNet Runtime 8.0Writing output script to '/opt/startup/startup.sh'
+2026-07-09T15:13:01.0759306+00:00 ContainerStream: Trying to find the startup DLL name...
+2026-07-09T15:13:01.0774489+00:00 ContainerStream: Found the startup D name: VetAmb.dll
+2026-07-09T15:13:01.0774850+00:00 ContainerStream: Running the command: dotnet "VetAmb.dll"
+2026-07-09T15:13:10.2772055+00:00 ContainerStream: [15:13:09 INF] Google authentication enabled: True
+2026-07-09T15:13:21.5397444+00:00 ContainerStream: [15:13:21 WRN] Entity 'Appointment' has a global query filter defined and is the required end of a relationship with the entity 'AppointmentService'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-09T15:13:21.5583426+00:00 ContainerStream: [15:13:21 WRN] Entity 'Patient' has a global query filter defined and is the required end of a relationship with the entity 'PatientAttachment'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+2026-07-09T15:13:33.7109272+00:00 ContainerStream: [15:13:33 WRN] HTTP GET /robots933456.txt responded 404 in 540.0199 ms
+2026-07-09T15:13:33.7909084+00:00 ContainerStatus: Site startup probe succeeded after 114.841193 seconds.
+2026-07-09T15:13:34.0216702+00:00 ContainerStatus: State: Starting, Action: WarmUpProbeSucceeded, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site startup probe succeeded after 114.841193 seconds., DetailsLevel: INFO
+2026-07-09T15:13:34.9083352+00:00 ContainerStatus: Site is running with deployment version: afec683e-6e81-48cd-bbcf-c587b28cb981
+2026-07-09T15:13:34.9184546+00:00 ContainerStatus: Site started.
+2026-07-09T15:13:34.9195318+00:00 ContainerStatus: State: Started, Action: None, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 07/09/2026 15:13:34 (UTC), DetailsLevel: INFO
+2026-07-09T15:13:34.9518941+00:00 ContainerStatus: Site is running with patch version DOTNETCORE-8.0.26

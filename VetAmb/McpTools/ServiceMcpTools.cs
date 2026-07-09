@@ -9,14 +9,16 @@ using VetAmb.Repositories;
 namespace VetAmb.McpTools;
 
 [McpServerToolType]
-[Description("MCP tools for creating, retrieving, searching, updating, and soft-deleting veterinary services.")]
+[Description("MCP tools for services. Read tools: GetService, SearchServices. Write tools: CreateService, UpdateService, DeleteService.")]
 public sealed class ServiceMcpTools
 {
     private readonly IServiceRepository _serviceRepository;
+    private readonly McpToolExecution _execution;
 
-    public ServiceMcpTools(IServiceRepository serviceRepository)
+    public ServiceMcpTools(IServiceRepository serviceRepository, McpToolExecution execution)
     {
         _serviceRepository = serviceRepository;
+        _execution = execution;
     }
 
     [McpServerTool]
@@ -27,17 +29,20 @@ public sealed class ServiceMcpTools
         [Description("Service price.")] decimal price,
         [Description("Estimated duration in minutes.")] int estimatedDurationMinutes)
     {
-        var service = new Service
+        return _execution.ExecuteWrite("Service.CreateService", () =>
         {
-            Name = name,
-            Description = description,
-            Price = price,
-            EstimatedDurationMinutes = estimatedDurationMinutes
-        };
+            var service = new Service
+            {
+                Name = name,
+                Description = description,
+                Price = price,
+                EstimatedDurationMinutes = estimatedDurationMinutes
+            };
 
-        _serviceRepository.Add(service);
-        var created = _serviceRepository.GetById(service.Id) ?? service;
-        return ToDto(created);
+            _serviceRepository.Add(service);
+            var created = _serviceRepository.GetById(service.Id) ?? service;
+            return ToDto(created);
+        });
     }
 
     [McpServerTool]
@@ -45,10 +50,13 @@ public sealed class ServiceMcpTools
     public ServiceToolDto GetService(
         [Description("Primary key ID of the service to fetch.")] int id)
     {
-        var service = _serviceRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Service with ID {id} was not found.");
+        return _execution.ExecuteRead("Service.GetService", () =>
+        {
+            var service = _serviceRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Service with ID {id} was not found.");
 
-        return ToDto(service);
+            return ToDto(service);
+        });
     }
 
     [McpServerTool]
@@ -56,11 +64,14 @@ public sealed class ServiceMcpTools
     public IReadOnlyList<ServiceToolDto> SearchServices(
         [Description("Free-text search term for service matching.")] string? searchTerm)
     {
-        var results = string.IsNullOrWhiteSpace(searchTerm)
-            ? _serviceRepository.GetAll()
-            : _serviceRepository.Search(searchTerm);
+        return _execution.ExecuteRead("Service.SearchServices", () =>
+        {
+            var results = string.IsNullOrWhiteSpace(searchTerm)
+                ? _serviceRepository.GetAll()
+                : _serviceRepository.Search(searchTerm);
 
-        return results.Select(ToDto).ToList();
+            return results.Select(ToDto).ToList();
+        });
     }
 
     [McpServerTool]
@@ -72,16 +83,19 @@ public sealed class ServiceMcpTools
         [Description("Updated price. Omit to keep current value.")] decimal? price = null,
         [Description("Updated estimated duration in minutes. Omit to keep current value.")] int? estimatedDurationMinutes = null)
     {
-        var service = _serviceRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Service with ID {id} was not found.");
+        return _execution.ExecuteWrite("Service.UpdateService", () =>
+        {
+            var service = _serviceRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Service with ID {id} was not found.");
 
-        if (name is not null) service.Name = name;
-        if (description is not null) service.Description = description;
-        if (price.HasValue) service.Price = price.Value;
-        if (estimatedDurationMinutes.HasValue) service.EstimatedDurationMinutes = estimatedDurationMinutes.Value;
+            if (name is not null) service.Name = name;
+            if (description is not null) service.Description = description;
+            if (price.HasValue) service.Price = price.Value;
+            if (estimatedDurationMinutes.HasValue) service.EstimatedDurationMinutes = estimatedDurationMinutes.Value;
 
-        _serviceRepository.Update(service);
-        return ToDto(service);
+            _serviceRepository.Update(service);
+            return ToDto(service);
+        });
     }
 
     [McpServerTool]
@@ -89,11 +103,14 @@ public sealed class ServiceMcpTools
     public string DeleteService(
         [Description("Primary key ID of the service to soft-delete.")] int id)
     {
-        var service = _serviceRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Service with ID {id} was not found.");
+        return _execution.ExecuteWrite("Service.DeleteService", () =>
+        {
+            var service = _serviceRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Service with ID {id} was not found.");
 
-        _serviceRepository.SoftDelete(id);
-        return $"Service {service.Id} soft-deleted successfully.";
+            _serviceRepository.SoftDelete(id);
+            return $"Service {service.Id} soft-deleted successfully.";
+        });
     }
 
     private static ServiceToolDto ToDto(Service service)

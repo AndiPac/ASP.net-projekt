@@ -41,5 +41,9 @@ public class SearchApiControllerTests : IClassFixture<WebApplicationFactory<Prog
 
         Assert.Equal(JsonValueKind.Array, json.RootElement.ValueKind);
         Assert.True(json.RootElement.GetArrayLength() > 0);
+
+        var firstResult = json.RootElement[0];
+        Assert.Equal("Termini", firstResult.GetProperty("text").GetString());
+        Assert.Equal("Izbornik", firstResult.GetProperty("type").GetString());
     }
 }

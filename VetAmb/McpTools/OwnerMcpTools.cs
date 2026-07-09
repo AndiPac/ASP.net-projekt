@@ -9,14 +9,16 @@ using VetAmb.Repositories;
 namespace VetAmb.McpTools;
 
 [McpServerToolType]
-[Description("MCP tools for creating, retrieving, searching, updating, and soft-deleting pet owners.")]
+[Description("MCP tools for owners. Read tools: GetOwner, SearchOwners. Write tools: CreateOwner, UpdateOwner, DeleteOwner.")]
 public sealed class OwnerMcpTools
 {
     private readonly IOwnerRepository _ownerRepository;
+    private readonly McpToolExecution _execution;
 
-    public OwnerMcpTools(IOwnerRepository ownerRepository)
+    public OwnerMcpTools(IOwnerRepository ownerRepository, McpToolExecution execution)
     {
         _ownerRepository = ownerRepository;
+        _execution = execution;
     }
 
     [McpServerTool]
@@ -31,21 +33,24 @@ public sealed class OwnerMcpTools
         [Description("Owner identification number used by the clinic.")] string? idNumber,
         [Description("Foreign key ID of the clinic that manages this owner.")] int clinicId)
     {
-        var owner = new Owner
+        return _execution.ExecuteWrite("Owner.CreateOwner", () =>
         {
-            FirstName = firstName,
-            LastName = lastName,
-            Email = email,
-            Phone = phone,
-            Address = address,
-            RegistrationDate = registrationDate,
-            IdNumber = idNumber,
-            ClinicId = clinicId
-        };
+            var owner = new Owner
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Phone = phone,
+                Address = address,
+                RegistrationDate = registrationDate,
+                IdNumber = idNumber,
+                ClinicId = clinicId
+            };
 
-        _ownerRepository.Add(owner);
-        var created = _ownerRepository.GetById(owner.Id) ?? owner;
-        return ToDto(created);
+            _ownerRepository.Add(owner);
+            var created = _ownerRepository.GetById(owner.Id) ?? owner;
+            return ToDto(created);
+        });
     }
 
     [McpServerTool]
@@ -53,10 +58,13 @@ public sealed class OwnerMcpTools
     public OwnerToolDto GetOwner(
         [Description("Primary key ID of the owner to retrieve.")] int id)
     {
-        var owner = _ownerRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Owner with ID {id} was not found.");
+        return _execution.ExecuteRead("Owner.GetOwner", () =>
+        {
+            var owner = _ownerRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Owner with ID {id} was not found.");
 
-        return ToDto(owner);
+            return ToDto(owner);
+        });
     }
 
     [McpServerTool]
@@ -64,11 +72,14 @@ public sealed class OwnerMcpTools
     public IReadOnlyList<OwnerToolDto> SearchOwners(
         [Description("Free-text search term.")] string? searchTerm)
     {
-        var results = string.IsNullOrWhiteSpace(searchTerm)
-            ? _ownerRepository.GetAll()
-            : _ownerRepository.Search(searchTerm);
+        return _execution.ExecuteRead("Owner.SearchOwners", () =>
+        {
+            var results = string.IsNullOrWhiteSpace(searchTerm)
+                ? _ownerRepository.GetAll()
+                : _ownerRepository.Search(searchTerm);
 
-        return results.Select(ToDto).ToList();
+            return results.Select(ToDto).ToList();
+        });
     }
 
     [McpServerTool]
@@ -84,20 +95,23 @@ public sealed class OwnerMcpTools
         [Description("Updated owner ID number. Omit to keep current value.")] string? idNumber = null,
         [Description("Updated clinic ID. Omit to keep current value.")] int? clinicId = null)
     {
-        var owner = _ownerRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Owner with ID {id} was not found.");
+        return _execution.ExecuteWrite("Owner.UpdateOwner", () =>
+        {
+            var owner = _ownerRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Owner with ID {id} was not found.");
 
-        if (firstName is not null) owner.FirstName = firstName;
-        if (lastName is not null) owner.LastName = lastName;
-        if (email is not null) owner.Email = email;
-        if (phone is not null) owner.Phone = phone;
-        if (address is not null) owner.Address = address;
-        if (registrationDate.HasValue) owner.RegistrationDate = registrationDate.Value;
-        if (idNumber is not null) owner.IdNumber = idNumber;
-        if (clinicId.HasValue) owner.ClinicId = clinicId.Value;
+            if (firstName is not null) owner.FirstName = firstName;
+            if (lastName is not null) owner.LastName = lastName;
+            if (email is not null) owner.Email = email;
+            if (phone is not null) owner.Phone = phone;
+            if (address is not null) owner.Address = address;
+            if (registrationDate.HasValue) owner.RegistrationDate = registrationDate.Value;
+            if (idNumber is not null) owner.IdNumber = idNumber;
+            if (clinicId.HasValue) owner.ClinicId = clinicId.Value;
 
-        _ownerRepository.Update(owner);
-        return ToDto(owner);
+            _ownerRepository.Update(owner);
+            return ToDto(owner);
+        });
     }
 
     [McpServerTool]
@@ -105,11 +119,14 @@ public sealed class OwnerMcpTools
     public string DeleteOwner(
         [Description("Primary key ID of the owner to soft-delete.")] int id)
     {
-        var owner = _ownerRepository.GetById(id)
-            ?? throw new InvalidOperationException($"Owner with ID {id} was not found.");
+        return _execution.ExecuteWrite("Owner.DeleteOwner", () =>
+        {
+            var owner = _ownerRepository.GetById(id)
+                ?? throw new InvalidOperationException($"Owner with ID {id} was not found.");
 
-        _ownerRepository.SoftDelete(id);
-        return $"Owner {owner.Id} soft-deleted successfully.";
+            _ownerRepository.SoftDelete(id);
+            return $"Owner {owner.Id} soft-deleted successfully.";
+        });
     }
 
     private static OwnerToolDto ToDto(Owner owner)

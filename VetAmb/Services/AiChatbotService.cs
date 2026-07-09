@@ -9,6 +9,9 @@ namespace VetAmb.Services;
 public class AiChatbotService
 {
     private const string SystemPrompt = "You are a helpful, professional assistant for the VetAmb veterinary clinic. Answer questions about pets and our services.";
+    private const int MaxConversationMessages = 12;
+    private const int MaxMessageLength = 800;
+    private const int MaxContextLength = 12000;
 
     private readonly ChatClient _chatClient;
     private readonly ILogger<AiChatbotService> _logger;
@@ -37,6 +40,14 @@ public class AiChatbotService
 
     public async Task<string> GetResponseAsync(List<AppChatMessage>? conversation, ClaimsPrincipal? user, CancellationToken cancellationToken = default)
     {
+        var userId = user?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous";
+        var incomingCount = conversation?.Count ?? 0;
+
+        _logger.LogInformation(
+            "AI chatbot response generation started. UserId: {UserId}, IncomingMessageCount: {IncomingMessageCount}",
+            userId,
+            incomingCount);
+
         var latestUserMessage = conversation?
             .Where(m => !string.IsNullOrWhiteSpace(m?.Content) &&
                         string.Equals(m.Role, "user", StringComparison.OrdinalIgnoreCase))
@@ -44,6 +55,13 @@ public class AiChatbotService
             .LastOrDefault() ?? string.Empty;
 
         var publicContext = await BuildPublicContextAsync(latestUserMessage, user, cancellationToken);
+        var sanitizedConversation = SanitizeConversation(conversation);
+
+        _logger.LogDebug(
+            "AI chatbot input sanitized. UserId: {UserId}, SanitizedMessageCount: {SanitizedMessageCount}, LatestUserMessageLength: {LatestUserMessageLength}",
+            userId,
+            sanitizedConversation.Count,
+            latestUserMessage.Length);
 
         var sdkMessages = new List<OpenAI.Chat.ChatMessage>
         {
@@ -51,17 +69,12 @@ public class AiChatbotService
             new SystemChatMessage($"Use the following public VetAmb data context when relevant. If information is missing from context, say that clearly and suggest where user can check in the app.\n\n{publicContext}")
         };
 
-        if (conversation is not null)
+        if (sanitizedConversation.Count > 0)
         {
-            foreach (var message in conversation)
+            foreach (var message in sanitizedConversation)
             {
-                if (string.IsNullOrWhiteSpace(message?.Content))
-                {
-                    continue;
-                }
-
                 var role = (message.Role ?? string.Empty).Trim().ToLowerInvariant();
-                var content = message.Content.Trim();
+                var content = TrimToLength(message.Content.Trim(), MaxMessageLength);
 
                 if (role == "assistant")
                 {
@@ -84,15 +97,38 @@ public class AiChatbotService
             sdkMessages.Add(new UserChatMessage("Hello"));
         }
 
-        var completion = await _chatClient.CompleteChatAsync(sdkMessages, cancellationToken: cancellationToken);
+        string answer;
 
-        var answer = string.Concat(completion.Value.Content.Select(c => c.Text));
+        try
+        {
+            var completion = await _chatClient.CompleteChatAsync(sdkMessages, cancellationToken: cancellationToken);
+            answer = string.Concat(completion.Value.Content.Select(c => c.Text));
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            _logger.LogWarning("AI chatbot request canceled by caller. UserId: {UserId}", userId);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "AI chatbot completion call failed. UserId: {UserId}", userId);
+            throw;
+        }
 
         if (string.IsNullOrWhiteSpace(answer))
         {
-            _logger.LogWarning("OpenAI completion returned an empty answer.");
+            _logger.LogWarning(
+                "OpenAI completion returned an empty answer. UserId: {UserId}, PromptMessageCount: {PromptMessageCount}",
+                userId,
+                sdkMessages.Count);
             return "Trenutno nemam odgovor. Molim pokušajte ponovno.";
         }
+
+        _logger.LogInformation(
+            "AI chatbot response generation completed. UserId: {UserId}, PromptMessageCount: {PromptMessageCount}, AnswerLength: {AnswerLength}",
+            userId,
+            sdkMessages.Count,
+            answer.Length);
 
         return answer.Trim();
     }
@@ -111,6 +147,11 @@ public class AiChatbotService
                 .Take(6)
                 .ToList();
 
+            _logger.LogDebug(
+                "Building public AI chat context. SearchTermCount: {SearchTermCount}, UserAuthenticated: {UserAuthenticated}",
+                normalizedTerms.Count,
+                user?.Identity?.IsAuthenticated == true);
+
             bool Matches(string text)
             {
                 if (normalizedTerms.Count == 0)
@@ -125,39 +166,37 @@ public class AiChatbotService
             var clinics = await _dbContext.Clinics
                 .AsNoTracking()
                 .Select(c => new { c.Id, c.Name, c.Address, c.Phone })
-                .Take(200)
+                .Take(100)
                 .ToListAsync(cancellationToken);
 
             var vets = await _dbContext.Vets
                 .AsNoTracking()
                 .Select(v => new { v.Id, v.FirstName, v.LastName, v.Specialization, v.ClinicId })
-                .Take(300)
+                .Take(100)
                 .ToListAsync(cancellationToken);
 
             var services = await _dbContext.Services
                 .AsNoTracking()
                 .Select(s => new { s.Id, s.Name, s.Description, s.Price, s.EstimatedDurationMinutes })
-                .Take(300)
+                .Take(100)
                 .ToListAsync(cancellationToken);
 
             var owners = await _dbContext.Owners
                 .AsNoTracking()
                 .Select(o => new { o.Id, o.FirstName, o.LastName, o.Phone, o.Email, o.ClinicId })
-                .Take(300)
+                .Take(100)
                 .ToListAsync(cancellationToken);
 
             var patients = await _dbContext.Patients
                 .AsNoTracking()
                 .Select(p => new { p.Id, p.Name, p.Species, p.Breed, p.Color, p.OwnerId })
-                .Take(300)
+                .Take(100)
                 .ToListAsync(cancellationToken);
 
             var appointments = await _dbContext.Appointments
                 .AsNoTracking()
-                .Include(a => a.Patient)
-                .Include(a => a.Vet)
                 .OrderByDescending(a => a.AppointmentDateTime)
-                .Take(180)
+                .Take(120)
                 .Select(a => new
                 {
                     a.Id,
@@ -171,9 +210,8 @@ public class AiChatbotService
 
             var records = await _dbContext.MedicalRecords
                 .AsNoTracking()
-                .Include(r => r.Patient)
                 .OrderByDescending(r => r.RecordDate)
-                .Take(180)
+                .Take(120)
                 .Select(r => new
                 {
                     r.Id,
@@ -398,12 +436,58 @@ public class AiChatbotService
                 recordLines.Count > 0 ? string.Join("\n", recordLines) : "- Nema podataka za tražene pojmove."
             };
 
-            return string.Join("\n", contextParts);
+            var finalContext = string.Join("\n", contextParts);
+
+            _logger.LogInformation(
+                "Public AI chat context built. Clinics: {Clinics}, Vets: {Vets}, Services: {Services}, Owners: {Owners}, Patients: {Patients}, Appointments: {Appointments}, Records: {Records}, ContextLength: {ContextLength}",
+                totalClinics,
+                totalVets,
+                totalServices,
+                totalOwners,
+                totalPatients,
+                totalAppointments,
+                totalMedicalRecords,
+                finalContext.Length);
+
+            return finalContext;
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to build public context for AI chat.");
+            _logger.LogWarning(ex, "Failed to build public context for AI chat. Returning fallback context.");
             return "Public context is currently unavailable.";
         }
+    }
+
+    private static List<AppChatMessage> SanitizeConversation(IEnumerable<AppChatMessage>? conversation)
+    {
+        if (conversation is null)
+        {
+            return new List<AppChatMessage>();
+        }
+
+        return conversation
+            .Where(message => !string.IsNullOrWhiteSpace(message?.Content))
+            .Where(message =>
+            {
+                var role = (message!.Role ?? string.Empty).Trim().ToLowerInvariant();
+                return role is "user" or "assistant";
+            })
+            .Select(message => new AppChatMessage
+            {
+                Role = (message!.Role ?? string.Empty).Trim().ToLowerInvariant(),
+                Content = TrimToLength(message.Content.Trim(), MaxMessageLength)
+            })
+            .TakeLast(MaxConversationMessages)
+            .ToList();
+    }
+
+    private static string TrimToLength(string value, int maxLength)
+    {
+        if (string.IsNullOrEmpty(value) || value.Length <= maxLength)
+        {
+            return value;
+        }
+
+        return value[..maxLength];
     }
 }
