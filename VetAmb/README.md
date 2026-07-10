@@ -49,6 +49,7 @@ Set these environment variables before starting the stack if you need the relate
 - `OPENAI_API_KEY`: enables the AI chat endpoint
 - `GOOGLE_CLIENT_ID`
 - `GOOGLE_CLIENT_SECRET`
+- `SEED_DEFAULT_USERS`: when `true`, creates the default admin and vet accounts on startup
 
 You can either edit `.env` after copying `.env.example`, or set them directly in PowerShell.
 
@@ -59,6 +60,7 @@ $env:SA_PASSWORD = "Your_strong_password_123!"
 $env:OPENAI_API_KEY = "replace-me"
 $env:GOOGLE_CLIENT_ID = "replace-me-if-needed"
 $env:GOOGLE_CLIENT_SECRET = "replace-me-if-needed"
+$env:SEED_DEFAULT_USERS = "true"
 docker compose up --build
 ```
 
@@ -67,5 +69,6 @@ docker compose up --build
 - SQL data is persisted in the Docker volume `vetamb-sqldata`.
 - Serilog file logs are written to `artifacts/docker-logs` on the host.
 - Docker startup enables `Database__AutoMigrateOnStartup=true`, so the app applies pending EF Core migrations automatically inside the container.
+- The default laptop/dev Docker stack enables `SEED_DEFAULT_USERS=true`, which creates `admin@vetamb.com` / `AdminPassword123!` and `vet@vetamb.com` / `VetPassword123!` if they do not already exist.
 - Outside Docker, startup migrations remain off by default.
 - If you use the production override on a laptop and port `80` is unavailable, change the published port in [docker-compose.prod.yml](docker-compose.prod.yml).

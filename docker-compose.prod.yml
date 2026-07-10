@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+      SEED_DEFAULT_USERS: "false"
       Serilog__MinimumLevel__Default: Warning
     ports: !override
       - "80:8080"
