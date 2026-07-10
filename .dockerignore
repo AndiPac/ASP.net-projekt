@@ -1,0 +1,14 @@
+.git
+.vs
+.vscode
+artifacts
+**/bin
+**/obj
+**/Logs
+**/TestResults
+**/*.user
+**/*.suo
+**/*.db
+**/*.mdf
+**/*.ldf
+**/agent_log.txt

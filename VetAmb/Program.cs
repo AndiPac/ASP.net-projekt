@@ -162,6 +162,8 @@ builder.Services.AddScoped<AiChatbotService>();
 
 var app = builder.Build();
 
+var autoMigrateOnStartup = builder.Configuration.GetValue<bool?>("Database:AutoMigrateOnStartup") ?? false;
+
 app.Logger.LogInformation("Google authentication enabled: {GoogleAuthEnabled}", isGoogleAuthConfigured);
 
 app.UseSerilogRequestLogging(options =>
@@ -239,11 +241,19 @@ app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{i
 try
 {
     using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<VetAmbDbContext>();
+
+    if (autoMigrateOnStartup)
+    {
+        await dbContext.Database.MigrateAsync();
+        app.Logger.LogInformation("Applied pending database migrations at startup.");
+    }
+
     await IdentitySeedData.SeedRolesAndAdminAsync(scope.ServiceProvider);
 }
 catch (Exception ex)
 {
-    app.Logger.LogError(ex, "Identity seeding failed");
+    app.Logger.LogError(ex, "Startup database initialization failed");
 }
 
 try

@@ -1,0 +1,40 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: vetamb-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${SA_PASSWORD:-Your_strong_password_123!}
+    ports:
+      - "1433:1433"
+    volumes:
+      - vetamb-sqldata:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "${SA_PASSWORD:-Your_strong_password_123!}", "-C", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vetamb-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Database__AutoMigrateOnStartup: "true"
+      ConnectionStrings__DefaultConnection: Server=db,1433;Database=VetAmbDb;User Id=sa;Password=${SA_PASSWORD:-Your_strong_password_123!};TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=true;
+      OpenAI__ApiKey: ${OPENAI_API_KEY:-PLACEHOLDER_SET_THIS}
+      Google__ClientId: ${GOOGLE_CLIENT_ID:-}
+      Google__ClientSecret: ${GOOGLE_CLIENT_SECRET:-}
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./artifacts/docker-logs:/app/Logs
+
+volumes:
+  vetamb-sqldata:

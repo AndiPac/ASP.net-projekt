@@ -1,0 +1,12 @@
+services:
+  db:
+    restart: unless-stopped
+    ports: !reset []
+
+  app:
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Serilog__MinimumLevel__Default: Warning
+    ports: !override
+      - "80:8080"
